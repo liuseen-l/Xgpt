@@ -27,10 +27,7 @@ export default defineConfig({
       'text-base': 'text-black dark:text-white switch-animation',
       // 'border-base': 'b-1-rgba(0,0,0,.1) dark:b-1-#a3a6a9 switch-animation',
     },
-    [/^([tlrb])?border-base$/, ([, d]) => {
-      console.log(d, `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#a3a6a9 switch-animation`)
-      return `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#a3a6a9 switch-animation`
-    }],
+    [/^([tlrb])?border-base$/, ([, d]) => `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#a3a6a9 switch-animation`],
 
   ],
   rules: [
