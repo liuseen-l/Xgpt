@@ -2,7 +2,6 @@ import antfu from '@antfu/eslint-config'
 import pluginReact from 'eslint-plugin-react'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
 import pluginReactRefresh from 'eslint-plugin-react-refresh'
-import pluginTs from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import { isPackageExists } from 'local-pkg'
 
@@ -26,7 +25,6 @@ export default antfu({
   yaml: false,
 }, {
   plugins: {
-    'ts': pluginTs,
     'react': pluginReact,
     'react-hooks': pluginReactHooks,
     'react-refresh': pluginReactRefresh,
@@ -91,5 +89,6 @@ export default antfu({
     'react/react-in-jsx-scope': 'off',
     'react/require-render-return': 'error',
 
+    'no-console': 'off',
   },
 })

@@ -1,7 +1,9 @@
+import Chat from '~/pages/chat'
+
 function App() {
   return (
     <>
-      <div className="bg-red">12213</div>
+      <Chat></Chat>
     </>
   )
 }
