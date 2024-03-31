@@ -25,10 +25,8 @@ export default defineConfig({
       'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-[rgba(24,24,24,1)] switch-animation',
       /** app text base */
       'text-base': 'text-black dark:text-white switch-animation',
-      // 'border-base': 'b-1-rgba(0,0,0,.1) dark:b-1-#a3a6a9 switch-animation',
     },
     [/^([tlrb])?border-base$/, ([, d]) => `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#a3a6a9 switch-animation`],
-
   ],
   rules: [
     /** justify-content: center */

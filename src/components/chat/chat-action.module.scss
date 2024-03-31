@@ -1,0 +1,19 @@
+.chat-input-action {
+  width: var(--icon-width);
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+
+
+  &:hover {
+    transition: width ease 0.3s;
+    width: var(--full-width);
+
+    .text {
+      opacity: 1;
+      transform: translate(0);
+    }
+  }
+
+}

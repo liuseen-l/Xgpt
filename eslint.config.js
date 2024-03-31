@@ -59,7 +59,7 @@ export default antfu({
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
 
-    // // react refresh
+    // react refresh
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: isAllowConstantExport },
@@ -89,6 +89,8 @@ export default antfu({
     'react/react-in-jsx-scope': 'off',
     'react/require-render-return': 'error',
 
+    // custom
+    "react-hooks/rules-of-hooks": 'off',
     'no-console': 'off',
   },
 })

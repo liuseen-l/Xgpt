@@ -1,6 +1,6 @@
-import ChatContent from './ChatContent'
-import ChatHedaer from './ChatHeader'
-import ChatInput from './ChatInput'
+import ChatContent from './chat-content'
+import ChatHedaer from './chat-header'
+import ChatInput from './chat-input'
 
 function ChatRoom() {
   return (

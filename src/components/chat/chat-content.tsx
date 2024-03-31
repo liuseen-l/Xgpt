@@ -1,4 +1,4 @@
-import ChatCard from './ChatCard'
+import ChatCard from './chat-card'
 
 function SideChatContent() {
   return (
