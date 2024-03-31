@@ -1,11 +1,11 @@
 import SideBar from '~/components/chat/SideBar'
-import SideChat from '~/components/chat/SideChat'
+import ChatRoom from '~/components/chat/ChatRoom'
 
 function Chat() {
   return (
     <div className="h-100vh w-100vw flex">
       <SideBar></SideBar>
-      <SideChat></SideChat>
+      <ChatRoom></ChatRoom>
     </div>
   )
 }
