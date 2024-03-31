@@ -1,7 +1,7 @@
 function SideChatInput() {
   return (
     <>
-      <div className="w-100% h-140px">
+      <div className="w-100% h-140px tborder-base">
         input
       </div>
     </>
