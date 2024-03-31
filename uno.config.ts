@@ -18,7 +18,7 @@ const directionMap = {
 export default defineConfig({
   shortcuts: [
     {
-      'switch-animation': 'transition duration-300',
+      'switch-animation': 'transition-all duration-300',
       /** app bg base */
       'bg-base': 'bg-[#fff] dark:bg-[#1e1e1e] switch-animation',
       /** chatroom side bg base */

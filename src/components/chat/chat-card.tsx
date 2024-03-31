@@ -12,8 +12,9 @@ function ChatCard() {
         </div>
         {/* content */}
         <div className="border-base fs-14 leading-5 border-rounded-2 p-10px siderbar-bg-base">
-          我怕我怕我怕我怕我怕我怕我怕我怕我怕我怕我怕我怕我怕我怕我怕
+          我怕我怕我怕我怕我怕我怕我怕我怕我dwadwadawdawdwa怕我怕我怕我怕我怕我怕我怕
         </div>
+        <div className="fs-12 text-neutral-400 dark:text-neutral-500">2024/03/12 13:23:31</div>
       </div>
     </div>
 

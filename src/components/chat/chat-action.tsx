@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import styles from './chatAction.module.scss'
+import styles from './chat-action.module.scss'
 import { useToggle } from '~/utils'
 
 function ChatAction() {
@@ -39,7 +39,7 @@ function ChatAction() {
       }
     >
       <div ref={iconRef} className="i-carbon-sun dark:i-carbon-moon" />
-      <div className={`${styles.text} pl-5px whitespace-nowrap opacity-0 transform-translate-x-[-5px]`} ref={textRef}>
+      <div className={`${styles.text} pl-5px whitespace-nowrap text-base opacity-0 transform-translate-x-[-5px]`} ref={textRef}>
         切换模式
       </div>
     </div>
