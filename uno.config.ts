@@ -18,13 +18,15 @@ const directionMap = {
 export default defineConfig({
   shortcuts: [
     {
-      'switch-animation': 'transition-all duration-300',
+      'switch-animation': 'transition duration-300',
       /** app bg base */
       'bg-base': 'bg-[#fff] dark:bg-[#1e1e1e] switch-animation',
       /** chatroom side bg base */
       'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-[rgba(24,24,24,1)] switch-animation',
       /** app text base */
-      'text-base': 'text-black dark:text-white switch-animation',
+      'text-base': 'text-black dark:text-[#bbb] switch-animation',
+      'action-base': 'hover:bg-[#f2f2f2] dark:hover:bg-neutral-700 switch-animation',
+      'sub-text-base': 'text-neutral-400 dark:text-neutral-500 switch-animation',
     },
     [/^([tlrb])?border-base$/, ([, d]) => `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#a3a6a9 switch-animation`],
   ],
