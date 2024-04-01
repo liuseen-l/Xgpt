@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import styles from './chat-action.module.scss'
 import { useToggle } from '~/utils'
 
 function ChatAction() {
@@ -25,7 +24,7 @@ function ChatAction() {
 
   return (
     <div
-      className={`${styles['chat-input-action']} transition-width fs-12 flex py-4px px-10px ai-c overflow-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base`}
+      className="w-[var(--icon-width)] hover:w-[--full-width] transition-width fs-12 flex py-4px px-10px ai-c overflow-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base group"
       onClick={() => {
         useToggle()
       }}
@@ -39,7 +38,7 @@ function ChatAction() {
       }
     >
       <div ref={iconRef} className="i-carbon-sun dark:i-carbon-moon text-base" />
-      <div className={`${styles.text} pl-5px whitespace-nowrap text-base opacity-0 transform-translate-x-[-5px]`} ref={textRef}>
+      <div className="group-hover:opacity-100 group-hover:translate-0 pl-5px whitespace-nowrap text-base opacity-0 transform-translate-x-[-5px]" ref={textRef}>
         切换模式
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import { Button } from 'antd'
 import SideItem from './side-item'
-import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 
-export const MIN_SIDEBAR_WIDTH = 250
-export const MAX_SIDEBAR_WIDTH = 500
-export const DEFAULT_SIDEBAR_WIDTH = 300
+const MIN_SIDEBAR_WIDTH = 250
+const MAX_SIDEBAR_WIDTH = 500
+const DEFAULT_SIDEBAR_WIDTH = 300
 
 function SideBar() {
   const startX = useRef(0)
@@ -48,7 +48,7 @@ function SideBar() {
   }, [sidebarWidth])
 
   return (
-    <div className={`${styles.sidebar} flex flex-col h-100% text-base siderbar-bg-base select-none p-20px box-border relative`}>
+    <div className="w-[var(--sidebar-width)] flex flex-col h-100% text-base siderbar-bg-base select-none p-20px box-border relative">
       {/* header */}
       <div className="flex jc-b ai-c mb-20px">
         <div className="flex flex-col">
@@ -67,12 +67,17 @@ function SideBar() {
       </div>
 
       {/* footer */}
-      <div className="w-100% h-50px"></div>
+      <div className="w-100% h-50px flex jc-e ai-c">
+        <Button className="fs-12 flex ai-c jc-b p-5px gap-5px btn-base ">
+          <div className="i-ant-design:plus-circle-outlined">12</div>
+          <span>新建聊天</span>
+        </Button>
+      </div>
       <div
-        className={`${styles['sidebar-drag']} w-14px absolute top-0 right-0 h-100% flex jc-c ai-c`}
+        className="bg-transparent cursor-ew-resize w-14px absolute top-0 right-0 h-100% flex jc-c ai-c group"
         onPointerDown={e => onDragStart(e as any)}
       >
-        <div className="icon i-radix-icons:drag-handle-dots-2 ml-[-2px]"></div>
+        <div className="i-radix-icons:drag-handle-dots-2 ml-[-2px] opacity-0 sub-text-base group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
     </div>
   )
