@@ -9,19 +9,21 @@
 
   <style>
     .test {
-      color: red;
       background-color: aqua;
-      transition: color ease 2s;
-      transition: background-color ease 4s;
-    }
-
-    .test:hover {
-      color: blue;
-      background-color: antiquewhite;
+      transition: all ease 2s;
     }
 
     .son {
-      transition: all 2s;
+      background-color: yellow;
+      opacity: 0;
+    }
+
+    .test:hover {
+      background-color: antiquewhite;
+    }
+
+    .son:hover {
+      opacity: 1;
     }
   </style>
 </head>

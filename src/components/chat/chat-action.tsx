@@ -25,7 +25,7 @@ function ChatAction() {
 
   return (
     <div
-      className={`${styles['chat-input-action']} transition-all fs-12 flex py-4px px-10px ai-c overflow-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base`}
+      className={`${styles['chat-input-action']} transition-width fs-12 flex py-4px px-10px ai-c overflow-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base`}
       onClick={() => {
         useToggle()
       }}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import SideHistory from './side-history'
+import SideItem from './side-item'
 import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 
@@ -62,7 +62,7 @@ function SideBar() {
       {/* history */}
       <div className="flex-1 w-100% overflow-scroll">
         {
-          Array.from({ length: 10 }).fill(null).map(() => <SideHistory></SideHistory>)
+          Array.from({ length: 12 }).fill(null).map((_, i) => <SideItem key={i}></SideItem>)
         }
       </div>
 

@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 
 function ChatCard() {
-  const isTarget = true
+  const isTarget = Math.random() * 10 < 5
 
   return (
-    <div className={clsx('w-100% flex', isTarget && 'jc-e')}>
+    <div className={clsx('w-100% flex mb-25px', isTarget && 'jc-e')}>
       <div className={clsx('max-w-80% flex flex-col gap-8px', isTarget && 'ai-e')}>
         {/* header icon */}
         <div className="h-30px w-30px flex ai-c jc-c border-base border-rounded-2">

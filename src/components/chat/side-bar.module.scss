@@ -1,20 +1,9 @@
 .sidebar-drag {
-  background-color: rgba($color: #000000, $alpha: 0);
+  background-color: rgba(#000000, 0);
   cursor: ew-resize;
-
-  .icon {
-    opacity: 0;
-  }
-
-  &:hover {
-    .icon {
-      opacity: 1;
-    }
-  }
 }
 
 
 .sidebar {
-
   width: var(--sidebar-width);
 }
