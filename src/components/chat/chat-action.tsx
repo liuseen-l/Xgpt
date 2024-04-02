@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 
 interface Props {
   text: string
-  icon: string
+  icon: JSX.Element
   onClick: () => void
 }
 
@@ -42,7 +42,9 @@ const ChatAction: React.FC<Props> = ({ text, onClick: _onClick, icon }) => {
         } as React.CSSProperties
       }
     >
-      <div ref={iconRef} className={`${icon} text-base`} />
+      <div ref={iconRef}>
+        {icon}
+      </div>
       <div className="group-hover:opacity-100 group-hover:translate-0 pl-5px whitespace-nowrap text-base opacity-0 transform-translate-x-[-5px]" ref={textRef}>
         {text}
       </div>

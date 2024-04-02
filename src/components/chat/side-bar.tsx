@@ -3,7 +3,7 @@ import { Button } from 'antd'
 import SideItem from './side-item'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 
-const MIN_SIDEBAR_WIDTH = 250
+const MIN_SIDEBAR_WIDTH = 280
 const MAX_SIDEBAR_WIDTH = 500
 const DEFAULT_SIDEBAR_WIDTH = 300
 

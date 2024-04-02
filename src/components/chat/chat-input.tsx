@@ -1,7 +1,7 @@
 import { Input } from 'antd'
 import React from 'react'
 import ChatAction from './chat-action'
-import { ACTIONS_CONFIGS } from '~/consts/action-configs'
+import { ACTIONS_CONFIGS } from '~/consts/action-configs.tsx'
 
 function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
   console.log('Change:', e.target.value)
