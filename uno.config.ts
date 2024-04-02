@@ -31,7 +31,8 @@ export default defineConfig({
       /** app bg base */
       'bg-base': 'bg-[#fff] dark:bg-[#1e1e1e] switch-animation',
       /** chatroom side bg base */
-      'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-[rgba(24,24,24,1)] switch-animation',
+      'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-black switch-animation',
+      'bubble-bg-base': 'bg-[rgba(0,0,0,.05)] dark:bg-neutral-800 switch-animation',
       /** app text base */
       'text-base': 'text-black dark:text-[#bbb] switch-animation',
       'action-base': 'hover:bg-[#f2f2f2] dark:hover:bg-neutral-700 switch-animation',

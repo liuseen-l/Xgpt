@@ -13,6 +13,8 @@ function SideBar() {
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH)
   const startDragWidth = useRef(DEFAULT_SIDEBAR_WIDTH)
 
+  const [seletcd, setSelected] = useState(0)
+
   const onDragStart = (e: MouseEvent) => {
     // Remembers the initial width each time the mouse is pressed
     startX.current = e.clientX
@@ -62,10 +64,18 @@ function SideBar() {
       {/* history */}
       <div className="flex-1 w-100% overflow-scroll">
         {
-          Array.from({ length: 12 }).fill(null).map((_, i) => <SideItem key={i}></SideItem>)
+          Array.from({ length: 12 }).fill(null).map((_, i) => (
+            <SideItem
+              style={{
+                border: `2px solid ${seletcd === i ? '#1d93ab' : 'transparent'}`,
+              }}
+              onClick={() => { setSelected(i) }}
+              key={i}
+            >
+            </SideItem>
+          ))
         }
       </div>
-
       {/* footer */}
       <div className="w-100% h-50px flex jc-e ai-c">
         <Button className="fs-12 flex ai-c jc-b p-5px gap-5px btn-base ">
@@ -73,6 +83,7 @@ function SideBar() {
           <span>新建聊天</span>
         </Button>
       </div>
+      {/* darg bar */}
       <div
         className="bg-transparent cursor-ew-resize w-14px absolute top-0 right-0 h-100% flex jc-c ai-c group"
         onPointerDown={e => onDragStart(e as any)}

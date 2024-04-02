@@ -10,9 +10,15 @@
   <style>
     .test {
       background-color: aqua;
-      transition: all ease 2s;
+      transition-property: background-color;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 1000ms;
     }
+    
+    .hh {
+      transition: all ease 0.5s;
 
+    }
     .son {
       background-color: yellow;
       opacity: 0;
@@ -29,7 +35,7 @@
 </head>
 
 <body>
-  <div class="test">
+  <div class="test hh">
     123
     <div class="son">
       456

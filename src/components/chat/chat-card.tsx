@@ -1,6 +1,7 @@
 import clsx from 'clsx'
+import React from 'react'
 
-function ChatCard() {
+const ChatCard: React.FC = () => {
   const isTarget = Math.random() * 10 < 5
 
   return (
@@ -11,7 +12,7 @@ function ChatCard() {
           <div className="i-emojione:blond-haired-person-medium-light-skin-tone fs-20" />
         </div>
         {/* content */}
-        <div className="border-base fs-14 leading-5 border-rounded-2 p-10px siderbar-bg-base">
+        <div className="border-base fs-14 leading-5 border-rounded-2 p-10px bubble-bg-base">
           我怕我怕我怕我怕我怕我怕我怕我怕我dwadwadawdawdwa怕我怕我怕我怕我怕我怕我怕
         </div>
         <div className="fs-12 sub-text-base">2024/03/12 13:23:31</div>

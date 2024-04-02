@@ -1,7 +1,12 @@
-import { useRef, useState } from 'react'
-import { useToggle } from '~/utils'
+import React, { useRef, useState } from 'react'
 
-function ChatAction() {
+interface Props {
+  text: string
+  icon: string
+  onClick: () => void
+}
+
+const ChatAction: React.FC<Props> = ({ text, onClick: _onClick, icon }) => {
   const iconRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState({
@@ -26,7 +31,7 @@ function ChatAction() {
     <div
       className="w-[var(--icon-width)] hover:w-[--full-width] transition-width fs-12 flex py-4px px-10px ai-c overflow-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base group"
       onClick={() => {
-        useToggle()
+        _onClick()
       }}
       onMouseEnter={updateWidth}
       onTouchStart={updateWidth}
@@ -37,9 +42,9 @@ function ChatAction() {
         } as React.CSSProperties
       }
     >
-      <div ref={iconRef} className="i-carbon-sun dark:i-carbon-moon text-base" />
+      <div ref={iconRef} className={`${icon} text-base`} />
       <div className="group-hover:opacity-100 group-hover:translate-0 pl-5px whitespace-nowrap text-base opacity-0 transform-translate-x-[-5px]" ref={textRef}>
-        切换模式
+        {text}
       </div>
     </div>
   )
