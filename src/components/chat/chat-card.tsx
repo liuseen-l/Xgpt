@@ -4,19 +4,19 @@ import { Markdown } from './chat-markdown'
 
 interface ChatCardItemProps {
   content: string
-  isTarget?: boolean
+  isUser?: boolean
 }
 
-const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, isTarget }) => {
+const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, isUser }) => {
   return (
-    <div className={clsx('w-100% flex mb-25px', isTarget && 'jc-e')}>
-      <div className={clsx('max-w-80% flex flex-col gap-8px', isTarget && 'ai-e')}>
+    <div className={clsx('w-100% flex mb-25px', isUser && 'jc-e')}>
+      <div className={clsx('max-w-80% flex flex-col gap-8px', isUser && 'ai-e')}>
         {/* header icon */}
         <div className="h-30px w-30px flex ai-c jc-c border-base border-rounded-2">
           <div className="i-emojione:blond-haired-person-medium-light-skin-tone fs-20" />
         </div>
         {/* content */}
-        <div className="border-base fs-14 leading-5 border-rounded-2 px-10px bubble-bg-base">
+        <div className={clsx('border-base fs-14 leading-5 border-rounded-2 px-10px', isUser ? 'bubble-bg-base-user' : 'bubble-bg-base')}>
           <Markdown
             content={content}
           >
@@ -37,7 +37,7 @@ const ChatCard: React.FC = () => {
 
   return (
     <>
-      <ChatCardItem content={item.question} isTarget></ChatCardItem>
+      <ChatCardItem content={item.question} isUser></ChatCardItem>
       <ChatCardItem content={item.replication}></ChatCardItem>
     </>
   )

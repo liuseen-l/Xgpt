@@ -48,7 +48,6 @@ function _MarkDownContent(props: { content: string }) {
     () => escapeBrackets(escapeDollarNumber(props.content)),
     [props.content],
   )
-  console.log(456, escapedContent)
 
   return (
     <ReactMarkdown
@@ -97,7 +96,7 @@ function _MarkDownContent(props: { content: string }) {
         },
       }}
     >
-      {props.content}
+      {escapedContent}
     </ReactMarkdown>
   )
 }

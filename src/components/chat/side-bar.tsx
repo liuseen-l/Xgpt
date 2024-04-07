@@ -57,7 +57,7 @@ function SideBar() {
           <span className="fs-28 font-700 leading-14">Xgpt</span>
           <span className="fs-13">下一代 Chatgpt 集成平台</span>
         </div>
-        <span className="w-80px h-80px fill-#8bcae0 switch-animation dark:fill-neutral-700">
+        <span className="w-80px h-80px logo-bg-base">
           <ChatGptIcon></ChatGptIcon>
         </span>
       </div>

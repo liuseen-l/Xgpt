@@ -30,11 +30,13 @@ export default defineConfig({
       'switch-animation': 'transition duration-300',
       /** app bg base */
       'bg-base': 'bg-[#fff] dark:bg-[#1e1e1e] switch-animation',
+      'logo-bg-base': 'fill-[#8bcae0] dark:fill-[#3c5159] switch-animation',
       /** chatroom side bg base */
-      'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-black switch-animation',
-      'bubble-bg-base': 'bg-[rgba(0,0,0,.05)] dark:bg-neutral-800 switch-animation',
+      'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-[#1b262a] switch-animation',
+      'bubble-bg-base': 'bg-[rgba(0,0,0,.05)] dark:bg-neutral-900 switch-animation',
+      'bubble-bg-base-user': 'bg-[#e7f8ff] dark:bg-[#1b262a] switch-animation',
       /** app text base */
-      'text-base': 'text-black dark:text-[#bbb] switch-animation',
+      'text-base': 'text-black dark:text-neutral-200 switch-animation',
       'action-base': 'hover:bg-[#f2f2f2] dark:hover:bg-neutral-700 switch-animation',
       'sub-text-base': 'text-neutral-400 dark:text-neutral-500 switch-animation',
       'btn-base': `bg-[#fff] ${resolveBtnBase(['text-[#1d93ab]', 'border-[#1d93ab]', 'bg-[#fff]', 'dark:text-[#1d93ab]', 'dark:bg-neutral-300', 'dark:border-[#1d93ab]'])} dark:bg-neutral-400  switch-animation`,
