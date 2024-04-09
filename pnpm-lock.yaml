@@ -82,6 +82,9 @@ devDependencies:
   eslint-plugin-react-refresh:
     specifier: ^0.4.6
     version: 0.4.6(eslint@8.57.0)
+  immer:
+    specifier: ^10.0.4
+    version: 10.0.4
   local-pkg:
     specifier: ^0.5.0
     version: 0.5.0
@@ -105,7 +108,7 @@ devDependencies:
     version: 5.2.4(@types/node@20.12.2)(sass@1.72.0)
   zustand:
     specifier: ^4.5.2
-    version: 4.5.2(@types/react@18.2.69)(react@18.2.0)
+    version: 4.5.2(@types/react@18.2.69)(immer@10.0.4)(react@18.2.0)
 
 packages:
 
@@ -3829,6 +3832,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immer@10.0.4:
+    resolution: {integrity: sha512-cuBuGK40P/sk5IzWa9QPUaAdvPHjkk1c+xYsd9oZw+YQQEV+10G0P5uMpGctZZKnyQ+ibRO08bD25nWLmYi2pw==}
+    dev: true
+
   /immutable@4.3.5:
     resolution: {integrity: sha512-8eabxkth9gZatlwl5TBuJnCsoTADlL6ftEr7A4qgdaTsPyreilDSnUk57SO+jfKcNtxPa22U5KK6DSeAYhpBJw==}
     dev: true
@@ -7048,7 +7055,7 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /zustand@4.5.2(@types/react@18.2.69)(react@18.2.0):
+  /zustand@4.5.2(@types/react@18.2.69)(immer@10.0.4)(react@18.2.0):
     resolution: {integrity: sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -7064,6 +7071,7 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.2.69
+      immer: 10.0.4
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: true

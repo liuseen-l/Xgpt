@@ -1,19 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
-import { Button } from 'antd'
+import { Button, Skeleton } from 'antd'
 import SideItem from './side-item'
+import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
+import { useGlobalStore } from '~/stores/global'
+import { fetchChatList } from '~/api'
+import type { ChatItemType } from '~/api/chat/types'
+import { useChatStore } from '~/stores/chat'
 
 const MIN_SIDEBAR_WIDTH = 280
 const MAX_SIDEBAR_WIDTH = 500
 const DEFAULT_SIDEBAR_WIDTH = 300
 
+const limit = (x: number) => Math.min(MAX_SIDEBAR_WIDTH, x)
+
 function SideBar() {
   const startX = useRef(0)
-  const limit = (x: number) => Math.min(MAX_SIDEBAR_WIDTH, x)
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH)
   const startDragWidth = useRef(DEFAULT_SIDEBAR_WIDTH)
-
   const [seletcd, setSelected] = useState(0)
+
+  const { handleGetSession, handleLoadHistory } = useChatStore(state => ({
+    handleGetSession: state.handleGetSession,
+    handleLoadHistory: state.handleLoadHistory,
+  }))
+  const { gptCode } = useGlobalStore(state => ({
+    gptCode: state.gptCode,
+  }))
 
   const onDragStart = (e: MouseEvent) => {
     // Remembers the initial width each time the mouse is pressed
@@ -49,6 +62,23 @@ function SideBar() {
     document.documentElement.style.setProperty('--sidebar-width', sideBarWidth)
   }, [sidebarWidth])
 
+  const { data, isLoading } = fetchChatList({
+    gptCode,
+  })
+
+  // 获取默认聊天记录
+  useEffect(() => {
+    if (!isLoading && data?.data?.[0])
+      handleLoadHistory(data.data[0].chatCode)
+  }, [isLoading])
+
+  const handleSelect = (i: ChatItemType, idx: number) => {
+    if (idx !== seletcd) {
+      setSelected(idx)
+      handleGetSession(i)
+    }
+  }
+
   return (
     <div className="w-[var(--sidebar-width)] flex flex-col h-100% text-base siderbar-bg-base select-none p-20px box-border relative">
       {/* header */}
@@ -62,18 +92,23 @@ function SideBar() {
         </span>
       </div>
       {/* history */}
-      <div className="flex-1 w-100% overflow-scroll">
+      <div className="flex-1 w-100% overflow-auto">
         {
-          Array.from({ length: 12 }).fill(null).map((_, i) => (
-            <SideItem
-              style={{
-                border: `2px solid ${seletcd === i ? '#1d93ab' : 'transparent'}`,
-              }}
-              onClick={() => { setSelected(i) }}
-              key={i}
-            >
-            </SideItem>
-          ))
+          isLoading
+            ? <Skeleton paragraph={{ rows: 15 }} className={styles.skin} />
+            : data?.data?.map((i, idx) => (
+              <SideItem
+                chatAmount={i.chatAmount}
+                chatName={i.chatName}
+                lastChatTime={i.createTime}
+                style={{
+                  border: `2px solid ${seletcd === idx ? '#1d93ab' : 'transparent'}`,
+                }}
+                onClick={() => { handleSelect(i, idx) }}
+                key={idx}
+              >
+              </SideItem>
+            ))
         }
       </div>
       {/* footer */}

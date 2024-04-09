@@ -5,42 +5,45 @@
   <title></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="css/style.css" rel="stylesheet">
 
   <style>
     .test {
-      background-color: aqua;
-      transition-property: background-color;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-      transition-duration: 1000ms;
-    }
-    
-    .hh {
-      transition: all ease 0.5s;
-
-    }
-    .son {
-      background-color: yellow;
-      opacity: 0;
-    }
-
-    .test:hover {
-      background-color: antiquewhite;
-    }
-
-    .son:hover {
-      opacity: 1;
+      box-sizing: border-box;
+      overflow: auto;
+      height: 200px;
+      width: 300px;
+      background-color: red;
     }
   </style>
 </head>
 
 <body>
-  <div class="test hh">
-    123
-    <div class="son">
-      456
-    </div>
+  <div class="test">
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
   </div>
 </body>
+<script>
+  window.onload = () => {
+    const dom = document.querySelector('.test')
+    dom.addEventListener('scroll', () => {
+      console.log(dom.scrollHeight, dom.clientHeight , dom.scrollTop);
+    })
+  }
+
+</script>
 
 </html>

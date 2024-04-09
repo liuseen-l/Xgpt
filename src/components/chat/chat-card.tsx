@@ -29,16 +29,16 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, isUser }) => {
   )
 }
 
-const ChatCard: React.FC = () => {
-  const item = {
-    question: '我们一般有哪些?',
-    replication: '好的，以下是一个简单的Java for循环示例：\n```css\nfor (int i = 0; i < 10; i++) {\n    System.out.println(i);\n}\n```\n\n在这个例子中，`i` 是计数器，从 `0` 开始，每次循环增加 `1`，直到达到 `10`。在每次循环中，都会执行缩进块中的代码（在这种情况下，只是打印出当前的 `i` 值）。',
-  }
+interface ChatCardProps {
+  question: string
+  replication: string
+}
 
+const ChatCard: React.FC<ChatCardProps> = ({ question, replication }) => {
   return (
     <>
-      <ChatCardItem content={item.question} isUser></ChatCardItem>
-      <ChatCardItem content={item.replication}></ChatCardItem>
+      <ChatCardItem content={question} isUser></ChatCardItem>
+      <ChatCardItem content={replication}></ChatCardItem>
     </>
   )
 }

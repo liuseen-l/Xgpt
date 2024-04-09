@@ -7,7 +7,7 @@ import RemarkMath from 'remark-math'
 import RemarkGfm from 'remark-gfm'
 import 'katex/dist/katex.min.css'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { a11yDark, coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 function escapeDollarNumber(text: string) {
   let escapedText = ''
@@ -87,7 +87,7 @@ function _MarkDownContent(props: { content: string }) {
               </code>
               )
         },
-        p: pProps => <p {...pProps} dir="auto" />,
+        p: pProps => <p {...pProps} className="break-all" dir="auto" />,
         a: (aProps) => {
           const href = aProps.href || ''
           const isInternal = /^\/#/i.test(href)
