@@ -5,9 +5,10 @@ import { Markdown } from './chat-markdown'
 interface ChatCardItemProps {
   content: string
   isUser?: boolean
+  createTime: string
 }
 
-const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, isUser }) => {
+const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser }) => {
   return (
     <div className={clsx('w-100% flex mb-25px', isUser && 'jc-e')}>
       <div className={clsx('max-w-80% flex flex-col gap-8px', isUser && 'ai-e')}>
@@ -22,7 +23,7 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, isUser }) => {
           >
           </Markdown>
         </div>
-        <div className="fs-12 sub-text-base">2024/03/12 13:23:31</div>
+        <div className="fs-12 sub-text-base">{createTime}</div>
       </div>
     </div>
 
@@ -32,13 +33,14 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, isUser }) => {
 interface ChatCardProps {
   question: string
   replication: string
+  createTime: string
 }
 
-const ChatCard: React.FC<ChatCardProps> = ({ question, replication }) => {
+const ChatCard: React.FC<ChatCardProps> = ({ question, replication, createTime }) => {
   return (
     <>
-      <ChatCardItem content={question} isUser></ChatCardItem>
-      <ChatCardItem content={replication}></ChatCardItem>
+      <ChatCardItem content={question} isUser createTime={createTime}></ChatCardItem>
+      <ChatCardItem content={replication} createTime={createTime}></ChatCardItem>
     </>
   )
 }

@@ -1,7 +1,7 @@
-import { stat } from 'node:fs'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { fetchChatSession } from '~/api'
+import { devtools } from 'zustand/middleware'
+import { fetchChatSession, fetchPushSession } from '~/api'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
 
 interface SessionState {
@@ -25,6 +25,7 @@ interface ChatStoreState {
 interface ChatStoreActions {
   handleGetSession: (i: ChatItemType) => void
   handleLoadHistory: (c?: string) => void
+  handlePushTextSeesion: (c: string) => void
 }
 
 const initState = {
@@ -41,7 +42,7 @@ const initState = {
   isSessionLoading: true,
 }
 
-export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer((set, get) => ({
+export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
   ...initState,
   async handleGetSession(i) {
     const { chatCode } = i
@@ -98,4 +99,12 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer((s
       state.isSessionLoading = false
     })
   },
-})))
+  async handlePushTextSeesion(content: string) {
+    const chatCode = get().currentSession.chatCode
+    const res = await fetchPushSession({
+      content,
+      chatCode,
+    })
+    console.log(res)
+  },
+}))))

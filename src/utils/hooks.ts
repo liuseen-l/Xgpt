@@ -23,7 +23,6 @@ export function useToggle() {
  */
 export function useScrollToBottom(
   scrollRef: RefObject<HTMLDivElement>,
-  detach: boolean = false,
 ) {
   function scrollDomToBottom() {
     const dom = scrollRef.current
@@ -36,13 +35,6 @@ export function useScrollToBottom(
       })
     }
   }
-  console.log(detach)
-
-  // // auto scroll
-  // useEffect(() => {
-  //   if (!detach)
-  //     scrollDomToBottom()
-  // })
 
   return {
     scrollRef,

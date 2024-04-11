@@ -5,12 +5,17 @@ const ChatAddPanel: React.FC = () => {
   const navigate = useNavigate()
 
   const handleBack = () => {
-    navigate(-1)
+    navigate('/chat/session')
   }
 
   return (
-    <div className="flex flex-col flex-1 bg-red">
-      <button onClick={handleBack}>返回</button>
+    <div className="flex flex-col flex-1 bg-base box-border">
+      <div className="w-100% p-20px flex ai-c box-border" onClick={handleBack}>
+        <div className="flex ai-c fs-12 text-base hover:cursor-pointer">
+          <div className="i-material-symbols:arrow-back-ios-new-rounded"></div>
+          <span className="ml-5px">返回</span>
+        </div>
+      </div>
 
     </div>
   )

@@ -118,7 +118,6 @@ export function Markdown(
     <div
       className="markdown-body"
       ref={mdRef}
-      dir="auto"
     >
       <MarkdownContent content={props.content} />
     </div>

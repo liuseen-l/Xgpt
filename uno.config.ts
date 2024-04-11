@@ -39,7 +39,7 @@ export default defineConfig({
       'text-base': 'text-black dark:text-neutral-200 switch-animation',
       'action-base': 'hover:bg-[#f2f2f2] dark:hover:bg-neutral-700 switch-animation',
       'sub-text-base': 'text-neutral-400 dark:text-neutral-500 switch-animation',
-      'btn-base': `border-none hover:filter-brightness-95  ${resolveBtnBase(['text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e] bg-[#fff] switch-animation`,
+      'btn-base': `border-none hover:filter-brightness-95 ${resolveBtnBase(['text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e] bg-[#fff] switch-animation`,
     },
     [/^([tlrb])?border-base$/, ([, d]) => `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#a3a6a9 switch-animation`],
   ],

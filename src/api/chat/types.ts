@@ -38,6 +38,7 @@ export interface ChatSessionItem {
   image: string
   question: string
   replication: string
+  createTime: string
 }
 
 export interface ResponseGetChatSession {
@@ -47,4 +48,12 @@ export interface ResponseGetChatSession {
     total: number
     chatName: string
   }
+}
+
+/**
+ * 发送消息
+ */
+export interface RequestPushSession {
+  chatCode: string
+  content: string
 }

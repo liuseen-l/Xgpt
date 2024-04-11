@@ -35,7 +35,6 @@ function ChatRoom() {
     await handleLoadHistory()
     setLoadMore(false)
   }
-  console.log('l', isSessionLoading)
 
   return (
     <>
@@ -50,7 +49,7 @@ function ChatRoom() {
             </span>
           </div>
         </div>
-        <div ref={scrollRef} className="w-100% flex-1 flex-col overflow-auto p-20px pb-40px box-border transition-all scroll-soomth">
+        <div ref={scrollRef} className="w-100% flex-1 flex-col overflow-auto p-20px pb-40px box-border transition-all">
           {
             !isSessionLoading
               ? isLoadMore
@@ -77,7 +76,8 @@ function ChatRoom() {
                   <Skeleton avatar paragraph={{ rows: 4 }} />
                 </>
                 )
-              : currentSession.list.map((i, idx) => <ChatCard key={idx} question={i.question} replication={i.replication}></ChatCard>)
+              // : Array.from({ length: 200 }).fill(null).map(i => <div>123</div>)
+              : currentSession.list.map((i, idx) => <ChatCard key={idx} question={i.question} createTime={i.createTime} replication={i.replication}></ChatCard>)
           }
         </div>
         <ChatInput changeTheme={useToggle} scrollDomToBottom={scrollDomToBottom}></ChatInput>
