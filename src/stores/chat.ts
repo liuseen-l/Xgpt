@@ -1,3 +1,4 @@
+import { stat } from 'node:fs'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { fetchChatSession } from '~/api'
@@ -10,6 +11,7 @@ interface SessionState {
   hasMore: boolean
   chatCode: string
   list: ChatSessionItem[]
+  chatName: string
 }
 
 interface ChatStoreState {
@@ -34,6 +36,7 @@ const initState = {
     hasMore: false,
     chatCode: '',
     list: [],
+    chatName: '',
   },
   isSessionLoading: true,
 }
@@ -54,6 +57,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer((s
         chatCode: '',
         hasMore: false,
         list: [],
+        chatName: '',
       }
       state.isSessionLoading = true
     })
@@ -82,10 +86,15 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer((s
     })
 
     set((state) => {
-      state.currentSession.page = page + 1
-      state.currentSession.hasMore = res.hasMore
-      state.currentSession.list = [...res.list, ...state.currentSession.list]
-      state.currentSession.chatCode = chatCode
+      state.currentSession = {
+        page: page + 1,
+        size: 10,
+        hasMore: res.hasMore,
+        list: [...res.list, ...state.currentSession.list],
+        chatCode,
+        chatName: res.chatName,
+        total: res.total,
+      }
       state.isSessionLoading = false
     })
   },

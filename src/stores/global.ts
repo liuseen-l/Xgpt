@@ -7,7 +7,7 @@ interface GlobalStoreState {
 
 export const useGlobalStore = create<GlobalStoreState>((get, set) => {
   return {
-    token: 'eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAACXMPQ6DMAwG0Lt8M0Ps2Amw9iRWnEodWhAB9U-9eyld3_DemK21-7Q4RrC6qjn30UxCsLMkKTl5plhCNkeH-pgxUiZlIdGhw8XWAzjJcMDW6nKavO4fccQfbnb9QXk98fkCDyhWRHMAAAA.AmhytDp5YvKa8A0YhN6TbdScd1NZ_E9afnCGra26iuHTOM5dRhfUNllxiQcINo0R0QaAqv1WfVKaaQkABdWH6g',
+    token: 'eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAACXMOw6DMBAFwLu8msK7trGhzUlWXiOlCEY4URIQd-fXTjErJqn1W2ZFD_bqvShHK-KMkcG1LoVWA9lkgiga5N-EngJ5x8SdafCU9wUcubvgU_P8KJqPj9jihlFeJ6Tlj20HEpcQInMAAAA.rU9suc3frLRgaxPTGmLtFLRMLbWvGETdfYz64t0ckExy25wwIn9XvNH5KImOk9uTzBP_EgeSZtoSHRnRJG_fkg',
     gptCode: 'gpt_2',
   }
 })

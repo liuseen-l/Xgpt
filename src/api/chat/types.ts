@@ -45,5 +45,6 @@ export interface ResponseGetChatSession {
     list: ChatSessionItem[]
     hasMore: boolean
     total: number
+    chatName: string
   }
 }

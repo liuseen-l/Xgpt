@@ -35,13 +35,14 @@ function ChatRoom() {
     await handleLoadHistory()
     setLoadMore(false)
   }
+  console.log('l', isSessionLoading)
 
   return (
     <>
       <div className="flex flex-col flex-1 h-100% bg-base text-base">
         <div className="w-100% py-14px px-20px flex box-border ai-c bborder-base">
           <div className="flex flex-col">
-            <span className="fs-20 font-700 leading-9">新的聊天</span>
+            <span className="fs-20 font-700 leading-9">{currentSession.chatName}</span>
             <span className="fs-14">
               共
               {currentSession.total}

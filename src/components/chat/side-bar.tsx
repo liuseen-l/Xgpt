@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Skeleton } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import SideItem from './side-item'
 import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
@@ -79,6 +80,11 @@ function SideBar() {
     }
   }
 
+  const navigate = useNavigate()
+  const handleJump = () => {
+    navigate('addpanel')
+  }
+
   return (
     <div className="w-[var(--sidebar-width)] flex flex-col h-100% text-base siderbar-bg-base select-none p-20px box-border relative">
       {/* header */}
@@ -113,8 +119,8 @@ function SideBar() {
       </div>
       {/* footer */}
       <div className="w-100% h-50px flex jc-e ai-c">
-        <Button className="fs-12 flex ai-c jc-b p-5px gap-5px btn-base ">
-          <div className="i-ant-design:plus-circle-outlined">12</div>
+        <Button onClick={handleJump} className="fs-12 flex ai-c jc-b p-8px gap-5px text-base btn-base">
+          <div className="i-ant-design:plus-circle-outlined"></div>
           <span>新建聊天</span>
         </Button>
       </div>
