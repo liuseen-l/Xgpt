@@ -39,8 +39,8 @@ interface ChatCardProps {
 const ChatCard: React.FC<ChatCardProps> = ({ question, replication, createTime }) => {
   return (
     <>
-      <ChatCardItem content={question} isUser createTime={createTime}></ChatCardItem>
-      <ChatCardItem content={replication} createTime={createTime}></ChatCardItem>
+      { !!question.length && <ChatCardItem content={question} isUser createTime={createTime}></ChatCardItem>}
+      { !!replication.length && <ChatCardItem content={replication} createTime={createTime}></ChatCardItem>}
     </>
   )
 }

@@ -21,9 +21,12 @@ function SideBar() {
   const startDragWidth = useRef(DEFAULT_SIDEBAR_WIDTH)
   const [seletcd, setSelected] = useState(0)
 
-  const { handleGetSession, handleLoadHistory } = useChatStore(state => ({
+  const { handleGetSession, handleGetChatList, sideList, isLoading } = useChatStore(state => ({
     handleGetSession: state.handleGetSession,
     handleLoadHistory: state.handleLoadHistory,
+    handleGetChatList: state.handleGetChatList,
+    sideList: state.sideList,
+    isLoading: state.isSideListLoading,
   }))
   const { gptCode } = useGlobalStore(state => ({
     gptCode: state.gptCode,
@@ -63,15 +66,10 @@ function SideBar() {
     document.documentElement.style.setProperty('--sidebar-width', sideBarWidth)
   }, [sidebarWidth])
 
-  const { data, isLoading } = fetchChatList({
-    gptCode,
-  })
-
   // 获取默认聊天记录
   useEffect(() => {
-    if (!isLoading && data?.data?.[0])
-      handleLoadHistory(data.data[0].chatCode)
-  }, [isLoading])
+    handleGetChatList(gptCode)
+  }, [])
 
   const handleSelect = (i: ChatItemType, idx: number) => {
     if (idx !== seletcd) {
@@ -102,7 +100,7 @@ function SideBar() {
         {
           isLoading
             ? <Skeleton paragraph={{ rows: 15 }} className={styles.skin} />
-            : data?.data?.map((i, idx) => (
+            : sideList.map((i, idx) => (
               <SideItem
                 chatAmount={i.chatAmount}
                 chatName={i.chatName}

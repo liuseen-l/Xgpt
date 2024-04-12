@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
-import { fetchChatSession, fetchPushSession } from '~/api'
+import { fetchChatList, fetchChatSession, fetchPushSession } from '~/api'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
 
 interface SessionState {
@@ -20,12 +20,15 @@ interface ChatStoreState {
   }
   currentSession: SessionState
   isSessionLoading: boolean
+  sideList: ChatItemType[]
+  isSideListLoading: boolean
 }
 
 interface ChatStoreActions {
   handleGetSession: (i: ChatItemType) => void
   handleLoadHistory: (c?: string) => void
   handlePushTextSeesion: (c: string) => void
+  handleGetChatList: (g: string) => void
 }
 
 const initState = {
@@ -40,6 +43,8 @@ const initState = {
     chatName: '',
   },
   isSessionLoading: true,
+  sideList: [],
+  isSideListLoading: true,
 }
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
@@ -105,6 +110,21 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
       content,
       chatCode,
     })
-    console.log(res)
+    set((state) => {
+      state.currentSession.list.push(res)
+    })
+  },
+  async handleGetChatList(gptCode: string) {
+    set({
+      isSideListLoading: true,
+    })
+    const data = await fetchChatList({
+      gptCode,
+    })
+    set({
+      sideList: data,
+      isSideListLoading: false,
+    })
+    get().handleLoadHistory(data[0].chatCode)
   },
 }))))

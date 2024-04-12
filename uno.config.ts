@@ -36,7 +36,7 @@ export default defineConfig({
       'bubble-bg-base': 'bg-[rgba(0,0,0,.05)] dark:bg-neutral-900 switch-animation',
       'bubble-bg-base-user': 'bg-[#e7f8ff] dark:bg-[#1b262a] switch-animation',
       /** app text base */
-      'text-base': 'text-black dark:text-neutral-200 switch-animation',
+      'text-base': 'text-black dark:text-neutral-400 switch-animation',
       'action-base': 'hover:bg-[#f2f2f2] dark:hover:bg-neutral-700 switch-animation',
       'sub-text-base': 'text-neutral-400 dark:text-neutral-500 switch-animation',
       'btn-base': `border-none hover:filter-brightness-95 ${resolveBtnBase(['text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e] bg-[#fff] switch-animation`,

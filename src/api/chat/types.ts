@@ -57,3 +57,39 @@ export interface RequestPushSession {
   chatCode: string
   content: string
 }
+
+export interface ResponsePushSession {
+  data: ChatSessionItem
+}
+
+/**
+ * 获取功能列表
+ */
+
+export interface RequestGptFunction {
+  gptCode: string
+}
+
+export interface GptFunctionItem {
+  createTime: string
+  functionCode: string
+  functionName: string
+  id: number
+  gptCode: string
+  updateTime: string
+
+}
+
+export interface ResponseGptFunction {
+  data: GptFunctionItem[]
+}
+
+/**
+ * 增加聊天
+ */
+
+export interface RequestAddChat {
+  chatName: string
+  gptCode: string
+  functionCode: string
+}
