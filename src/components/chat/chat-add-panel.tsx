@@ -54,7 +54,7 @@ const ChatAddPanel: React.FC = () => {
                   <div className="flex">
                     <div className="flex flex-col">
                       <span className="fs-14 leading-6 fw-700">{i.functionName}</span>
-                      <span className="fs-12">gpt-3.5-turbo</span>
+                      <span className="fs-12">{i.gptName}</span>
                     </div>
                   </div>
                   {/* rigjt */}

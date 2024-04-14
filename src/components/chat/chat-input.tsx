@@ -12,16 +12,23 @@ interface Props {
 const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [userInput, setUserInput] = useState('')
+  const [disabled, setDisabled] = useState(false)
   const { handlePushTextSeesion } = useChatStore(state => ({
     handlePushTextSeesion: state.handlePushTextSeesion,
   }))
 
   const handleSendMessage = async () => {
     setLoading(true)
-    const c = userInput
-    setUserInput('')
-    await handlePushTextSeesion(c)
+    setDisabled(true)
+    try {
+      await handlePushTextSeesion(userInput)
+      setUserInput('')
+    }
+    catch (error) {
+
+    }
     setLoading(false)
+    setDisabled(false)
   }
 
   const onInput = (text: string) => {
@@ -39,6 +46,7 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
       <div className="relative">
         <Input.TextArea
           value={userInput}
+          disabled={disabled}
           onInput={e => onInput(e.currentTarget.value)}
           placeholder="请输入内容......"
           className="bg-base hover:border-[#d9d9d9] focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "

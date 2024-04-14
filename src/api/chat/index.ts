@@ -38,7 +38,7 @@ export async function fetchChatSession(params: RequestChatSession) {
  * 发送消息
  * @param params
  */
-export async function fetchPushSession(params: RequestPushSession) {
+export async function fetchPushTextSession(params: RequestPushSession) {
   const res = await request.post<ResponsePushSession>(API_URL.CHAT_PUSH_SESSION, params)
   return res.data.data
 }

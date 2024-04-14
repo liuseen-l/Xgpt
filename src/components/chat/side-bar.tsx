@@ -5,7 +5,6 @@ import SideItem from './side-item'
 import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 import { useGlobalStore } from '~/stores/global'
-import { fetchChatList } from '~/api'
 import type { ChatItemType } from '~/api/chat/types'
 import { useChatStore } from '~/stores/chat'
 

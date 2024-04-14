@@ -47,6 +47,7 @@ export interface ResponseGetChatSession {
     hasMore: boolean
     total: number
     chatName: string
+    functionCode: string
   }
 }
 
@@ -74,10 +75,8 @@ export interface GptFunctionItem {
   createTime: string
   functionCode: string
   functionName: string
-  id: number
   gptCode: string
-  updateTime: string
-
+  gptName: string
 }
 
 export interface ResponseGptFunction {
