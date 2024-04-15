@@ -12,7 +12,9 @@ const ChatAddPanel: React.FC = () => {
     navigate('/chat/session')
   }
 
-  const { gptCode } = useGlobalStore(state => ({
+  const { handleGetChatList, handleCheckSession, gptCode } = useChatStore(state => ({
+    handleGetChatList: state.handleGetChatList,
+    handleCheckSession: state.handleCheckSession,
     gptCode: state.gptCode,
   }))
 
@@ -20,13 +22,10 @@ const ChatAddPanel: React.FC = () => {
     gptCode,
   })
 
-  const { handleGetChatList } = useChatStore(state => ({
-    handleGetChatList: state.handleGetChatList,
-  }))
-
   const handleCreateChat = async (params: RequestAddChat) => {
     await fetchCreateChat(params)
-    await handleGetChatList(gptCode)
+    const data = await handleGetChatList()
+    handleCheckSession(data[0])
     handleBack()
   }
 

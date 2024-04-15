@@ -13,15 +13,15 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [userInput, setUserInput] = useState('')
   const [disabled, setDisabled] = useState(false)
-  const { handlePushTextSeesion } = useChatStore(state => ({
-    handlePushTextSeesion: state.handlePushTextSeesion,
+  const { handleSendSeesion } = useChatStore(state => ({
+    handleSendSeesion: state.handleSendSeesion,
   }))
 
   const handleSendMessage = async () => {
     setLoading(true)
     setDisabled(true)
     try {
-      await handlePushTextSeesion(userInput)
+      await handleSendSeesion(userInput)
       setUserInput('')
     }
     catch (error) {
@@ -49,7 +49,7 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
           disabled={disabled}
           onInput={e => onInput(e.currentTarget.value)}
           placeholder="请输入内容......"
-          className="bg-base hover:border-[#d9d9d9] focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "
+          className="bg-base hover:border-[#d9d9d9] dark:hover:border-[#ffffff31] dark:border-[#ffffff31] focus:border-[#1d93ab] dark:focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "
           style={{ minHeight: 150, maxHeight: 300 }}
         >
         </Input.TextArea>

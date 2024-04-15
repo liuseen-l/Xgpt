@@ -38,7 +38,7 @@ function ChatRoom() {
 
   return (
     <>
-      <div className="flex flex-col flex-1 h-100% bg-base text-base">
+      <div className="flex flex-col flex-1 h-100% bg-base card-text-base">
         <div className="w-100% py-14px px-20px flex box-border ai-c bborder-base">
           <div className="flex flex-col">
             <span className="fs-20 font-700 leading-9">{currentSession.chatName}</span>
@@ -76,7 +76,6 @@ function ChatRoom() {
                   <Skeleton avatar paragraph={{ rows: 4 }} />
                 </>
                 )
-              // : Array.from({ length: 200 }).fill(null).map(i => <div>123</div>)
               : currentSession.list.map((i, idx) => <ChatCard key={idx} question={i.question} createTime={i.createTime} replication={i.replication}></ChatCard>)
           }
         </div>

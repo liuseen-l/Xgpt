@@ -11,7 +11,7 @@ interface ChatCardItemProps {
 
 const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser }) => {
   return (
-    <div className={clsx('w-100% flex mb-25px', isUser && 'jc-e', styles['chat-message'])}>
+    <div className={clsx('w-100% flex mb-25px card-text-base', isUser && 'jc-e', styles['chat-message'])}>
       <div className={clsx('max-w-80% flex flex-col gap-8px', isUser && 'ai-e')}>
         {/* header icon */}
         <div className="h-30px w-30px flex ai-c jc-c border-base border-rounded-2">
@@ -114,3 +114,6 @@ export default ChatCard
 // | a | b |
 // | - | - |
 // `
+
+// https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fbjcdn.openstorage.cn%2Fxinghuo-privatedata%2F%252Ftmp%2FapiTempFile713fa63451bf488f83ac61102b4e191d746542160662978924%2F%25E6%25AF%2595%25E4%25B8%259A%25E8%25AE%25BE%25E8%25AE%25A1%25E6%2588%2590%25E6%259E%259C%25E5%25B1%2595%25E7%25A4%25BA.pptx&wdOrigin=BROWSELINK
+// https://bjcdn.openstorage.cn/xinghuo-privatedata/%2Ftmp/apiTempFile713fa63451bf488f83ac61102b4e191d746542160662978924/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1%E6%88%90%E6%9E%9C%E5%B1%95%E7%A4%BA.pptx

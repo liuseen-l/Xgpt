@@ -8,6 +8,7 @@ import RemarkGfm from 'remark-gfm'
 import 'katex/dist/katex.min.css'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { Button, Image } from 'antd'
 
 function escapeDollarNumber(text: string) {
   let escapedText = ''
@@ -92,8 +93,32 @@ function _MarkDownContent(props: { content: string }) {
           const href = aProps.href || ''
           const isInternal = /^\/#/i.test(href)
           const target = isInternal ? '_self' : aProps.target ?? '_blank'
-          return <a {...aProps} target={target} />
+          if (href.endsWith('jpg') || href.endsWith('png'))
+            return <Image width={400} src={href} />
+
+          if (href.endsWith('pptx')) {
+            const handleClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+              const btn = (e.target as HTMLSpanElement).parentNode!
+              const root = btn?.parentNode
+              const dom = document.createElement('iframe')
+              dom.setAttribute('src', `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(href)}`)
+              dom.setAttribute('width', '800px')
+              dom.setAttribute('height', '600px')
+              root?.insertBefore(dom, btn)
+              root?.removeChild(btn)
+            }
+            return (
+              <div>
+                <Button onClick={handleClick} className="fs-12 important:text-white fw-700 flex ai-c jc-b p-8px gap-5px card-text-base session-btn-base">
+                  一键生成PPT
+                </Button>
+              </div>
+            )
+          }
+
+          return <a {...aProps} className="dark:color-blue" target={target} />
         },
+
       }}
     >
       {escapedContent}

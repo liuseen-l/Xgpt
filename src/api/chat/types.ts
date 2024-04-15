@@ -52,7 +52,7 @@ export interface ResponseGetChatSession {
 }
 
 /**
- * 发送消息
+ * 发送消息(文本)
  */
 export interface RequestPushSession {
   chatCode: string
@@ -60,6 +60,32 @@ export interface RequestPushSession {
 }
 
 export interface ResponsePushSession {
+  data: ChatSessionItem
+}
+
+/**
+ * 发送消息(图片生成)
+ *
+ */
+export interface RequestImageGen {
+  chatCode: string
+  content: string
+}
+
+export interface ResponseImageGen {
+  data: ChatSessionItem
+}
+
+/**
+ * 发送消息(PPT生成)
+ *
+ */
+export interface RequestPPTGen {
+  chatCode: string
+  content: string
+}
+
+export interface ResponsePPTGen {
   data: ChatSessionItem
 }
 
@@ -91,4 +117,12 @@ export interface RequestAddChat {
   chatName: string
   gptCode: string
   functionCode: string
+}
+
+/**
+ * 删除聊天
+ *
+ */
+export interface RequestDeleteSession {
+  chatCode: string
 }

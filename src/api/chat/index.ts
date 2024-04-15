@@ -1,4 +1,4 @@
-import type { RequestAddChat, RequestChatSession, RequestGetChatList, RequestGptFunction, RequestPushSession, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponsePushSession } from './types'
+import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestPPTGen, RequestPushSession, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponsePPTGen, ResponsePushSession } from './types'
 import { useGetFecth } from '~/utils'
 import request from '~/utils/request'
 
@@ -8,6 +8,9 @@ const API_URL = {
   CHAT_PUSH_SESSION: '/chat/xf/question',
   CHAT_GET_FUNCTION: '/gpt/chat/function/list',
   CHAT_ADD: '/chat/add',
+  CHAT_DELETE: '/chat/delete',
+  CHAT_IMAGE_GEN: '/chat/xf/image/create',
+  CHAT_PPT_GEN: '/chat/xf/ppt/create',
 }
 
 /**
@@ -35,6 +38,29 @@ export async function fetchChatSession(params: RequestChatSession) {
 }
 
 /**
+ * 获取功能列表
+ * @param params
+ * @returns
+ */
+export function fetchGetFunction(params: RequestGptFunction) {
+  return useGetFecth<ResponseGptFunction>(API_URL.CHAT_GET_FUNCTION, params)
+}
+
+/**
+ * 创建对话
+ * @param params
+ */
+export async function fetchCreateChat(params: RequestAddChat) {
+  await request.post(API_URL.CHAT_ADD, params)
+}
+
+export async function fetchDeleteSession(params: RequestDeleteSession) {
+  await request.get(API_URL.CHAT_DELETE, {
+    params,
+  })
+}
+
+/**
  * 发送消息
  * @param params
  */
@@ -44,14 +70,16 @@ export async function fetchPushTextSession(params: RequestPushSession) {
 }
 
 /**
- * 获取功能
+ * 图片生成
  * @param params
  * @returns
  */
-export function fetchGetFunction(params: RequestGptFunction) {
-  return useGetFecth<ResponseGptFunction>(API_URL.CHAT_GET_FUNCTION, params)
+export async function fetchImageGen(params: RequestImageGen) {
+  const res = await request.post<ResponseImageGen>(API_URL.CHAT_IMAGE_GEN, params)
+  return res.data.data
 }
 
-export async function fetchCreateChat(params: RequestAddChat) {
-  await request.post(API_URL.CHAT_ADD, params)
+export async function fetchPPTGen(params: RequestPPTGen) {
+  const res = await request.post<ResponsePPTGen>(API_URL.CHAT_PPT_GEN, params)
+  return res.data.data
 }

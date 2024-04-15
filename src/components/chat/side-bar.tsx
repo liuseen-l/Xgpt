@@ -18,17 +18,14 @@ function SideBar() {
   const startX = useRef(0)
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH)
   const startDragWidth = useRef(DEFAULT_SIDEBAR_WIDTH)
-  const [seletcd, setSelected] = useState(0)
 
-  const { handleGetSession, handleGetChatList, sideList, isLoading } = useChatStore(state => ({
-    handleGetSession: state.handleGetSession,
+  const { handleCheckSession, handleGetChatList, sideList, isLoading, currentSession } = useChatStore(state => ({
+    handleCheckSession: state.handleCheckSession,
     handleLoadHistory: state.handleLoadHistory,
     handleGetChatList: state.handleGetChatList,
     sideList: state.sideList,
     isLoading: state.isSideListLoading,
-  }))
-  const { gptCode } = useGlobalStore(state => ({
-    gptCode: state.gptCode,
+    currentSession: state.currentSession,
   }))
 
   const onDragStart = (e: MouseEvent) => {
@@ -65,16 +62,18 @@ function SideBar() {
     document.documentElement.style.setProperty('--sidebar-width', sideBarWidth)
   }, [sidebarWidth])
 
+  const init = async () => {
+    const data = await handleGetChatList()
+    handleCheckSession(data[0])
+  }
   // 获取默认聊天记录
   useEffect(() => {
-    handleGetChatList(gptCode)
+    init()
   }, [])
 
-  const handleSelect = (i: ChatItemType, idx: number) => {
-    if (idx !== seletcd) {
-      setSelected(idx)
-      handleGetSession(i)
-    }
+  const handleSelect = (i: ChatItemType) => {
+    if (i.chatCode !== currentSession.chatCode)
+      handleCheckSession(i)
   }
 
   const navigate = useNavigate()
@@ -104,10 +103,11 @@ function SideBar() {
                 chatAmount={i.chatAmount}
                 chatName={i.chatName}
                 lastChatTime={i.createTime}
+                chatCode={i.chatCode}
                 style={{
-                  border: `2px solid ${seletcd === idx ? '#1d93ab' : 'transparent'}`,
+                  border: `2px solid ${i.chatCode === currentSession.chatCode ? '#1d93ab' : 'transparent'}`,
                 }}
-                onClick={() => { handleSelect(i, idx) }}
+                onClick={() => { handleSelect(i) }}
                 key={idx}
               >
               </SideItem>

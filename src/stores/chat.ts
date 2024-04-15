@@ -1,8 +1,9 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { devtools } from 'zustand/middleware'
-import { fetchChatList, fetchChatSession, fetchPushTextSession } from '~/api'
+import { combine, devtools } from 'zustand/middleware'
+import { fetchChatList, fetchChatSession, fetchDeleteSession } from '~/api'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
+import { apiMap } from '~/consts/send-api-config'
 
 interface SessionState {
   page: number
@@ -17,8 +18,9 @@ interface SessionState {
 
 interface ChatStoreState {
   sessions: {
-    [k: string]: SessionState
+    [k: string]: SessionState | null
   }
+  gptCode: string
   currentSession: SessionState
   isSessionLoading: boolean
   sideList: ChatItemType[]
@@ -26,10 +28,11 @@ interface ChatStoreState {
 }
 
 interface ChatStoreActions {
-  handleGetSession: (i: ChatItemType) => void
+  handleCheckSession: (i: ChatItemType) => void
   handleLoadHistory: (c?: string) => void
-  handlePushTextSeesion: (c: string) => void
-  handleGetChatList: (g: string) => void
+  handleSendSeesion: (c: string) => void
+  handleGetChatList: () => Promise<ChatItemType[]>
+  handleDeleteSession: (c: string) => void
 }
 
 const initState = {
@@ -38,35 +41,39 @@ const initState = {
     page: 1,
     size: 10,
     total: 0,
-    hasMore: false,
+    hasMore: true,
     chatCode: '',
     list: [],
     chatName: '',
     functionCode: '',
   },
-  isSessionLoading: true,
+  gptCode: 'gpt_2',
+  isSessionLoading: true, // 聊天框骨架
   sideList: [],
   isSideListLoading: true,
 }
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
   ...initState,
-  async handleGetSession(i) {
+  // 切换聊天
+  async handleCheckSession(i) {
     const { chatCode } = i
 
     // 切换时缓存上一个聊天记录
     set((state) => {
       const { currentSession } = get()
-      state.sessions[currentSession.chatCode] = currentSession
-      state.currentSession = {
-        page: 1,
-        size: 10,
-        total: 0,
-        chatCode: '',
-        hasMore: false,
-        list: [],
-        chatName: '',
-        functionCode: '',
+      if (chatCode.length) {
+        state.sessions[currentSession.chatCode] = currentSession
+        state.currentSession = {
+          page: 1,
+          size: 10,
+          total: 0,
+          chatCode: '',
+          hasMore: true,
+          list: [],
+          chatName: '',
+          functionCode: '',
+        }
       }
       state.isSessionLoading = true
     })
@@ -86,8 +93,13 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
 
     await handleLoadHistory(chatCode)
   },
+  // 获取历史记录
   async handleLoadHistory(chatCode: string = get().currentSession.chatCode) {
-    const { currentSession: { page, size } } = get()
+    const { currentSession: { page, size, hasMore } } = get()
+
+    if (!hasMore)
+      return
+
     const res = await fetchChatSession({
       page,
       size,
@@ -108,11 +120,12 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
       state.isSessionLoading = false
     })
   },
-  async handlePushTextSeesion(content: string) {
-    const { currentSession: { chatCode, functionCode } } = get()
-    console.log(123, functionCode)
+  // 发消息
+  async handleSendSeesion(content: string) {
+    const { currentSession: { chatCode, functionCode }, gptCode } = get()
+    const fetchApi = apiMap[gptCode][functionCode]
 
-    const res = await fetchPushTextSession({
+    const res = await fetchApi({
       content,
       chatCode,
     })
@@ -120,17 +133,30 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
       state.currentSession.list.push(res)
     })
   },
-  async handleGetChatList(gptCode: string) {
+  // 获取列表
+  async handleGetChatList() {
     set({
       isSideListLoading: true,
     })
     const data = await fetchChatList({
-      gptCode,
+      gptCode: get().gptCode,
     })
+
     set({
       sideList: data,
       isSideListLoading: false,
     })
-    get().handleLoadHistory(data[0].chatCode)
+
+    return data
+  },
+  // 删除会话
+  async handleDeleteSession(chatCode: string) {
+    await fetchDeleteSession({
+      chatCode,
+    })
+
+    set((state) => {
+      state.sessions[chatCode] = null
+    })
   },
 }))))

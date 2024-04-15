@@ -20,12 +20,10 @@
   --sidebar-width: 300px;
 }
 
-li {
-  list-style: none;
-}
-
 .da {
   color:#1b7f93;
+  color:#35a5c4;
+  color:#ffffff31;
 }
 .one-line {
   white-space: nowrap;
@@ -33,6 +31,3 @@ li {
   text-overflow: ellipsis;
 }
 
-div {
-  unicode-bidi: isolate;
-}
