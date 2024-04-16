@@ -41,13 +41,19 @@ export interface ChatSessionItem {
   createTime: string
 }
 
+export enum functionCodeType {
+  function1 = 'function_1',
+  function2 = 'function_2',
+  function3 = 'function_3',
+  function4 = 'function_4',
+}
 export interface ResponseGetChatSession {
   data: {
     list: ChatSessionItem[]
     hasMore: boolean
     total: number
     chatName: string
-    functionCode: string
+    functionCode: functionCodeType
   }
 }
 
@@ -90,6 +96,18 @@ export interface ResponsePPTGen {
 }
 
 /**
+ * 发送消息(图片理解)
+ */
+
+export interface RequestImageUnd {
+  data: FormData
+}
+
+export interface ResponseImageUnd {
+  data: ChatSessionItem
+}
+
+/**
  * 获取功能列表
  */
 
@@ -99,7 +117,7 @@ export interface RequestGptFunction {
 
 export interface GptFunctionItem {
   createTime: string
-  functionCode: string
+  functionCode: functionCodeType
   functionName: string
   gptCode: string
   gptName: string
@@ -116,7 +134,7 @@ export interface ResponseGptFunction {
 export interface RequestAddChat {
   chatName: string
   gptCode: string
-  functionCode: string
+  functionCode: functionCodeType
 }
 
 /**

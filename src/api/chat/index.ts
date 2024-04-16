@@ -1,4 +1,4 @@
-import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestPPTGen, RequestPushSession, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponsePPTGen, ResponsePushSession } from './types'
+import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPushSession, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePushSession } from './types'
 import { useGetFecth } from '~/utils'
 import request from '~/utils/request'
 
@@ -11,6 +11,7 @@ const API_URL = {
   CHAT_DELETE: '/chat/delete',
   CHAT_IMAGE_GEN: '/chat/xf/image/create',
   CHAT_PPT_GEN: '/chat/xf/ppt/create',
+  CHAT_IMAGE_UND: '/chat/xf/image/understander',
 }
 
 /**
@@ -54,6 +55,10 @@ export async function fetchCreateChat(params: RequestAddChat) {
   await request.post(API_URL.CHAT_ADD, params)
 }
 
+/**
+ * 删除对话
+ * @param params
+ */
 export async function fetchDeleteSession(params: RequestDeleteSession) {
   await request.get(API_URL.CHAT_DELETE, {
     params,
@@ -79,7 +84,26 @@ export async function fetchImageGen(params: RequestImageGen) {
   return res.data.data
 }
 
+/**
+ * ppt生成
+ * @param params
+ * @returns
+ */
 export async function fetchPPTGen(params: RequestPPTGen) {
   const res = await request.post<ResponsePPTGen>(API_URL.CHAT_PPT_GEN, params)
+  return res.data.data
+}
+
+/**
+ * 图片理解
+ * @param params
+ * @returns
+ */
+export async function fetchImageUnd(params: RequestImageUnd) {
+  const res = await request.post<ResponseImageUnd>(API_URL.CHAT_IMAGE_UND, params, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
   return res.data.data
 }

@@ -36,8 +36,21 @@ export function useScrollToBottom(
     }
   }
 
+  function scrollDomToTop() {
+    const dom = scrollRef.current
+    if (dom) {
+      requestAnimationFrame(() => {
+        dom.scrollTo({
+          top: dom.scrollHeight,
+          behavior: 'smooth',
+        })
+      })
+    }
+  }
+
   return {
     scrollRef,
+    scrollDomToTop,
     scrollDomToBottom,
   }
 }

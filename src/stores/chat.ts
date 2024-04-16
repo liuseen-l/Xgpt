@@ -1,8 +1,10 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { combine, devtools } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
+import type { UploadFile } from 'antd'
 import { fetchChatList, fetchChatSession, fetchDeleteSession } from '~/api'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
+import { functionCodeType } from '~/api/chat/types'
 import { apiMap } from '~/consts/send-api-config'
 
 interface SessionState {
@@ -13,7 +15,7 @@ interface SessionState {
   chatCode: string
   list: ChatSessionItem[]
   chatName: string
-  functionCode: string
+  functionCode: functionCodeType
 }
 
 interface ChatStoreState {
@@ -30,7 +32,7 @@ interface ChatStoreState {
 interface ChatStoreActions {
   handleCheckSession: (i: ChatItemType) => void
   handleLoadHistory: (c?: string) => void
-  handleSendSeesion: (c: string) => void
+  handleSendSeesion: (c: string, f: UploadFile[]) => void
   handleGetChatList: () => Promise<ChatItemType[]>
   handleDeleteSession: (c: string) => void
 }
@@ -45,7 +47,7 @@ const initState = {
     chatCode: '',
     list: [],
     chatName: '',
-    functionCode: '',
+    functionCode: '' as any,
   },
   gptCode: 'gpt_2',
   isSessionLoading: true, // 聊天框骨架
@@ -72,7 +74,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
           hasMore: true,
           list: [],
           chatName: '',
-          functionCode: '',
+          functionCode: '' as any,
         }
       }
       state.isSessionLoading = true
@@ -94,7 +96,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     await handleLoadHistory(chatCode)
   },
   // 获取历史记录
-  async handleLoadHistory(chatCode: string = get().currentSession.chatCode) {
+  async handleLoadHistory(chatCode = get().currentSession.chatCode) {
     const { currentSession: { page, size, hasMore } } = get()
 
     if (!hasMore)
@@ -121,14 +123,25 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     })
   },
   // 发消息
-  async handleSendSeesion(content: string) {
+  async handleSendSeesion(content, fileList) {
     const { currentSession: { chatCode, functionCode }, gptCode } = get()
     const fetchApi = apiMap[gptCode][functionCode]
 
-    const res = await fetchApi({
-      content,
-      chatCode,
-    })
+    let res: any
+    if (functionCode === functionCodeType.function3) {
+      const formData = new FormData()
+      fileList.length && formData.append('image', fileList[0].originFileObj as File)
+      formData.append('content', content)
+      formData.append('chatCode', chatCode)
+      res = await fetchApi(formData)
+    }
+    else {
+      res = await fetchApi({
+        content,
+        chatCode,
+      })
+    }
+
     set((state) => {
       state.currentSession.list.push(res)
     })
@@ -150,7 +163,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     return data
   },
   // 删除会话
-  async handleDeleteSession(chatCode: string) {
+  async handleDeleteSession(chatCode) {
     await fetchDeleteSession({
       chatCode,
     })

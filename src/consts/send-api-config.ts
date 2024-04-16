@@ -1,4 +1,5 @@
-import { fetchImageGen, fetchPPTGen, fetchPushTextSession } from '~/api'
+import { fetchImageGen, fetchImageUnd, fetchPPTGen, fetchPushTextSession } from '~/api'
+import { functionCodeType } from '~/api/chat/types'
 
 export const apiMap: Record<string, Record<string, any>> = {
   /**
@@ -14,19 +15,19 @@ export const apiMap: Record<string, Record<string, any>> = {
     /**
      * 文本问答
      */
-    function_1: fetchPushTextSession,
+    [functionCodeType.function1]: fetchPushTextSession,
     /**
      * 图片生成
      */
-    function_2: fetchImageGen,
+    [functionCodeType.function2]: fetchImageGen,
     /**
      * 图片理解
      */
-    function_3: fetchPPTGen,
+    [functionCodeType.function3]: fetchImageUnd,
     /**
      * ppt生成
      */
-    function_4: fetchPPTGen,
+    [functionCodeType.function4]: fetchPPTGen,
   },
   /**
    * 通义千问
