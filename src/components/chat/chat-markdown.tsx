@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import RemarkBreaks from 'remark-breaks'
 import RehypeKatex from 'rehype-katex'
@@ -62,7 +62,7 @@ function _MarkDownContent(props: { content: string }) {
          *  1. ````lang-type ```
          *  2. ` `
          */
-        code({ inline, className, children, ...props }) {
+        code({ inline, className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className || '')
 
           const theme = {

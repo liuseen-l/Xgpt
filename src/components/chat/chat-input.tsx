@@ -1,6 +1,6 @@
 import type { UploadFile, UploadProps } from 'antd'
 import { Button, Image, Input, Upload } from 'antd'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import ChatAction from './chat-action'
 import styles from './chat-input.module.scss'
 import { ACTIONS_CONFIGS } from '~/consts/action-configs.tsx'

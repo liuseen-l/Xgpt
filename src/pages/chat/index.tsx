@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom'
 import SideBar from '~/components/chat/side-bar'
-import ChatRoom from '~/components/chat/chat-room'
 
 function Chat() {
   return (

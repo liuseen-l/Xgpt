@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Skeleton } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import SideItem from './side-item'
 import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
-import { useGlobalStore } from '~/stores/global'
+// import { useGlobalStore } from '~/stores/global'
 import type { ChatItemType } from '~/api/chat/types'
 import { useChatStore } from '~/stores/chat'
 
@@ -19,10 +19,14 @@ function SideBar() {
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH)
   const startDragWidth = useRef(DEFAULT_SIDEBAR_WIDTH)
 
-  const { handleCheckSession, handleGetChatList, sideList, isLoading, currentSession } = useChatStore(state => ({
+  const [search] = useSearchParams()
+  const gptCode = search.get('gptCode')!
+
+  const { handleCheckSession, handleGetChatList, handleInit, sideList, isLoading, currentSession } = useChatStore(state => ({
     handleCheckSession: state.handleCheckSession,
     handleLoadHistory: state.handleLoadHistory,
     handleGetChatList: state.handleGetChatList,
+    handleInit: state.handleInit,
     sideList: state.sideList,
     isLoading: state.isSideListLoading,
     currentSession: state.currentSession,
@@ -63,6 +67,10 @@ function SideBar() {
   }, [sidebarWidth])
 
   const init = async () => {
+    handleInit({
+      gptCode,
+    })
+
     const data = await handleGetChatList()
     handleCheckSession(data[0])
   }

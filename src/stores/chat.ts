@@ -19,7 +19,7 @@ interface SessionState {
 }
 
 interface ChatStoreState {
-  sessions: {
+  chatCaches: {
     [k: string]: SessionState | null
   }
   gptCode: string
@@ -27,6 +27,9 @@ interface ChatStoreState {
   isSessionLoading: boolean
   sideList: ChatItemType[]
   isSideListLoading: boolean
+  gptCaches: {
+    [k: string]: ChatStoreState['chatCaches']
+  }
 }
 
 interface ChatStoreActions {
@@ -35,10 +38,12 @@ interface ChatStoreActions {
   handleSendSeesion: (c: string, f: UploadFile[]) => void
   handleGetChatList: () => Promise<ChatItemType[]>
   handleDeleteSession: (c: string) => void
+  handleInit: (config?: Partial<ChatStoreState>) => void
 }
 
 const initState = {
-  sessions: {},
+  chatCaches: {},
+  gptCaches: {},
   currentSession: {
     page: 1,
     size: 10,
@@ -49,7 +54,7 @@ const initState = {
     chatName: '',
     functionCode: '' as any,
   },
-  gptCode: 'gpt_2',
+  gptCode: '',
   isSessionLoading: true, // 聊天框骨架
   sideList: [],
   isSideListLoading: true,
@@ -57,6 +62,7 @@ const initState = {
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
   ...initState,
+
   // 切换聊天
   async handleCheckSession(i) {
     const { chatCode } = i
@@ -65,7 +71,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     set((state) => {
       const { currentSession } = get()
       if (chatCode.length) {
-        state.sessions[currentSession.chatCode] = currentSession
+        state.chatCaches[currentSession.chatCode] = currentSession
         state.currentSession = {
           page: 1,
           size: 10,
@@ -80,8 +86,8 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
       state.isSessionLoading = true
     })
 
-    const { sessions, handleLoadHistory } = get()
-    const cache = sessions[chatCode]
+    const { chatCaches, handleLoadHistory } = get()
+    const cache = chatCaches[chatCode]
     // 判断下一个聊天是否有缓存的记录
     if (cache) {
       set({
@@ -148,11 +154,14 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
   },
   // 获取列表
   async handleGetChatList() {
+    const { gptCode } = get()
+
     set({
       isSideListLoading: true,
     })
+
     const data = await fetchChatList({
-      gptCode: get().gptCode,
+      gptCode,
     })
 
     set({
@@ -169,7 +178,21 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     })
 
     set((state) => {
-      state.sessions[chatCode] = null
+      state.chatCaches[chatCode] = null
+    })
+  },
+  handleInit(config = {}) {
+    const { gptCode } = config
+
+    // 获取缓存
+    if (gptCode?.length) {
+      const sessions = get().gptCaches[gptCode] || {}
+      config.chatCaches = sessions
+    }
+
+    set({
+      ...initState,
+      ...config,
     })
   },
 }))))

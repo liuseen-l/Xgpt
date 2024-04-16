@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
-import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 import ChatAddPanel from '~/components/chat/chat-add-panel'
 import ChatRoom from '~/components/chat/chat-room'
 import Chat from '~/pages/chat'
+import Home from '~/pages/home'
 
-export const router = createBrowserRouter(
+export const router = createHashRouter(
   [
     {
       path: '/chat',
@@ -27,9 +27,13 @@ export const router = createBrowserRouter(
       ],
     },
     {
+      path: '/center',
+      Component: Home,
+    },
+    {
       path: '/',
       element: (
-        <Navigate to="/chat" />
+        <Navigate to="/center" />
       ),
     },
   ],

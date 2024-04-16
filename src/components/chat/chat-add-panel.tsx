@@ -1,8 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Skeleton } from 'antd'
+import { Skeleton } from 'antd'
 import { fetchCreateChat, fetchGetFunction } from '~/api'
-import { useGlobalStore } from '~/stores/global'
 import { useChatStore } from '~/stores/chat'
 import type { RequestAddChat } from '~/api/chat/types'
 
