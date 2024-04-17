@@ -5,7 +5,7 @@ import type { UploadFile } from 'antd'
 import { fetchChatList, fetchChatSession, fetchDeleteSession } from '~/api'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
 import { functionCodeType } from '~/api/chat/types'
-import { apiMap } from '~/consts/send-api-config'
+import { GPT_URL, apiMap } from '~/consts/send-api-config'
 
 interface SessionState {
   page: number
@@ -131,7 +131,8 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
   // 发消息
   async handleSendSeesion(content, fileList) {
     const { currentSession: { chatCode, functionCode }, gptCode } = get()
-    const fetchApi = apiMap[gptCode][functionCode]
+    const fetchApi = apiMap[functionCode]
+    const fetchUrl = GPT_URL[gptCode][functionCode]
 
     let res: any
     if (functionCode === functionCodeType.function3) {
@@ -139,10 +140,10 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
       fileList.length && formData.append('image', fileList[0].originFileObj as File)
       formData.append('content', content)
       formData.append('chatCode', chatCode)
-      res = await fetchApi(formData)
+      res = await fetchApi(fetchUrl, formData)
     }
     else {
-      res = await fetchApi({
+      res = await fetchApi(fetchUrl, {
         content,
         chatCode,
       })

@@ -9,6 +9,7 @@ import 'katex/dist/katex.min.css'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Button, Image } from 'antd'
+import parseUrl from 'parse-url'
 
 function escapeDollarNumber(text: string) {
   let escapedText = ''
@@ -93,7 +94,8 @@ function _MarkDownContent(props: { content: string }) {
           const href = aProps.href || ''
           const isInternal = /^\/#/i.test(href)
           const target = isInternal ? '_self' : aProps.target ?? '_blank'
-          if (href.endsWith('jpg') || href.endsWith('png'))
+          const pathname = parseUrl(href).pathname
+          if (pathname.endsWith('jpg') || pathname.endsWith('png'))
             return <Image width={400} src={href} />
 
           if (href.endsWith('pptx')) {

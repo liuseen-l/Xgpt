@@ -5,13 +5,9 @@ import request from '~/utils/request'
 const API_URL = {
   CHAT_LIST: '/chat/create/list',
   CHAT_GET_HISTORY: '/chat/history',
-  CHAT_PUSH_SESSION: '/chat/xf/question',
   CHAT_GET_FUNCTION: '/gpt/chat/function/list',
   CHAT_ADD: '/chat/add',
   CHAT_DELETE: '/chat/delete',
-  CHAT_IMAGE_GEN: '/chat/xf/image/create',
-  CHAT_PPT_GEN: '/chat/xf/ppt/create',
-  CHAT_IMAGE_UND: '/chat/xf/image/understander',
 }
 
 /**
@@ -69,8 +65,8 @@ export async function fetchDeleteSession(params: RequestDeleteSession) {
  * 发送消息
  * @param params
  */
-export async function fetchPushTextSession(params: RequestPushSession) {
-  const res = await request.post<ResponsePushSession>(API_URL.CHAT_PUSH_SESSION, params)
+export async function fetchPushTextSession(url: string, params: RequestPushSession) {
+  const res = await request.post<ResponsePushSession>(url, params)
   return res.data.data
 }
 
@@ -79,8 +75,8 @@ export async function fetchPushTextSession(params: RequestPushSession) {
  * @param params
  * @returns
  */
-export async function fetchImageGen(params: RequestImageGen) {
-  const res = await request.post<ResponseImageGen>(API_URL.CHAT_IMAGE_GEN, params)
+export async function fetchImageGen(url: string, params: RequestImageGen) {
+  const res = await request.post<ResponseImageGen>(url, params)
   return res.data.data
 }
 
@@ -89,8 +85,8 @@ export async function fetchImageGen(params: RequestImageGen) {
  * @param params
  * @returns
  */
-export async function fetchPPTGen(params: RequestPPTGen) {
-  const res = await request.post<ResponsePPTGen>(API_URL.CHAT_PPT_GEN, params)
+export async function fetchPPTGen(url: string, params: RequestPPTGen) {
+  const res = await request.post<ResponsePPTGen>(url, params)
   return res.data.data
 }
 
@@ -99,8 +95,8 @@ export async function fetchPPTGen(params: RequestPPTGen) {
  * @param params
  * @returns
  */
-export async function fetchImageUnd(params: RequestImageUnd) {
-  const res = await request.post<ResponseImageUnd>(API_URL.CHAT_IMAGE_UND, params, {
+export async function fetchImageUnd(url: string, params: RequestImageUnd) {
+  const res = await request.post<ResponseImageUnd>(url, params, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

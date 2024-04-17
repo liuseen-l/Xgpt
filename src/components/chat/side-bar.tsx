@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import SideItem from './side-item'
 import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
-// import { useGlobalStore } from '~/stores/global'
 import type { ChatItemType } from '~/api/chat/types'
 import { useChatStore } from '~/stores/chat'
 
@@ -70,7 +69,6 @@ function SideBar() {
     handleInit({
       gptCode,
     })
-
     const data = await handleGetChatList()
     handleCheckSession(data[0])
   }
