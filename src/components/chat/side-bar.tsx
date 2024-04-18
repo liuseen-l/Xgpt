@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Skeleton } from 'antd'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import clsx from 'clsx'
 import SideItem from './side-item'
 import styles from './side-bar.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
@@ -10,6 +11,7 @@ import { useChatStore } from '~/stores/chat'
 const MIN_SIDEBAR_WIDTH = 280
 const MAX_SIDEBAR_WIDTH = 500
 const DEFAULT_SIDEBAR_WIDTH = 300
+export const NARROW_SIDEBAR_WIDTH = 100
 
 const limit = (x: number) => Math.min(MAX_SIDEBAR_WIDTH, x)
 
@@ -20,7 +22,7 @@ function SideBar() {
 
   const [search] = useSearchParams()
   const gptCode = search.get('gptCode')!
-
+  const lastUpdateTime = useRef(Date.now())
   const { handleCheckSession, handleGetChatList, handleInit, sideList, isLoading, currentSession } = useChatStore(state => ({
     handleCheckSession: state.handleCheckSession,
     handleLoadHistory: state.handleLoadHistory,
@@ -31,28 +33,41 @@ function SideBar() {
     currentSession: state.currentSession,
   }))
 
+  const toggleSideBar = () => {
+    if (sidebarWidth < MIN_SIDEBAR_WIDTH)
+      setSidebarWidth(DEFAULT_SIDEBAR_WIDTH)
+    else
+      setSidebarWidth(NARROW_SIDEBAR_WIDTH)
+  }
   const onDragStart = (e: MouseEvent) => {
-    // Remembers the initial width each time the mouse is pressed
+    // 记录光标开始的位置
     startX.current = e.clientX
-    startDragWidth.current = sidebarWidth
+    console.log(startX.current)
 
+    startDragWidth.current = sidebarWidth
+    const dragStartTime = Date.now()
     const handleDragMove = (e: MouseEvent) => {
+      if (Date.now() < lastUpdateTime.current + 20)
+        return
+
+      lastUpdateTime.current = Date.now()
+      // 记录光标移动的距离
       const d = e.clientX - startX.current
 
       const nextWidth = limit(startDragWidth.current + d)
 
-      const update = () => {
-        if (nextWidth < MIN_SIDEBAR_WIDTH)
-          setSidebarWidth(MIN_SIDEBAR_WIDTH)
-        else
-          setSidebarWidth(nextWidth)
-      }
-      update()
+      if (nextWidth < MIN_SIDEBAR_WIDTH)
+        setSidebarWidth(NARROW_SIDEBAR_WIDTH)
+      else
+        setSidebarWidth(nextWidth)
     }
 
     const handleDragEnd = () => {
       window.removeEventListener('pointermove', handleDragMove)
       window.removeEventListener('pointerup', handleDragEnd)
+      const shouldFireClick = Date.now() - dragStartTime < 300
+      if (shouldFireClick)
+        toggleSideBar()
     }
 
     window.addEventListener('pointermove', handleDragMove)
@@ -74,8 +89,6 @@ function SideBar() {
   }
   // 获取默认聊天记录
   useEffect(() => {
-    console.log(3)
-
     init()
   }, [])
 
@@ -89,53 +102,66 @@ function SideBar() {
     navigate('addpanel')
   }
 
+  const shouldNarrow = sidebarWidth < MIN_SIDEBAR_WIDTH
+
   return (
-    <div className="w-[var(--sidebar-width)] flex flex-col h-100% text-base siderbar-bg-base select-none p-20px box-border relative">
+    <div className={clsx('w-[var(--sidebar-width)] h-100%', styles.sidebar)}>
       {/* header */}
-      <div className="flex jc-b ai-c mb-20px">
-        <div className="flex flex-col">
-          <span className="fs-28 font-700 leading-14">Xgpt</span>
-          <span className="fs-13">下一代 Chatgpt 集成平台</span>
+      <div className="text-base siderbar-bg-base flex flex-col select-none p-20px box-border relative w-100% h-100%">
+        <div className="flex jc-b ai-c mb-20px">
+          {
+            !shouldNarrow && (
+              <div className="flex flex-col">
+                <span className="fs-28 font-700 leading-14">Xgpt</span>
+                <span className="fs-13">下一代 Chatgpt 集成平台</span>
+              </div>
+            )
+          }
+          <span className="w-80px h-80px logo-bg-base">
+            <ChatGptIcon></ChatGptIcon>
+          </span>
         </div>
-        <span className="w-80px h-80px logo-bg-base">
-          <ChatGptIcon></ChatGptIcon>
-        </span>
+        {/* history */}
+        <div className="flex-1 w-100% overflow-y-auto overflow-x-hidden ">
+          {
+            isLoading
+              ? <Skeleton paragraph={{ rows: 15 }} className={styles.skin} />
+              : sideList.map((i, idx) => (
+                <SideItem
+                  chatAmount={i.chatAmount}
+                  chatName={i.chatName}
+                  lastChatTime={i.createTime}
+                  chatCode={i.chatCode}
+                  shouldNarrow={shouldNarrow}
+                  style={{
+                    border: `2px solid ${i.chatCode === currentSession.chatCode ? '#1d93ab' : 'transparent'}`,
+                  }}
+                  onClick={() => { handleSelect(i) }}
+                  key={idx}
+                >
+                </SideItem>
+              ))
+          }
+        </div>
+        <div
+          className="w-100% flex jc-e ai-c"
+          style={{
+            height: shouldNarrow ? '150px' : '100px',
+          }}
+        >
+          <Button onClick={handleJump} className="fs-12 flex ai-c jc-b p-8px gap-5px text-base btn-base">
+            <div className="i-ant-design:plus-circle-outlined"></div>
+            <span>新建聊天</span>
+          </Button>
+        </div>
+        <div
+          className="bg-transparent cursor-ew-resize w-14px absolute top-0 right-0 h-100% flex jc-c ai-c group"
+          onPointerDown={e => onDragStart(e as any)}
+        >
+          <div className="i-radix-icons:drag-handle-dots-2 ml-[-2px] opacity-0 sub-text-base group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
       </div>
-      {/* history */}
-      <div className="flex-1 w-100% overflow-auto">
-        {
-          isLoading
-            ? <Skeleton paragraph={{ rows: 15 }} className={styles.skin} />
-            : sideList.map((i, idx) => (
-              <SideItem
-                chatAmount={i.chatAmount}
-                chatName={i.chatName}
-                lastChatTime={i.createTime}
-                chatCode={i.chatCode}
-                style={{
-                  border: `2px solid ${i.chatCode === currentSession.chatCode ? '#1d93ab' : 'transparent'}`,
-                }}
-                onClick={() => { handleSelect(i) }}
-                key={idx}
-              >
-              </SideItem>
-            ))
-        }
-      </div>
-      {/* footer */}
-      <div className="w-100% h-50px flex jc-e ai-c">
-        <Button onClick={handleJump} className="fs-12 flex ai-c jc-b p-8px gap-5px text-base btn-base">
-          <div className="i-ant-design:plus-circle-outlined"></div>
-          <span>新建聊天</span>
-        </Button>
-      </div>
-      {/* darg bar */}
-      <div
-        className="bg-transparent cursor-ew-resize w-14px absolute top-0 right-0 h-100% flex jc-c ai-c group"
-        onPointerDown={e => onDragStart(e as any)}
-      >
-        <div className="i-radix-icons:drag-handle-dots-2 ml-[-2px] opacity-0 sub-text-base group-hover:opacity-100 transition-opacity duration-300"></div>
-      </div>
+
     </div>
   )
 }

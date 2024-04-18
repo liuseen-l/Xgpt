@@ -1,5 +1,8 @@
 import React from 'react'
+import clsx from 'clsx'
+import styles from './side-bar.module.scss'
 import { useChatStore } from '~/stores/chat'
+import ChatGptIcon from '~/asstes/icons/chatgpt'
 
 interface Props {
   style?: React.CSSProperties
@@ -8,9 +11,10 @@ interface Props {
   chatName: string // 对话名称
   lastChatTime: string // 最后一次聊天时间
   chatCode: string
+  shouldNarrow: boolean
 }
 
-const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, chatName, chatCode, chatAmount }) => {
+const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, chatName, chatCode, chatAmount, shouldNarrow }) => {
   const { handleDeleteSession, handleGetChatList, handleCheckSession, currentSession } = useChatStore(state => ({
     handleDeleteSession: state.handleDeleteSession,
     handleCheckSession: state.handleCheckSession,
@@ -33,17 +37,35 @@ const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, cha
       className="relative box-border mb-6px b-2-transparent border-rounded-3"
       style={style}
     >
-      <div className="p-10px flex flex-col bg-base hover:bg-neutral-200 dark:hover:bg-neutral-700 border-rounded-3 cursor-pointer group">
+      <div className="p-10px flex flex-col bg-base hover:bg-neutral-200 box-border dark:hover:bg-neutral-700 border-rounded-3 overflow-hidden cursor-pointer group">
         <div onClick={handleDelete} className="i-typcn:delete-outline absolute right-0 top-0 transition-all opacity-0 hover:opacity-100 group-hover:opacity-50 group-hover:translate-x-[-4px]"></div>
-        <span className="mb-10px font-700 fs-14">{chatName}</span>
-        <div className="w-100% flex jc-b sub-text-base fs-12">
-          <span>
-            {chatAmount}
-            条对话
-          </span>
-          <span className="">{lastChatTime}</span>
-        </div>
+        {
+          !shouldNarrow
+            ? (
+              <>
+                <span className="mb-10px font-700 fs-14">{chatName}</span>
+                <div className="w-100% flex jc-b sub-text-base fs-12">
+                  <span>
+                    {chatAmount}
+                    条对话
+                  </span>
+                  <span className="">{lastChatTime}</span>
+                </div>
+              </>
+              )
+            : (
+              <div className="w-36px h-36px transition-all flex jc-c ai-c group">
+                <div className="group-hover:scale-80 group-hover:rotate-45 transition-all transition-duration-300 flex ai-c jc-c">
+                  <div className="w-40px h-40px absolute scale-150 logo-bg-base">
+                    <ChatGptIcon></ChatGptIcon>
+                  </div>
+                </div>
+                <div className="absolute">{chatAmount}</div>
+              </div>
+              )
+        }
       </div>
+
     </div>
   )
 }
