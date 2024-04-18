@@ -7,7 +7,7 @@ import { ACTIONS_CONFIGS } from '~/consts/action-configs.tsx'
 import { useChatStore } from '~/stores/chat'
 import type { FileType } from '~/utils/common'
 import { getBase64 } from '~/utils/common'
-import { functionCodeType } from '~/api/chat/types'
+import { FunctionCodeType } from '~/api/chat/types'
 
 interface Props {
   scrollDomToBottom: () => void
@@ -67,7 +67,7 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
           <ChatAction text={ACTIONS_CONFIGS.theme.text} icon={ACTIONS_CONFIGS.theme.inco} onClick={changeTheme} />
           {
 
-            currentSession.functionCode === functionCodeType.function3
+            currentSession.functionCode === FunctionCodeType.function3
             && (
               <>
                 <Upload

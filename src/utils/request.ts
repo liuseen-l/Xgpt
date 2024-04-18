@@ -12,7 +12,22 @@ import type {
   InternalAxiosRequestConfig,
 } from 'axios'
 import axios from 'axios'
+import { useMessage } from './hooks'
 import { useGlobalStore } from '~/stores/global'
+import { toLoginPage } from '~/router'
+
+function resolveError(response: AxiosResponse<any, any>) {
+  const { data } = response
+
+  const { error } = useMessage()
+  if (data.code === 401) {
+    error(data.message)
+    localStorage.removeItem('globalStore')
+    toLoginPage()
+  }
+  if (data.code === 500)
+    error(data.message)
+}
 
 export class Request {
   constructor(config?: CreateAxiosDefaults) {
@@ -45,6 +60,9 @@ export class Request {
   private async responseSuccessInterceptor(
     response: AxiosResponse<any, any>,
   ): Promise<any> {
+    if (response.data.code > 200)
+      resolveError(response)
+
     return Promise.resolve(response)
   }
 

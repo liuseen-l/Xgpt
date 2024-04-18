@@ -74,6 +74,8 @@ function SideBar() {
   }
   // 获取默认聊天记录
   useEffect(() => {
+    console.log(3)
+
     init()
   }, [])
 

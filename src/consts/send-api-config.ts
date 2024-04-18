@@ -1,5 +1,5 @@
 import { fetchImageGen, fetchImageUnd, fetchPPTGen, fetchPushTextSession } from '~/api'
-import { functionCodeType } from '~/api/chat/types'
+import { FunctionCodeType } from '~/api/chat/types'
 
 export const GPT_URL: Record<string, Record<string, any>> = {
   /**
@@ -9,15 +9,15 @@ export const GPT_URL: Record<string, Record<string, any>> = {
     /**
      * 文本问答
      */
-    [functionCodeType.function1]: '/chat/wenXin/question',
+    [FunctionCodeType.function1]: '/chat/wenXin/question',
     /**
      * 图片生成
      */
-    [functionCodeType.function2]: '/chat/wenXin/image/create',
+    [FunctionCodeType.function2]: '/chat/wenXin/image/create',
     /**
      * 图片理解
      */
-    [functionCodeType.function3]: '/chat/wenXin/image/understand',
+    [FunctionCodeType.function3]: '/chat/wenXin/image/understand',
   },
   /**
    * 讯飞
@@ -26,19 +26,19 @@ export const GPT_URL: Record<string, Record<string, any>> = {
     /**
      * 文本问答
      */
-    [functionCodeType.function1]: '/chat/xf/question',
+    [FunctionCodeType.function1]: '/chat/xf/question',
     /**
      * 图片生成
      */
-    [functionCodeType.function2]: '/chat/xf/image/create',
+    [FunctionCodeType.function2]: '/chat/xf/image/create',
     /**
      * 图片理解
      */
-    [functionCodeType.function3]: '/chat/xf/image/understander',
+    [FunctionCodeType.function3]: '/chat/xf/image/understander',
     /**
      * ppt生成
      */
-    [functionCodeType.function4]: '/chat/xf/ppt/create',
+    [FunctionCodeType.function4]: '/chat/xf/ppt/create',
   },
   /**
    * 通义千问
@@ -47,15 +47,15 @@ export const GPT_URL: Record<string, Record<string, any>> = {
     /**
      * 文本问答
      */
-    [functionCodeType.function1]: '/chat/tongYi/question',
+    [FunctionCodeType.function1]: '/chat/tongYi/question',
     /**
      * 图片生成
      */
-    [functionCodeType.function2]: '/chat/tongYi/image/create',
+    [FunctionCodeType.function2]: '/chat/tongYi/image/create',
     /**
      * 图片理解
      */
-    [functionCodeType.function3]: '/chat/tongYi/image/understand',
+    [FunctionCodeType.function3]: '/chat/tongYi/image/understand',
   },
 }
 
@@ -63,18 +63,18 @@ export const apiMap: Record<string, any> = {
   /**
    * 文本问答
    */
-  [functionCodeType.function1]: fetchPushTextSession,
+  [FunctionCodeType.function1]: fetchPushTextSession,
   /**
    * 图片生成
    */
-  [functionCodeType.function2]: fetchImageGen,
+  [FunctionCodeType.function2]: fetchImageGen,
   /**
    * 图片理解
    */
-  [functionCodeType.function3]: fetchImageUnd,
+  [FunctionCodeType.function3]: fetchImageUnd,
   /**
    * ppt生成
    */
-  [functionCodeType.function4]: fetchPPTGen,
+  [FunctionCodeType.function4]: fetchPPTGen,
 
 }

@@ -44,7 +44,7 @@ function ChatRoom() {
             <span className="fs-20 font-700 leading-9">{currentSession.chatName}</span>
             <span className="fs-14">
               共
-              {currentSession.total}
+              {currentSession.list.length}
               条对话
             </span>
           </div>

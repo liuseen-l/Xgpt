@@ -3,8 +3,9 @@ import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
 import type { UploadFile } from 'antd'
 import { fetchChatList, fetchChatSession, fetchDeleteSession } from '~/api'
+import { FunctionCodeType } from '~/api/chat/types'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
-import { functionCodeType } from '~/api/chat/types'
+
 import { GPT_URL, apiMap } from '~/consts/send-api-config'
 
 interface SessionState {
@@ -15,7 +16,7 @@ interface SessionState {
   chatCode: string
   list: ChatSessionItem[]
   chatName: string
-  functionCode: functionCodeType
+  functionCode: FunctionCodeType
 }
 
 interface ChatStoreState {
@@ -70,6 +71,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     // 切换时缓存上一个聊天记录
     set((state) => {
       const { currentSession } = get()
+      console.log(currentSession)
       if (chatCode.length) {
         state.chatCaches[currentSession.chatCode] = currentSession
         state.currentSession = {
@@ -135,7 +137,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     const fetchUrl = GPT_URL[gptCode][functionCode]
 
     let res: any
-    if (functionCode === functionCodeType.function3) {
+    if (functionCode === FunctionCodeType.function3) {
       const formData = new FormData()
       fileList.length && formData.append('image', fileList[0].originFileObj as File)
       formData.append('content', content)

@@ -8,7 +8,7 @@ import type { RequestAddChat } from '~/api/chat/types'
 const ChatAddPanel: React.FC = () => {
   const navigate = useNavigate()
   const handleBack = () => {
-    navigate('/chat/session')
+    navigate(-1)
   }
 
   const { handleGetChatList, handleCheckSession, gptCode } = useChatStore(state => ({

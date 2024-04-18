@@ -1,12 +1,43 @@
 import { create } from 'zustand'
+import { createJSONStorage, devtools, persist } from 'zustand/middleware'
+import type { ResponseLogin } from '~/api/account/types'
 
-interface GlobalStoreState {
-  token: string | null
+type UserInfo = ResponseLogin['data']
+
+type GlobalStoreState = Partial<{
+  [k in keyof UserInfo]: UserInfo[k]
+}>
+
+interface GlobalStoreAction {
+  handleSetUserInfo: (info: UserInfo) => void
+  handleInit: () => void
 }
 
-export const useGlobalStore = create<GlobalStoreState>((_get, _set) => {
+const initState = {
+  token: '',
+  emial: '',
+  username: '',
+}
+
+export const useGlobalStore = create<GlobalStoreState & GlobalStoreAction>()(devtools(persist((set, _get) => {
   return {
-    token: 'eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAACXMOw6DMBAFwLu8msK7trGhzUlWXiOlCEY4URIQd-fXTjErJqn1W2ZFD_bqvShHK-KMkcG1LoVWA9lkgiga5N-EngJ5x8SdafCU9wUcubvgU_P8KJqPj9jihlFeJ6Tlj20HEpcQInMAAAA.rU9suc3frLRgaxPTGmLtFLRMLbWvGETdfYz64t0ckExy25wwIn9XvNH5KImOk9uTzBP_EgeSZtoSHRnRJG_fkg',
-    // token: '',
+    ...initState,
+    handleSetUserInfo(info) {
+      const { token, username, email } = info
+
+      set({
+        token,
+        username,
+        email,
+      })
+    },
+    handleInit() {
+      set({
+        ...initState,
+      })
+    },
   }
-})
+}, {
+  name: 'globalStore',
+  storage: createJSONStorage(() => localStorage),
+})))

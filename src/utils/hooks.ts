@@ -1,8 +1,9 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
+import type { MessageInstance } from 'antd/es/message/interface'
+import { message } from 'antd'
 import request from './request'
-
 /**
  * 控制主题
  */
@@ -144,5 +145,30 @@ export function useCount() {
     btnCount,
     play,
     isPlaying,
+  }
+}
+
+/**
+ * message提示
+ */
+
+export function useMessage() {
+  const success = (content?: string) => {
+    message?.open({
+      type: 'success',
+      content: `${content || 'This is a success message'}`,
+    })
+  }
+
+  const error = (content?: string) => {
+    message?.open({
+      type: 'error',
+      content: `${content || '请求错误'}`,
+    })
+  }
+
+  return {
+    success,
+    error,
   }
 }

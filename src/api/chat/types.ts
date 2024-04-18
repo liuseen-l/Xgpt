@@ -41,7 +41,7 @@ export interface ChatSessionItem {
   createTime: string
 }
 
-export enum functionCodeType {
+export enum FunctionCodeType {
   function1 = 'function_1',
   function2 = 'function_2',
   function3 = 'function_3',
@@ -53,7 +53,7 @@ export interface ResponseGetChatSession {
     hasMore: boolean
     total: number
     chatName: string
-    functionCode: functionCodeType
+    functionCode: FunctionCodeType
   }
 }
 
@@ -117,7 +117,7 @@ export interface RequestGptFunction {
 
 export interface GptFunctionItem {
   createTime: string
-  functionCode: functionCodeType
+  functionCode: FunctionCodeType
   functionName: string
   gptCode: string
   gptName: string
@@ -134,7 +134,7 @@ export interface ResponseGptFunction {
 export interface RequestAddChat {
   chatName: string
   gptCode: string
-  functionCode: functionCodeType
+  functionCode: FunctionCodeType
 }
 
 /**

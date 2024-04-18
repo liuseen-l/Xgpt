@@ -1,9 +1,12 @@
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import ChatAddPanel from '~/components/chat/chat-add-panel'
+import IntroDuce from '~/components/chat/chat-introduce'
 import ChatRoom from '~/components/chat/chat-room'
 import Chat from '~/pages/chat'
+import Forget from '~/pages/forget'
 import Home from '~/pages/home'
 import Login from '~/pages/login'
+import Register from '~/pages/register'
 
 export const router = createBrowserRouter(
   [
@@ -18,6 +21,10 @@ export const router = createBrowserRouter(
         {
           path: 'addpanel',
           Component: ChatAddPanel,
+        },
+        {
+          path: 'introduce',
+          Component: IntroDuce,
         },
         {
           path: '/chat',
@@ -36,9 +43,17 @@ export const router = createBrowserRouter(
       Component: Login,
     },
     {
+      path: '/register',
+      Component: Register,
+    },
+    {
+      path: '/forget',
+      Component: Forget,
+    },
+    {
       path: '/',
       element: (
-        <Navigate to="/login" />
+        <Navigate to="/center" />
       ),
     },
   ],
@@ -51,3 +66,7 @@ function Router() {
 }
 
 export default Router
+
+export function toLoginPage() {
+  router.navigate('/login')
+}
