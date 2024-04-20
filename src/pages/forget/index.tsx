@@ -1,27 +1,22 @@
 import clsx from 'clsx'
-import { Button, Checkbox, Form, Input, Space } from 'antd'
+import { Button, Form, Input, Space } from 'antd'
 import { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styles from './index.module.scss'
-import { fetchFindAccount, fetchGetVerCode, fetchRegiste } from '~/api/account'
+import { fetchFindAccount, fetchGetVerCode } from '~/api/account'
 import { useCount } from '~/utils'
 import type { ResponseGetVerInfo } from '~/api/account/types'
-import { useGlobalStore } from '~/stores/global'
 
 function Register() {
   const [form] = Form.useForm()
   const [verInfo, setVerInfo] = useState<ResponseGetVerInfo['data']>({} as any)
   const { play, btnCount, isPlaying } = useCount()
 
-  const { handleSetUserInfo } = useGlobalStore(state => ({
-    handleSetUserInfo: state.handleSetUserInfo,
-  }))
-
   const onFinish = async (info: any) => {
     const { email, vercode: userVerifyCode, password, password2: againPassword } = info
     const { preEmail, verifyCode } = verInfo
 
-    const res = await fetchFindAccount({
+    await fetchFindAccount({
       email,
       userVerifyCode,
       verifyCode,
@@ -29,7 +24,6 @@ function Register() {
       password,
       againPassword,
     })
-    console.log(123123, res)
   }
 
   const handleGetVerCode = () => {

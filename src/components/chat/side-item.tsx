@@ -1,6 +1,4 @@
 import React from 'react'
-import clsx from 'clsx'
-import styles from './side-bar.module.scss'
 import { useChatStore } from '~/stores/chat'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 
@@ -12,9 +10,10 @@ interface Props {
   lastChatTime: string // 最后一次聊天时间
   chatCode: string
   shouldNarrow: boolean
+  functionName: string
 }
 
-const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, chatName, chatCode, chatAmount, shouldNarrow }) => {
+const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, chatName, chatCode, chatAmount, functionName, shouldNarrow }) => {
   const { handleDeleteSession, handleGetChatList, handleCheckSession, currentSession } = useChatStore(state => ({
     handleDeleteSession: state.handleDeleteSession,
     handleCheckSession: state.handleCheckSession,
@@ -38,12 +37,15 @@ const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, cha
       style={style}
     >
       <div className="p-10px flex flex-col bg-base hover:bg-neutral-200 box-border dark:hover:bg-neutral-700 border-rounded-3 overflow-hidden cursor-pointer group">
-        <div onClick={handleDelete} className="i-typcn:delete-outline absolute right-0 top-0 transition-all opacity-0 hover:opacity-100 group-hover:opacity-50 group-hover:translate-x-[-4px]"></div>
+        <div onClick={handleDelete} className="i-typcn:delete-outline absolute right-0 z-10 top-0 transition-all opacity-0 hover:opacity-100 group-hover:opacity-50 group-hover:translate-x-[-4px]"></div>
         {
           !shouldNarrow
             ? (
               <>
-                <span className="mb-10px font-700 fs-14">{chatName}</span>
+                <div className="mb-10px fw-700 fs-14 flex jc-b ai-c">
+                  <span>{chatName}</span>
+                  <span className="text-blue dark:text-[#1d93ab] transition-all fs-10 ">{functionName}</span>
+                </div>
                 <div className="w-100% flex jc-b sub-text-base fs-12">
                   <span>
                     {chatAmount}

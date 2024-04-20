@@ -3,7 +3,7 @@ import { Button, Skeleton } from 'antd'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import clsx from 'clsx'
 import SideItem from './side-item'
-import styles from './side-bar.module.scss'
+import styles from './antd.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 import type { ChatItemType } from '~/api/chat/types'
 import { useChatStore } from '~/stores/chat'
@@ -42,8 +42,6 @@ function SideBar() {
   const onDragStart = (e: MouseEvent) => {
     // 记录光标开始的位置
     startX.current = e.clientX
-    console.log(startX.current)
-
     startDragWidth.current = sidebarWidth
     const dragStartTime = Date.now()
     const handleDragMove = (e: MouseEvent) => {
@@ -99,7 +97,7 @@ function SideBar() {
 
   const navigate = useNavigate()
   const handleJump = () => {
-    navigate('addpanel')
+    navigate(`addpanel?gptCode=${gptCode}`)
   }
 
   const shouldNarrow = sidebarWidth < MIN_SIDEBAR_WIDTH
@@ -128,11 +126,13 @@ function SideBar() {
               ? <Skeleton paragraph={{ rows: 15 }} className={styles.skin} />
               : sideList.map((i, idx) => (
                 <SideItem
-                  chatAmount={i.chatAmount}
+                // 同步数据
+                  chatAmount={currentSession.chatCode === i.chatCode ? currentSession.list.length : i.chatAmount}
                   chatName={i.chatName}
                   lastChatTime={i.createTime}
                   chatCode={i.chatCode}
                   shouldNarrow={shouldNarrow}
+                  functionName={i.functionName}
                   style={{
                     border: `2px solid ${i.chatCode === currentSession.chatCode ? '#1d93ab' : 'transparent'}`,
                   }}
@@ -144,14 +144,17 @@ function SideBar() {
           }
         </div>
         <div
-          className="w-100% flex jc-e ai-c"
+          className="w-100% flex ai-c"
           style={{
+            justifyContent: shouldNarrow ? 'center' : 'flex-end',
             height: shouldNarrow ? '150px' : '100px',
           }}
         >
-          <Button onClick={handleJump} className="fs-12 flex ai-c jc-b p-8px gap-5px text-base btn-base">
+          <Button onClick={handleJump} className="fs-12 flex ai-c jc-b p-9px gap-5px text-base btn-base">
             <div className="i-ant-design:plus-circle-outlined"></div>
-            <span>新建聊天</span>
+            {
+              !shouldNarrow && <span>新建聊天</span>
+            }
           </Button>
         </div>
         <div

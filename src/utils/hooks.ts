@@ -1,7 +1,6 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import type { MessageInstance } from 'antd/es/message/interface'
 import { message } from 'antd'
 import request from './request'
 /**

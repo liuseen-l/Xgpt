@@ -2,7 +2,7 @@ import type { UploadFile, UploadProps } from 'antd'
 import { Button, Image, Input, Upload } from 'antd'
 import React, { useState } from 'react'
 import ChatAction from './chat-action'
-import styles from './chat-input.module.scss'
+import styles from './antd.module.scss'
 import { ACTIONS_CONFIGS } from '~/consts/action-configs.tsx'
 import { useChatStore } from '~/stores/chat'
 import type { FileType } from '~/utils/common'
@@ -15,19 +15,16 @@ interface Props {
 }
 
 const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
-  const [loading, setLoading] = useState<boolean>(false)
   const [userInput, setUserInput] = useState('')
-  const [disabled, setDisabled] = useState(false)
   const [fileList, setFileList] = useState<UploadFile[]>([])
 
-  const { handleSendSeesion, currentSession } = useChatStore(state => ({
+  const { handleSendSeesion, currentSession, isSendLoading } = useChatStore(state => ({
     handleSendSeesion: state.handleSendSeesion,
     currentSession: state.currentSession,
+    isSendLoading: state.isSendLoading,
   }))
 
-  const handleSendMessage = async () => {
-    setLoading(true)
-    setDisabled(true)
+  const handleSend = async () => {
     try {
       await handleSendSeesion(userInput, fileList)
       setUserInput('')
@@ -37,8 +34,6 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
     catch (error) {
 
     }
-    setLoading(false)
-    setDisabled(false)
   }
 
   const onInput = (text: string) => {
@@ -94,22 +89,20 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
                 )}
               </>
             )
-
           }
-
         </div>
       </div>
       <div className="relative">
         <Input.TextArea
           value={userInput}
-          disabled={disabled}
+          disabled={isSendLoading}
           onInput={e => onInput(e.currentTarget.value)}
           placeholder="请输入内容......"
           className="bg-base hover:border-[#d9d9d9] dark:hover:border-[#ffffff31] dark:border-[#ffffff31] focus:border-[#1d93ab] dark:focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "
           style={{ minHeight: 150, maxHeight: 300 }}
         >
         </Input.TextArea>
-        <Button onClick={handleSendMessage} className="bg-[#1d93ab] border-none text-white important:hover:bg-[#1d93ab] hover:filter-brightness-90 important:hover:text-white fs-12 absolute z-100 bottom-10px right-10px" loading={loading}>
+        <Button onClick={handleSend} className="bg-[#1d93ab] border-none text-white important:hover:bg-[#1d93ab] hover:filter-brightness-90 important:hover:text-white fs-12 absolute z-100 bottom-10px right-10px" loading={isSendLoading}>
           发送
         </Button>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Skeleton } from 'antd'
-import { fetchCreateChat, fetchGetFunction } from '~/api'
+import { fetchCreateChat, fetchPresetList } from '~/api'
 import { useChatStore } from '~/stores/chat'
 import type { RequestAddChat } from '~/api/chat/types'
 
@@ -10,22 +10,30 @@ const ChatAddPanel: React.FC = () => {
   const handleBack = () => {
     navigate(-1)
   }
+  const [search] = useSearchParams()
+  const gptCode = search.get('gptCode')!
 
-  const { handleGetChatList, handleCheckSession, gptCode } = useChatStore(state => ({
+  const { handleGetChatList, handleCheckSession } = useChatStore(state => ({
     handleGetChatList: state.handleGetChatList,
     handleCheckSession: state.handleCheckSession,
-    gptCode: state.gptCode,
   }))
 
-  const { data, isLoading } = fetchGetFunction({
+  // const { data, isLoading } = fetchGetFunction({
+  //   gptCode,
+  // })
+
+  const { data, isLoading } = fetchPresetList({
     gptCode,
   })
 
   const handleCreateChat = async (params: RequestAddChat) => {
-    await fetchCreateChat(params)
-    const data = await handleGetChatList()
-    handleCheckSession(data[0])
-    handleBack()
+    const res = await fetchCreateChat(params)
+    // 游客不支持创建，res返回为空
+    if (res) {
+      const data = await handleGetChatList()
+      handleCheckSession(data[0])
+      handleBack()
+    }
   }
 
   return (
@@ -51,8 +59,11 @@ const ChatAddPanel: React.FC = () => {
                 <div key={idx} className="flex p-16px ai-c jc-b border-base">
                   <div className="flex">
                     <div className="flex flex-col">
-                      <span className="fs-14 leading-6 fw-700">{i.functionName}</span>
-                      <span className="fs-12">{i.gptName}</span>
+                      <span className="fs-14 leading-6 fw-700">{i.name}</span>
+                      <div className="fs-12">
+                        <span>{`包含${i.total}条预设对话 / `}</span>
+                        <span>{i.name}</span>
+                      </div>
                     </div>
                   </div>
                   {/* rigjt */}
@@ -61,9 +72,11 @@ const ChatAddPanel: React.FC = () => {
                       className="flex fs-12 hover:cursor-pointer"
                       onClick={() => {
                         handleCreateChat({
-                          chatName: i.functionName,
+                          chatName: i.name,
                           gptCode,
                           functionCode: i.functionCode,
+                          content: i.content,
+                          replication: i.replication,
                         })
                       }}
                     >

@@ -13,6 +13,8 @@ export interface ChatItemType {
   createTime: string
   gptCode: string
   lastChatTime: string
+  functionName: string
+  functionCode: string
 }
 
 export interface ResponseGetChatList {
@@ -63,6 +65,8 @@ export interface ResponseGetChatSession {
 export interface RequestPushSession {
   chatCode: string
   content: string
+  isRebuild?: boolean
+  cid?: string
 }
 
 export interface ResponsePushSession {
@@ -76,6 +80,8 @@ export interface ResponsePushSession {
 export interface RequestImageGen {
   chatCode: string
   content: string
+  isRebuild?: boolean
+  cid?: string
 }
 
 export interface ResponseImageGen {
@@ -89,6 +95,8 @@ export interface ResponseImageGen {
 export interface RequestPPTGen {
   chatCode: string
   content: string
+  isRebuild?: boolean
+  cid?: string
 }
 
 export interface ResponsePPTGen {
@@ -135,6 +143,16 @@ export interface RequestAddChat {
   chatName: string
   gptCode: string
   functionCode: FunctionCodeType
+  content?: string
+  replication?: string
+}
+
+export interface ResponseAddChat {
+  data: {
+    chatCode: string
+    functionCode: string
+    chatName: string
+  }
 }
 
 /**
@@ -143,4 +161,24 @@ export interface RequestAddChat {
  */
 export interface RequestDeleteSession {
   chatCode: string
+}
+
+/**
+ * 获取预设列表
+ */
+export interface RequestPresetList {
+  gptCode: string
+}
+
+export interface GptPresetItem {
+  name: string
+  functionCode: FunctionCodeType
+  content: string
+  replication: string
+  total: number
+  createTime: string
+}
+
+export interface ResponsePresetList {
+  data: GptPresetItem[]
 }

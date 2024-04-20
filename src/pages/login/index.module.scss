@@ -2,3 +2,15 @@
   background: url('../../asstes/images/reg_bg_min.jpg');
 }
 
+.qrcode {
+  background: url('../../asstes/images/qrcode.png') no-repeat center;
+  height: 154px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scan {
+  background: url('../../asstes//images//image.png') no-repeat -46px -86px;
+  z-index: 21;
+}

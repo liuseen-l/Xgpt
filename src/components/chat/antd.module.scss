@@ -1,3 +1,11 @@
+.upload {
+  :global(.ant-upload-list-picture) {
+    position: absolute;
+    right: 10px;
+    top: -75px;
+  }
+}
+
 .skin {
   :global(.ant-skeleton-content .ant-skeleton-paragraph>li) {
     height: 24px;

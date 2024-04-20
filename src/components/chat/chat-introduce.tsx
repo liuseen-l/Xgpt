@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom'
-
 function IntroDuce() {
   return (
     <div className="flex flex-col flex-1 bg-base box-border">

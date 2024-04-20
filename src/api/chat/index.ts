@@ -1,4 +1,4 @@
-import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPushSession, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePushSession } from './types'
+import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPresetList, RequestPushSession, ResponseAddChat, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePresetList, ResponsePushSession } from './types'
 import { useGetFecth } from '~/utils'
 import request from '~/utils/request'
 
@@ -8,6 +8,7 @@ const API_URL = {
   CHAT_GET_FUNCTION: '/gpt/chat/function/list',
   CHAT_ADD: '/chat/add',
   CHAT_DELETE: '/chat/delete',
+  CHAT_PRESET: '/chat/default/list',
 }
 
 /**
@@ -35,20 +36,12 @@ export async function fetchChatSession(params: RequestChatSession) {
 }
 
 /**
- * 获取功能列表
- * @param params
- * @returns
- */
-export function fetchGetFunction(params: RequestGptFunction) {
-  return useGetFecth<ResponseGptFunction>(API_URL.CHAT_GET_FUNCTION, params)
-}
-
-/**
  * 创建对话
  * @param params
  */
 export async function fetchCreateChat(params: RequestAddChat) {
-  await request.post(API_URL.CHAT_ADD, params)
+  const res = await request.post<ResponseAddChat>(API_URL.CHAT_ADD, params)
+  return res.data.data
 }
 
 /**
@@ -102,4 +95,22 @@ export async function fetchImageUnd(url: string, params: RequestImageUnd) {
     },
   })
   return res.data.data
+}
+
+/**
+ * 获取功能列表
+ * @param params
+ * @returns
+ */
+export function fetchGetFunction(params: RequestGptFunction) {
+  return useGetFecth<ResponseGptFunction>(API_URL.CHAT_GET_FUNCTION, params)
+}
+
+/**
+ * 获取预设列表
+ * @param params
+ * @returns
+ */
+export function fetchPresetList(params: RequestPresetList) {
+  return useGetFecth<ResponsePresetList>(API_URL.CHAT_PRESET, params)
 }

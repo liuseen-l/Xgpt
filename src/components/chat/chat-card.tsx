@@ -2,14 +2,21 @@ import clsx from 'clsx'
 import React from 'react'
 import { Markdown } from './chat-markdown'
 import styles from './chat-room.module.scss'
+import { useChatStore } from '~/stores/chat'
 
 interface ChatCardItemProps {
   content: string
   isUser?: boolean
   createTime: string
+  supportResend: boolean
+  question?: string
 }
 
-const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser }) => {
+const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser, supportResend, question }) => {
+  const { handleSendSeesion } = useChatStore(state => ({
+    handleSendSeesion: state.handleSendSeesion,
+  }))
+
   return (
     <div className={clsx('w-100% flex mb-25px card-text-base', isUser && 'jc-e', styles['chat-message'])}>
       <div className={clsx('max-w-80% flex flex-col gap-8px', isUser && 'ai-e')}>
@@ -29,6 +36,16 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser
           </Markdown>
         </div>
         <div className="fs-12 sub-text-base">{createTime}</div>
+        { (!isUser && supportResend) && (
+          <div
+            className="fs-12 cursor-pointer resend-text-base"
+            onClick={() => {
+              handleSendSeesion(question || '请重新生成', [], true)
+            }}
+          >
+            重新生成
+          </div>
+        )}
       </div>
     </div>
 
@@ -39,13 +56,14 @@ interface ChatCardProps {
   question: string
   replication: string
   createTime: string
+  supportResend: boolean
 }
 
-const ChatCard: React.FC<ChatCardProps> = ({ question, replication, createTime }) => {
+const ChatCard: React.FC<ChatCardProps> = ({ question, supportResend, replication, createTime }) => {
   return (
     <>
-      { !!question?.length && <ChatCardItem content={question} isUser createTime={createTime}></ChatCardItem>}
-      { !!replication?.length && <ChatCardItem content={replication} createTime={createTime}></ChatCardItem>}
+      { !!question?.length && <ChatCardItem supportResend={supportResend} content={question} isUser createTime={createTime}></ChatCardItem>}
+      { !!replication?.length && <ChatCardItem supportResend={supportResend} content={replication} question={question} createTime={createTime}></ChatCardItem>}
     </>
   )
 }

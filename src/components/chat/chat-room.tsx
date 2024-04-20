@@ -76,7 +76,7 @@ function ChatRoom() {
                   <Skeleton avatar paragraph={{ rows: 4 }} />
                 </>
                 )
-              : currentSession.list.map((i, idx) => <ChatCard key={idx} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)
+              : currentSession.list.map((i, idx) => <ChatCard supportResend={idx === currentSession.list.length - 1} key={idx} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)
           }
         </div>
         <ChatInput changeTheme={useToggle} scrollDomToBottom={scrollDomToBottom}></ChatInput>

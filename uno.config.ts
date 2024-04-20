@@ -37,10 +37,16 @@ export default defineConfig({
       'bubble-bg-base-user': 'bg-[#e7f8ff] dark:bg-[#1b262a] switch-animation',
       /** app text base */
       'text-base': 'text-black dark:text-neutral-400 switch-animation',
+      // input 选项
       'action-base': 'hover:bg-[#f2f2f2] dark:hover:bg-neutral-700 switch-animation',
+      // 对话卡片时间
       'sub-text-base': 'text-neutral-400 dark:text-neutral-500 switch-animation',
-      'card-text-base': 'text-black dark:text-neutral-300',
+      // 对话卡片
+      'card-text-base': 'text-black dark:text-neutral-300 switch-animation',
+      // 对话重新发送
+      'resend-text-base': 'text-blue-500 dark:text-[#1d93ab] switch-animation',
       'btn-base': `border-none hover:filter-brightness-95 ${resolveBtnBase(['text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e] bg-[#fff] switch-animation`,
+      // 发送按钮
       'session-btn-base': `border-none ${resolveBtnBase(['text-white', 'dark:bg-[#1d93ab]', 'bg-[#1d93ab]'])} dark:bg-[#1d93ab] bg-[#1d93ab] switch-animation`,
       'pm-0': 'p-0 m-0',
     },

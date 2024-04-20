@@ -48,8 +48,6 @@ export async function fetchLoginByEmail(params: RequestLoginByEmail) {
  */
 export async function fetchLoginByAccount(params: RequestLoginByAccount) {
   const res = await request.post<ResponseLogin>(ACCOUNT_API_URL.LOGIN_ACCOUNT, params)
-  console.log(res)
-
   return res.data.data
 }
 

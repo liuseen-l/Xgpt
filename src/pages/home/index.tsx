@@ -1,16 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { useGlobalStore } from '~/stores/global'
 
 function Home() {
   const navigate = useNavigate()
-  const { token } = useGlobalStore(state => ({
-    token: state.token,
-  }))
+
   const handleJump = (g: string) => {
     navigate(`/chat/session?gptCode=${g}`)
   }
-
-  console.log(token)
 
   return (
     <div className="h-100vh w-100vw flex">

@@ -1,9 +1,9 @@
 import clsx from 'clsx'
-import { Button, Checkbox, Form, Input, Space } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Checkbox, Form, Input, Modal, Space } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styles from './index.module.scss'
-import { fetchGetVerCode, fetchLoginByAccount, fetchLoginByEmail, fetchRegiste } from '~/api/account'
+import { fetchGetVerCode, fetchLoginByAccount, fetchLoginByEmail } from '~/api/account'
 import { useCount } from '~/utils'
 import type { ResponseGetVerInfo } from '~/api/account/types'
 import { useGlobalStore } from '~/stores/global'
@@ -18,6 +18,8 @@ function Login() {
   const [verInfo, setVerInfo] = useState<ResponseGetVerInfo['data']>({} as any)
   const { play, btnCount, isPlaying } = useCount()
   const [loginType, setLoginType] = useState(LoginType.email)
+
+  const qrRef = useRef<HTMLImageElement>(null)
 
   const { handleSetUserInfo, handleReset } = useGlobalStore(state => ({
     handleSetUserInfo: state.handleSetUserInfo,
@@ -77,8 +79,51 @@ function Login() {
     if (!item)
       handleReset()
   }, [])
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const showModal = () => {
+    const createTime = Date.now()
+    fetch(`http://localhost:3000/qrcode?createTime=${createTime}`).then(res => res.json()).then((res) => {
+      qrRef.current!.src = res.code
+    })
+    const sse = new EventSource(`http://124.71.110.30:8080/user/login/by/scan/listen?&createTime=${createTime}`)
+    window.qrEventSource = sse
+    sse.addEventListener('message', (e) => {
+      sse.close()
+      const res = JSON.parse(e.data)
+      if (res) {
+        const { data: { token, email, username } } = res
+        handleSetUserInfo({
+          token,
+          email,
+          username,
+        } as any)
+        navigate('/center')
+      }
+    })
+    setIsModalOpen(true)
+  }
+  const handleCancel = () => {
+    window.qrEventSource?.close()
+    setIsModalOpen(false)
+  }
   return (
     <div className="h-100vh w-100vw relative box-border">
+      <Modal title="扫码登录" centered open={isModalOpen} footer={null} onCancel={handleCancel}>
+        <div className={styles.qrcode}>
+          <img src="" className="h-146px w-146px" ref={qrRef} alt="" />
+        </div>
+        <div className="text-[#666] fs-12 mt-12px">可以使用以下方式扫码登录</div>
+        <div className="flex mt-10px fs-20 gap-3">
+          <div className="i-entypo-social:qq text-red-5"></div>
+          <div className="i-mingcute:wechat-line text-green"></div>
+          <div className="i-ant-design:alipay-circle-outlined text-#2e58ff"></div>
+          <div className="i-logos:tiktok-icon"></div>
+
+        </div>
+        <div></div>
+      </Modal>
       <div className={clsx('fixed left-0 right-0 top-0 bottom-0 bg-cover bg-no-repeat', styles.bg)}></div>
       <div className="pb-20px box-border w-480px px-40px rounded-12px absolute right-139px top-50% bg-[rgba(255,255,255,.9)] translate-y-[-50%]">
         {/* header */}
@@ -230,6 +275,7 @@ function Login() {
                 )
           }
         </div>
+        <div onClick={showModal} className={clsx('w-44px h-44px absolute bottom-0 right-0 cursor-pointer', styles.scan)}></div>
       </div>
     </div>
   )

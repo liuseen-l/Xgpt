@@ -7,6 +7,7 @@ import { FunctionCodeType } from '~/api/chat/types'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
 
 import { GPT_URL, apiMap } from '~/consts/send-api-config'
+import { getTimeUnixStr } from '~/utils/common'
 
 interface SessionState {
   page: number
@@ -31,12 +32,13 @@ interface ChatStoreState {
   gptCaches: {
     [k: string]: ChatStoreState['chatCaches']
   }
+  isSendLoading: boolean
 }
 
 interface ChatStoreActions {
   handleCheckSession: (i: ChatItemType) => void
   handleLoadHistory: (c?: string) => void
-  handleSendSeesion: (c: string, f: UploadFile[]) => void
+  handleSendSeesion: (c: string, f: UploadFile[], isRebuild?: boolean) => void
   handleGetChatList: () => Promise<ChatItemType[]>
   handleDeleteSession: (c: string) => void
   handleInit: (config?: Partial<ChatStoreState>) => void
@@ -59,6 +61,7 @@ const initState = {
   isSessionLoading: true, // 聊天框骨架
   sideList: [],
   isSideListLoading: true,
+  isSendLoading: false,
 }
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
@@ -71,7 +74,6 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     // 切换时缓存上一个聊天记录
     set((state) => {
       const { currentSession } = get()
-      console.log(currentSession)
       if (chatCode.length) {
         state.chatCaches[currentSession.chatCode] = currentSession
         state.currentSession = {
@@ -131,28 +133,42 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
     })
   },
   // 发消息
-  async handleSendSeesion(content, fileList) {
+  async handleSendSeesion(content, fileList, isRebuild = false) {
+    console.log(content)
+
+    set({
+      isSendLoading: true,
+    })
     const { currentSession: { chatCode, functionCode }, gptCode } = get()
     const fetchApi = apiMap[functionCode]
     const fetchUrl = GPT_URL[gptCode][functionCode]
 
     let res: any
+    // 图片理解
     if (functionCode === FunctionCodeType.function3) {
       const formData = new FormData()
       fileList.length && formData.append('image', fileList[0].originFileObj as File)
       formData.append('content', content)
       formData.append('chatCode', chatCode)
+      formData.append('isRebuild', `${isRebuild}`)
+      formData.append('cid', getTimeUnixStr())
       res = await fetchApi(fetchUrl, formData)
     }
     else {
       res = await fetchApi(fetchUrl, {
         content,
         chatCode,
+        cid: getTimeUnixStr(),
+        isRebuild,
       })
     }
 
     set((state) => {
+      if (isRebuild)
+        state.currentSession.list.pop()
+
       state.currentSession.list.push(res)
+      state.isSendLoading = false
     })
   },
   // 获取列表

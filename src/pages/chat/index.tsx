@@ -1,4 +1,4 @@
-import { Outlet, useSearchParams } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import SideBar from '~/components/chat/side-bar'
 
 function Chat() {
