@@ -5,7 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "dev:h5": "vite h5",
+    "server": "nodemon ./server/index.cjs",
     "build": "tsc --noEmit --skipLibCheck && vite build",
+    "build:h5": "tsc --noEmit --skipLibCheck && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -13,8 +16,10 @@
     "@types/react-syntax-highlighter": "^15.5.11",
     "antd": "^5.16.0",
     "clsx": "^2.1.0",
+    "express": "^4.19.2",
     "lint-staged": "^15.2.2",
     "parse-url": "^9.2.0",
+    "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^9.0.1",

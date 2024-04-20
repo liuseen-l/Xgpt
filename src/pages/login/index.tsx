@@ -116,7 +116,6 @@ function Login() {
         </div>
         <div className="text-[#666] fs-12 mt-12px">可以使用以下方式扫码登录</div>
         <div className="flex mt-10px fs-20 gap-3">
-          <div className="i-entypo-social:qq text-red-5"></div>
           <div className="i-mingcute:wechat-line text-green"></div>
           <div className="i-ant-design:alipay-circle-outlined text-#2e58ff"></div>
           <div className="i-logos:tiktok-icon"></div>
