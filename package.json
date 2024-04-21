@@ -8,11 +8,12 @@
     "dev:app": "vite h5 -c vite.config.ts -m app",
     "server": "nodemon ./server/index.cjs",
     "build": "tsc --noEmit --skipLibCheck && vite build -c vite.config.ts -m web",
-    "build:app": "tsc --noEmit --skipLibCheck && vite build -c vite.config.ts -m app",
+    "build:app": "tsc --noEmit --skipLibCheck && vite build -c vite.config.ts -m app --watch",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@antfu/ni": "^0.21.12",
     "@types/react-syntax-highlighter": "^15.5.11",
     "antd": "^5.16.0",
     "clsx": "^2.1.0",

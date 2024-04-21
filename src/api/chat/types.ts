@@ -182,3 +182,10 @@ export interface GptPresetItem {
 export interface ResponsePresetList {
   data: GptPresetItem[]
 }
+
+/**
+ * 停止生成
+ */
+export interface RequestStopSend {
+  cid: string
+}

@@ -12,16 +12,15 @@ interface ModeResolver {
 const modeResolver: ModeResolver = {
   app: () => ({
     build: {
-      outDir: resolve(__dirname, 'server/dist'),
+      outDir: resolve(__dirname, 'server/public'),
       rollupOptions: {
-        input: resolve(__dirname, 'h5/index.html'),
+        input: resolve(__dirname, 'app/index.html'),
       },
     },
     base: './',
   }),
   web: () => ({}),
 }
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const baseConfig = modeResolver[mode as keyof ModeResolver]()
   return mergeConfig(baseConfig, {

@@ -33,12 +33,13 @@ interface ChatStoreState {
     [k: string]: ChatStoreState['chatCaches']
   }
   isSendLoading: boolean
+  cid: string
 }
 
 interface ChatStoreActions {
   handleCheckSession: (i: ChatItemType) => void
   handleLoadHistory: (c?: string) => void
-  handleSendSeesion: (c: string, f: UploadFile[], isRebuild?: boolean) => void
+  handleSendSeesion: (c: string, f: UploadFile[], isRebuild?: boolean) => any
   handleGetChatList: () => Promise<ChatItemType[]>
   handleDeleteSession: (c: string) => void
   handleInit: (config?: Partial<ChatStoreState>) => void
@@ -62,6 +63,7 @@ const initState = {
   sideList: [],
   isSideListLoading: true,
   isSendLoading: false,
+  cid: '',
 }
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
@@ -134,9 +136,9 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
   },
   // 发消息
   async handleSendSeesion(content, fileList, isRebuild = false) {
-    console.log(content)
-
+    const cid = getTimeUnixStr()
     set({
+      cid,
       isSendLoading: true,
     })
     const { currentSession: { chatCode, functionCode }, gptCode } = get()
@@ -151,25 +153,31 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
       formData.append('content', content)
       formData.append('chatCode', chatCode)
       formData.append('isRebuild', `${isRebuild}`)
-      formData.append('cid', getTimeUnixStr())
+      formData.append('cid', cid)
       res = await fetchApi(fetchUrl, formData)
     }
     else {
       res = await fetchApi(fetchUrl, {
         content,
         chatCode,
-        cid: getTimeUnixStr(),
+        cid,
         isRebuild,
       })
     }
 
-    set((state) => {
-      if (isRebuild)
-        state.currentSession.list.pop()
+    if (res) {
+      set((state) => {
+        if (isRebuild)
+          state.currentSession.list.pop()
 
-      state.currentSession.list.push(res)
-      state.isSendLoading = false
+        state.currentSession.list.push(res)
+      })
+    }
+    set({
+      cid: '',
+      isSendLoading: false,
     })
+    return res
   },
   // 获取列表
   async handleGetChatList() {

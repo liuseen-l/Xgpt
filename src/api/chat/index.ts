@@ -1,4 +1,4 @@
-import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPresetList, RequestPushSession, ResponseAddChat, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePresetList, ResponsePushSession } from './types'
+import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPresetList, RequestPushSession, RequestStopSend, ResponseAddChat, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePresetList, ResponsePushSession } from './types'
 import { useGetFecth } from '~/utils'
 import request from '~/utils/request'
 
@@ -9,6 +9,7 @@ const API_URL = {
   CHAT_ADD: '/chat/add',
   CHAT_DELETE: '/chat/delete',
   CHAT_PRESET: '/chat/default/list',
+  CHAT_STOP: '/chat/request/stop',
 }
 
 /**
@@ -113,4 +114,15 @@ export function fetchGetFunction(params: RequestGptFunction) {
  */
 export function fetchPresetList(params: RequestPresetList) {
   return useGetFecth<ResponsePresetList>(API_URL.CHAT_PRESET, params)
+}
+
+/**
+ * 停止请求
+ * @param params
+ * @returns
+ */
+export async function fetchStopSend(params: RequestStopSend) {
+  return request.get(API_URL.CHAT_STOP, {
+    params,
+  })
 }

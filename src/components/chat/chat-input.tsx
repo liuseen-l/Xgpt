@@ -8,6 +8,7 @@ import { useChatStore } from '~/stores/chat'
 import type { FileType } from '~/utils/common'
 import { getBase64 } from '~/utils/common'
 import { FunctionCodeType } from '~/api/chat/types'
+import { fetchStopSend } from '~/api'
 
 interface Props {
   scrollDomToBottom: () => void
@@ -17,23 +18,33 @@ interface Props {
 const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
   const [userInput, setUserInput] = useState('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [isStopLoading, setStopLoading] = useState(false)
 
-  const { handleSendSeesion, currentSession, isSendLoading } = useChatStore(state => ({
+  const { handleSendSeesion, currentSession, isSendLoading, cid } = useChatStore(state => ({
     handleSendSeesion: state.handleSendSeesion,
     currentSession: state.currentSession,
     isSendLoading: state.isSendLoading,
+    cid: state.cid,
   }))
 
   const handleSend = async () => {
     try {
       await handleSendSeesion(userInput, fileList)
       setUserInput('')
+      setStopLoading(false)
       setFileList([])
       scrollDomToBottom()
     }
     catch (error) {
 
     }
+  }
+
+  const handleCancel = async () => {
+    setStopLoading(true)
+    await fetchStopSend({
+      cid,
+    })
   }
 
   const onInput = (text: string) => {
@@ -56,6 +67,9 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
 
   return (
     <div className="w-100% p-20px pt-10px tborder-base box-border relative">
+      {
+        isSendLoading && <Button type="link" loading={isStopLoading} onClick={handleCancel} className="absolute left-50% translate-x-[-50%] top-[-30px]">停止生成</Button>
+      }
       <div className="flex flex-col">
         <div className="mb-10px flex gap-6px">
           <ChatAction text={ACTIONS_CONFIGS.scroll.text} icon={ACTIONS_CONFIGS.scroll.inco} onClick={scrollDomToBottom} />
