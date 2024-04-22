@@ -41,6 +41,8 @@ export interface ChatSessionItem {
   question: string
   replication: string
   createTime: string
+  replyTime: string
+  isDefault: null | number
 }
 
 export enum FunctionCodeType {

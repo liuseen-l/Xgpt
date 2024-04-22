@@ -10,6 +10,9 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Button, Image } from 'antd'
 import parseUrl from 'parse-url'
+import { useMessage } from '~/utils'
+
+const { success } = useMessage()
 
 function escapeDollarNumber(text: string) {
   let escapedText = ''
@@ -135,18 +138,32 @@ export function Markdown(
     content: string
     loading?: boolean
     fontSize?: number
+    isUser?: boolean
     parentRef?: RefObject<HTMLDivElement>
     defaultShow?: boolean
   } & React.DOMAttributes<HTMLDivElement>,
 ) {
   const mdRef = useRef<HTMLDivElement>(null)
+  const handleCopy = async () => {
+    const text = mdRef.current!.innerText
+    await navigator.clipboard.writeText(text)
+    success('复制成功')
+  }
 
   return (
-    <div
-      className="markdown-body"
-      ref={mdRef}
-    >
-      <MarkdownContent content={props.content} />
-    </div>
+    <>
+      <div
+        ref={mdRef}
+      >
+        <MarkdownContent content={props.content} />
+      </div>
+      {
+        !props.isUser && (
+          <div className="mt-[-10px] mb-5px flex jc-e h-20px ">
+            <div onClick={handleCopy} className="i-ri:file-copy-2-line fs-16 cursor-pointer  sub-text-base"></div>
+          </div>
+        )
+      }
+    </>
   )
 }

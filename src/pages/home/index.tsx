@@ -1,24 +1,14 @@
-import { useNavigate } from 'react-router-dom'
+import clsx from 'clsx'
+import styles from './index.module.scss'
+import Nav from '~/components/home/home-nav'
+import Content from '~/components/home/home-content'
 
 function Home() {
-  const navigate = useNavigate()
-
-  const handleJump = (g: string) => {
-    navigate(`/chat/session?gptCode=${g}`)
-  }
-
   return (
-    <div className="h-100vh w-100vw flex">
-      <button onClick={() => handleJump('gpt_1')}>去文心</button>
-      <button onClick={() => handleJump('gpt_2')}>去讯飞</button>
-      <button onClick={() => handleJump('gpt_4')}>去通义</button>
-      <button onClick={() => navigate('/login')}>去登录</button>
-      <button onClick={() => {
-        localStorage.removeItem('globalStore')
-      }}
-      >
-        init
-      </button>
+    <div className={clsx('w-100% of-x-hidden h-100vh relative')}>
+      <div className={clsx('w-100% h-100vh absolute left-0 top-0 z-[-1]', styles.wrapper)}></div>
+      <Nav></Nav>
+      <Content></Content>
     </div>
   )
 }

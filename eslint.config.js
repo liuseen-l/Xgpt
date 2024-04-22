@@ -90,7 +90,8 @@ export default antfu({
     'react/require-render-return': 'error',
 
     // custom
-    "react-hooks/rules-of-hooks": 'off',
+    'react-hooks/rules-of-hooks': 'off',
     'no-console': 'off',
+    'unicorn/prefer-dom-node-text-content': 'off',
   },
 })

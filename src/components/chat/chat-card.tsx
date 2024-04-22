@@ -7,12 +7,13 @@ import { useChatStore } from '~/stores/chat'
 interface ChatCardItemProps {
   content: string
   isUser?: boolean
-  createTime: string
+  time: string
   supportResend: boolean
   question?: string
+  isDefault: null | number
 }
 
-const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser, supportResend, question }) => {
+const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, time, isUser, isDefault, supportResend, question }) => {
   const { handleSendSeesion } = useChatStore(state => ({
     handleSendSeesion: state.handleSendSeesion,
   }))
@@ -31,12 +32,13 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, createTime, isUser
         {/* content */}
         <div className={clsx('border-base fs-14 leading-5 border-rounded-2 px-10px', isUser ? 'bubble-bg-base-user' : 'bubble-bg-base')}>
           <Markdown
+            isUser={isUser}
             content={content}
           >
           </Markdown>
         </div>
-        <div className="fs-12 sub-text-base">{createTime}</div>
-        { (!isUser && supportResend) && (
+        <div className="fs-12 sub-text-base">{time}</div>
+        {(!isUser && supportResend && !isDefault) && (
           <div
             className="fs-12 cursor-pointer resend-text-base"
             onClick={() => {
@@ -57,13 +59,15 @@ interface ChatCardProps {
   replication: string
   createTime: string
   supportResend: boolean
+  replyTime: string
+  isDefault: null | number
 }
 
-const ChatCard: React.FC<ChatCardProps> = ({ question, supportResend, replication, createTime }) => {
+const ChatCard: React.FC<ChatCardProps> = ({ question, supportResend, isDefault, replyTime, replication, createTime }) => {
   return (
     <>
-      { !!question?.length && <ChatCardItem supportResend={supportResend} content={question} isUser createTime={createTime}></ChatCardItem>}
-      { !!replication?.length && <ChatCardItem supportResend={supportResend} content={replication} question={question} createTime={createTime}></ChatCardItem>}
+      {!!question?.length && <ChatCardItem supportResend={supportResend} isDefault={isDefault} content={question} isUser time={createTime}></ChatCardItem>}
+      {!!replication?.length && <ChatCardItem supportResend={supportResend} isDefault={isDefault} content={replication} question={question} time={replyTime}></ChatCardItem>}
     </>
   )
 }

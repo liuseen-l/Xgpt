@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react'
 import { Skeleton, Spin } from 'antd'
+import clsx from 'clsx'
 import ChatInput from './chat-input'
 import ChatCard from './chat-card'
+import styles from './chat-room.module.scss'
 import { useScrollToBottom, useToggle } from '~/utils'
 import { useChatStore } from '~/stores/chat'
 
@@ -38,7 +40,7 @@ function ChatRoom() {
 
   return (
     <>
-      <div className="flex flex-col flex-1 h-100% bg-base card-text-base">
+      <div className={clsx('flex flex-col flex-1 h-100% bg-base card-text-base', styles.wrapper)}>
         <div className="w-100% py-14px px-20px flex box-border ai-c bborder-base">
           <div className="flex flex-col">
             <span className="fs-20 font-700 leading-9">{currentSession.chatName}</span>
@@ -76,7 +78,7 @@ function ChatRoom() {
                   <Skeleton avatar paragraph={{ rows: 4 }} />
                 </>
                 )
-              : currentSession.list.map((i, idx) => <ChatCard supportResend={idx === currentSession.list.length - 1} key={idx} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)
+              : currentSession.list.map((i, idx) => <ChatCard supportResend={idx === currentSession.list.length - 1} key={idx} isDefault={i.isDefault} replyTime={i.replyTime} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)
           }
         </div>
         <ChatInput changeTheme={useToggle} scrollDomToBottom={scrollDomToBottom}></ChatInput>

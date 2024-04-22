@@ -1,0 +1,38 @@
+@mixin home-card-appear {
+  opacity: 0;
+  transform: translate3d(0, 100%, 0);
+}
+
+@mixin home-card1-appear-active {
+  opacity: 1;
+  transform: translateZ(0);
+  transition: all ease 1s;
+}
+
+
+.home-card1-appear {
+  @include home-card-appear;
+}
+
+.home-card1-appear-active {
+  @include home-card1-appear-active
+}
+
+.home-card2-appear {
+  @include home-card-appear;
+}
+
+.home-card2-appear-active {
+  @include home-card1-appear-active;
+  transition-delay: 0.155s;
+}
+
+
+.home-card3-appear {
+  @include home-card-appear;
+}
+
+.home-card3-appear-active {
+  @include home-card1-appear-active;
+  transition-delay: 0.31s;
+}

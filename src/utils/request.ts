@@ -16,10 +16,11 @@ import { useMessage } from './hooks'
 import { useGlobalStore } from '~/stores/global'
 import { toLoginPage } from '~/router'
 
+const { error } = useMessage()
+
 function resolveError(response: AxiosResponse<any, any>) {
   const { data } = response
 
-  const { error } = useMessage()
   if (data.code === 401) {
     error(data.message)
     localStorage.removeItem('globalStore')
