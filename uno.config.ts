@@ -29,12 +29,13 @@ export default defineConfig({
     {
       'switch-animation': 'transition duration-300',
       /** app bg base */
-      'bg-base': 'bg-[#fff] dark:bg-[#1e1e1e] switch-animation',
-      'logo-bg-base': 'fill-[#8bcae0] dark:fill-[#3c5159] switch-animation',
+      'bg-base': 'bg-transparent dark:bg-[#1e1e1e] switch-animation',
+      'input-bg-base': 'bg-#fff dark:bg-[#1e1e1e] switch-animation',
+      'logo-bg-base': 'fill-[#a7ccf3] dark:fill-[#3c5159] switch-animation',
       /** chatroom side bg base */
-      'siderbar-bg-base': 'bg-[#e7f8ff] dark:bg-[#1b262a] switch-animation',
+      'siderbar-bg-base': 'bg-[#f6fafe] dark:bg-[#1b262a] switch-animation',
       'bubble-bg-base': 'bg-[rgba(0,0,0,.05)] dark:bg-neutral-900 switch-animation',
-      'bubble-bg-base-user': 'bg-[#e7f8ff] dark:bg-[#1b262a] switch-animation',
+      'bubble-bg-base-user': 'bg-#fff dark:bg-[#1b262a] switch-animation',
       /** app text base */
       'text-base': 'text-black dark:text-neutral-400 switch-animation',
       // input 选项
@@ -42,7 +43,7 @@ export default defineConfig({
       // 对话卡片时间
       'sub-text-base': 'text-neutral-400 dark:text-neutral-500 switch-animation',
       // 对话卡片
-      'card-text-base': 'text-black dark:text-neutral-300 switch-animation',
+      'card-text-base': 'text-#4b5b76 dark:text-neutral-300 switch-animation',
       // 对话重新发送
       'resend-text-base': 'text-blue-500 dark:text-[#1d93ab] switch-animation',
       'btn-base': `border-none hover:filter-brightness-95 ${resolveBtnBase(['text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e] bg-[#fff] switch-animation`,

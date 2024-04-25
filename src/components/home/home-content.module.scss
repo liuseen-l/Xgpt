@@ -223,8 +223,6 @@
 }
 
 
-.test {}
-
 
 @keyframes moveLight {
   0% {
@@ -236,4 +234,26 @@
     -webkit-transform: translateX(150%) translateY(150%) rotate(-60deg);
     transform: translateX(150%) translateY(150%) rotate(-60deg);
   }
+}
+
+.ppt {
+  background: url('../../asstes/images/home/ppt.png') no-repeat;
+  background-size: cover;
+}
+
+.ppt-card0 {
+  background: url('../../asstes/images/home/ppt-card1.png') no-repeat;
+  background-size: contain;
+}
+.ppt-card1 {
+  background: url('../../asstes/images/home/ppt-card2.png') no-repeat;
+  background-size: contain;
+}
+.ppt-card2 {
+  background: url('../../asstes/images/home/ppt-card3.png') no-repeat;
+  background-size: contain;
+}
+.ppt-card3 {
+  background: url('../../asstes/images/home/ppt-card4.png') no-repeat;
+  background-size: contain;
 }

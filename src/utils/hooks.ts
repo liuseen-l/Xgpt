@@ -1,18 +1,36 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import type { RefObject } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import { message } from 'antd'
 import request from './request'
 /**
  * 控制主题
  */
-export function useToggle() {
-  const root = document.querySelector('#root')
-  const classList = Array.from(root?.classList || [])
-  if (classList.includes('dark'))
-    root?.classList.remove('dark')
-  else
-    root?.classList.add('dark')
+export const ThemeInitContext = createContext<{
+  handleToggle: () => void
+  isDark: boolean
+}>({} as any)
+
+export function useTheme() {
+  const [isDark, setDark] = useState(false)
+
+  const handleToggle = () => {
+    const root = document.querySelector('#root')
+    const classList = Array.from(root?.classList || [])
+    if (classList.includes('dark')) {
+      setDark(false)
+      root?.classList.remove('dark')
+    }
+    else {
+      setDark(true)
+      root?.classList.add('dark')
+    }
+  }
+
+  return {
+    handleToggle,
+    isDark,
+  }
 }
 
 /**

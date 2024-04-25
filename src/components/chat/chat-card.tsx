@@ -30,7 +30,7 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, time, isUser, isDe
           }
         </div>
         {/* content */}
-        <div className={clsx('border-base fs-14 leading-5 border-rounded-2 px-10px', isUser ? 'bubble-bg-base-user' : 'bubble-bg-base')}>
+        <div className={clsx('border-base fs-15 lh-6 leading-5 border-rounded-2 px-10px', isUser ? 'bubble-bg-base-user' : 'bubble-bg-base')}>
           <Markdown
             isUser={isUser}
             content={content}

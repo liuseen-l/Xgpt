@@ -112,7 +112,7 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
           disabled={isSendLoading}
           onInput={e => onInput(e.currentTarget.value)}
           placeholder="请输入内容......"
-          className="bg-base hover:border-[#d9d9d9] dark:hover:border-[#ffffff31] dark:border-[#ffffff31] focus:border-[#1d93ab] dark:focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "
+          className="input-bg-base hover:border-[#d9d9d9] dark:hover:border-[#ffffff31] dark:border-[#ffffff31] focus:border-[#1d93ab] dark:focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "
           style={{ minHeight: 150, maxHeight: 300 }}
         >
         </Input.TextArea>

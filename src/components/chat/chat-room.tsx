@@ -1,15 +1,17 @@
-import { useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { Skeleton, Spin } from 'antd'
 import clsx from 'clsx'
 import ChatInput from './chat-input'
 import ChatCard from './chat-card'
 import styles from './chat-room.module.scss'
-import { useScrollToBottom, useToggle } from '~/utils'
+import { ThemeInitContext, useScrollToBottom, useTheme } from '~/utils'
 import { useChatStore } from '~/stores/chat'
 
 function ChatRoom() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isLoadMore, setLoadMore] = useState(false)
+
+  const { handleToggle } = useContext(ThemeInitContext)
   // const isScrolledToBottom = scrollRef?.current
   //   ? Math.abs(
   //     scrollRef.current.scrollHeight
@@ -81,7 +83,7 @@ function ChatRoom() {
               : currentSession.list.map((i, idx) => <ChatCard supportResend={idx === currentSession.list.length - 1} key={idx} isDefault={i.isDefault} replyTime={i.replyTime} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)
           }
         </div>
-        <ChatInput changeTheme={useToggle} scrollDomToBottom={scrollDomToBottom}></ChatInput>
+        <ChatInput changeTheme={handleToggle} scrollDomToBottom={scrollDomToBottom}></ChatInput>
       </div>
     </>
   )

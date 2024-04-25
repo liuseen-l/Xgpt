@@ -2,6 +2,7 @@ import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 import ChatAddPanel from '~/components/chat/chat-add-panel'
 import IntroDuce from '~/components/chat/chat-introduce'
 import ChatRoom from '~/components/chat/chat-room'
+import PPTHome from '~/components/ppt/ppt-home'
 import Chat from '~/pages/chat'
 import Forget from '~/pages/forget'
 import Home from '~/pages/home'
@@ -33,6 +34,10 @@ export const router = createHashRouter(
           ),
         },
       ],
+    },
+    {
+      path: '/ppt',
+      Component: PPTHome,
     },
     {
       path: '/center',

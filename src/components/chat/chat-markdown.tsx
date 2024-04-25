@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import React, { useMemo, useRef } from 'react'
+import React, { useContext, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import RemarkBreaks from 'remark-breaks'
 import RehypeKatex from 'rehype-katex'
@@ -7,10 +7,10 @@ import RemarkMath from 'remark-math'
 import RemarkGfm from 'remark-gfm'
 import 'katex/dist/katex.min.css'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { coldarkDark, gruvboxDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Button, Image } from 'antd'
 import parseUrl from 'parse-url'
-import { useMessage } from '~/utils'
+import { ThemeInitContext, useMessage } from '~/utils'
 
 const { success } = useMessage()
 
@@ -54,6 +54,8 @@ function _MarkDownContent(props: { content: string }) {
     [props.content],
   )
 
+  const { isDark } = useContext(ThemeInitContext)
+
   return (
     <ReactMarkdown
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
@@ -70,7 +72,7 @@ function _MarkDownContent(props: { content: string }) {
           const match = /language-(\w+)/.exec(className || '')
 
           const theme = {
-            light: coldarkDark,
+            light: isDark ? gruvboxDark : coldarkDark,
           }
 
           return !inline && match

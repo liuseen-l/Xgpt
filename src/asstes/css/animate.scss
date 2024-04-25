@@ -36,3 +36,14 @@
   @include home-card1-appear-active;
   transition-delay: 0.31s;
 }
+
+.ppt-animate-enter {
+  opacity: 0;
+  transform: translateY(50%);
+}
+
+.ppt-animate-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 1s ease;
+}

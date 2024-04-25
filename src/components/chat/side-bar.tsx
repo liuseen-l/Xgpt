@@ -105,7 +105,7 @@ function SideBar() {
   return (
     <div className={clsx('w-[var(--sidebar-width)] h-100%', styles.sidebar)}>
       {/* header */}
-      <div className="text-base siderbar-bg-base flex flex-col select-none p-20px box-border relative w-100% h-100%">
+      <div className="text-base siderbar-bg-base flex rounded-r-8 flex-col select-none p-20px box-border relative w-100% h-100%">
         <div className="flex jc-b ai-c mb-20px">
           {
             !shouldNarrow && (
