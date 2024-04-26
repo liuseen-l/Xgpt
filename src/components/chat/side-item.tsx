@@ -36,7 +36,7 @@ const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, cha
       className="relative box-border mb-6px b-2-transparent border-rounded-3"
       style={style}
     >
-      <div className="p-10px flex flex-col bg-base hover:bg-neutral-200 box-border dark:hover:bg-neutral-700 border-rounded-3 overflow-hidden cursor-pointer group">
+      <div className="p-10px flex flex-col input-bg-base hover:bg-neutral-200 box-border dark:hover:bg-neutral-700 border-rounded-3 overflow-hidden cursor-pointer group">
         <div onClick={handleDelete} className="i-typcn:delete-outline absolute right-0 z-10 top-0 transition-all opacity-0 hover:opacity-100 group-hover:opacity-50 group-hover:translate-x-[-4px]"></div>
         {
           !shouldNarrow

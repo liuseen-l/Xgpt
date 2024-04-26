@@ -12,11 +12,11 @@ export const ThemeInitContext = createContext<{
 }>({} as any)
 
 export function useTheme() {
-  const [isDark, setDark] = useState(false)
+  const root = document.querySelector('#root')
+  const classList = Array.from(root?.classList || [])
+  const [isDark, setDark] = useState(classList.includes('dark'))
 
   const handleToggle = () => {
-    const root = document.querySelector('#root')
-    const classList = Array.from(root?.classList || [])
     if (classList.includes('dark')) {
       setDark(false)
       root?.classList.remove('dark')

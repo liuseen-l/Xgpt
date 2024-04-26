@@ -42,8 +42,8 @@ function ChatRoom() {
 
   return (
     <>
-      <div className={clsx('flex flex-col flex-1 h-100% bg-base card-text-base', styles.wrapper)}>
-        <div className="w-100% py-14px px-20px flex box-border ai-c bborder-base">
+      <div className={clsx('flex flex-col flex-1 h-100% bg-base', styles.wrapper)}>
+        <div className="w-100% py-14px px-20px flex box-border ai-c text-base  bborder-base">
           <div className="flex flex-col">
             <span className="fs-20 font-700 leading-9">{currentSession.chatName}</span>
             <span className="fs-14">

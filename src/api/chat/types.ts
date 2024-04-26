@@ -179,6 +179,7 @@ export interface GptPresetItem {
   replication: string
   total: number
   createTime: string
+  kind: string
 }
 
 export interface ResponsePresetList {
