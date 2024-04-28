@@ -16,7 +16,7 @@ const items: MenuProps['items'] = [
   },
   {
     label: 'PPT',
-    key: 'ppt',
+    key: 'ppt/chat',
   },
 ]
 

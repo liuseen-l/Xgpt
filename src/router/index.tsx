@@ -2,12 +2,14 @@ import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 import ChatAddPanel from '~/components/chat/chat-add-panel'
 import IntroDuce from '~/components/chat/chat-introduce'
 import ChatRoom from '~/components/chat/chat-room'
-import PPTHome from '~/components/ppt/ppt-home'
-import Chat from '~/pages/chat'
+import PPTHome from '~/pages/ppt'
+import PPTChat from '~/components/ppt/ppt-chat'
 import Forget from '~/pages/forget'
 import Home from '~/pages/home'
 import Login from '~/pages/login'
 import Register from '~/pages/register'
+import Community from '~/components/ppt/ppt-community'
+import Chat from '~/pages/chat'
 
 export const router = createHashRouter(
   [
@@ -38,6 +40,22 @@ export const router = createHashRouter(
     {
       path: '/ppt',
       Component: PPTHome,
+      children: [
+        {
+          path: 'chat',
+          Component: PPTChat,
+        },
+        {
+          path: 'community',
+          Component: Community,
+        },
+        {
+          path: '/ppt',
+          element: (
+            <Navigate to="/ppt/chat" />
+          ),
+        },
+      ],
     },
     {
       path: '/center',

@@ -134,7 +134,7 @@ export interface GptFunctionItem {
 }
 
 export interface ResponseGptFunction {
-  data: GptFunctionItem[]
+  data: GptFunctionItem[] | Record<string, GptFunctionItem[]>
 }
 
 /**

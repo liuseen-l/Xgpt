@@ -8,8 +8,9 @@ import { TinyColor } from '@ctrl/tinycolor'
 import { CheckOutlined, RightCircleTwoTone } from '@ant-design/icons'
 import { useInViewport } from 'ahooks'
 import styles from './home-content.module.scss'
-import { fetchPresetList } from '~/api'
+import { fetchGetFunction, fetchPresetList } from '~/api'
 import { PPT_CONFIG, UTILS_CONFIG } from '~/consts/home-config'
+import type { GptFunctionItem } from '~/api/chat/types'
 
 interface BlockProps {
   title: string
@@ -54,6 +55,8 @@ const ContentPPT: React.FC = () => {
   if (inViewport)
     hasShow.current = true
 
+  const navigate = useNavigate()
+
   return (
     <Block title="PPT应用" className={clsx('mt-20 important:px-0 pt-10 h-650px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
       <CSSTransition
@@ -90,7 +93,7 @@ const ContentPPT: React.FC = () => {
             },
           }}
         >
-          <Button type="primary" size="large" icon={<RightCircleTwoTone />}>
+          <Button type="primary" size="large" onClick={() => navigate(`/ppt`)} icon={<RightCircleTwoTone />}>
             立即前往
           </Button>
         </ConfigProvider>
@@ -104,6 +107,9 @@ function ContentUtils() {
   const handleJump = (g: string) => {
     navigate(`/chat/session?gptCode=${g}`)
   }
+
+  const { data } = fetchGetFunction()
+  console.log(data)
 
   return (
     <Block title="集成工具" subTitle="集成多平台ChatGPT，智能交互无界，畅享高效沟通新体验">
@@ -122,27 +128,18 @@ function ContentUtils() {
                   <div className={clsx('h-346px w-358px rounded-5  hover:scale-105 transition-all relative cursor-pointer', styles[`card${idx + 1}`])} onClick={() => handleJump(i.url)}>
                     <span className="fs-20 fw-600">{i.title}</span>
                     <p className="text-#4b5b76 lh-7">{i.intro}</p>
-                    <div className="absolute bottom-10 right-10 gap-col-10 gap-row-3 grid grid-cols-2 grid-rows-2">
-                      <div className="flex ai-c  ">
-                        {/* <CheckOutlined /> */}
-                        <div className="i-material-symbols:fitbit-check-small fs-20 text-#1975FF"></div>
-                        <div className="text-#252B3A fs-14 fw-400">技术支持</div>
-                      </div>
-                      <div className="flex ai-c  ">
-                        {/* <CheckOutlined /> */}
-                        <div className="i-material-symbols:fitbit-check-small fs-20 text-#1975FF"></div>
-                        <div className="text-#252B3A fs-14 fw-400">技术支持</div>
-                      </div>
-                      <div className="flex ai-c  ">
-                        {/* <CheckOutlined /> */}
-                        <div className="i-material-symbols:fitbit-check-small fs-20 text-#1975FF"></div>
-                        <div className="text-#252B3A fs-14 fw-400">技术支持</div>
-                      </div>
-                      <div className="flex ai-c  ">
-                        {/* <CheckOutlined /> */}
-                        <div className="i-material-symbols:fitbit-check-small fs-20 text-#1975FF"></div>
-                        <div className="text-#252B3A fs-14 fw-400">技术支持</div>
-                      </div>
+                    <div className="absolute gap-col-8 gap-row-3 grid mt-10px grid-cols-2 grid-rows-2">
+
+                      {
+                        (data?.data as Record<string, GptFunctionItem[]>)?.[i.url]?.map((i, idx) => {
+                          return (
+                            <div key={idx} className="flex ai-c">
+                              <div className="i-material-symbols:fitbit-check-small fs-20 text-#1975FF"></div>
+                              <div className="text-#252B3A fs-14 fw-400">{i.functionName}</div>
+                            </div>
+                          )
+                        })
+                      }
                     </div>
                   </div>
                 </div>

@@ -103,7 +103,7 @@ export async function fetchImageUnd(url: string, params: RequestImageUnd) {
  * @param params
  * @returns
  */
-export function fetchGetFunction(params: RequestGptFunction) {
+export function fetchGetFunction(params?: RequestGptFunction) {
   return useGetFecth<ResponseGptFunction>(API_URL.CHAT_GET_FUNCTION, params)
 }
 
