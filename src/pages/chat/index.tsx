@@ -9,12 +9,12 @@ function Chat() {
 
   return (
     <div className={clsx('h-100vh w-100vw flex overflow-hidden bg-base relative', !isDark && styles.wrapper)}>
-      <SideBar></SideBar>
       <ThemeInitContext.Provider value={{
         handleToggle,
         isDark,
       } as any}
       >
+        <SideBar></SideBar>
         <Outlet></Outlet>
       </ThemeInitContext.Provider>
     </div>

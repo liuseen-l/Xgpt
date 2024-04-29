@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import { useChatStore } from '~/stores/chat'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 
@@ -11,9 +12,10 @@ interface Props {
   chatCode: string
   shouldNarrow: boolean
   functionName: string
+  className?: string
 }
 
-const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, chatName, chatCode, chatAmount, functionName, shouldNarrow }) => {
+const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, chatName, chatCode, className, chatAmount, functionName, shouldNarrow }) => {
   const { handleDeleteSession, handleGetChatList, handleCheckSession, currentSession } = useChatStore(state => ({
     handleDeleteSession: state.handleDeleteSession,
     handleCheckSession: state.handleCheckSession,
@@ -33,7 +35,7 @@ const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, cha
   return (
     <div
       onClick={_onClick}
-      className="relative box-border mb-6px b-2-transparent border-rounded-3"
+      className={clsx('relative box-border mb-6px b-2-transparent border-rounded-3', className)}
       style={style}
     >
       <div className="p-10px flex flex-col input-bg-base hover:bg-neutral-200 box-border dark:hover:bg-neutral-700 border-rounded-3 overflow-hidden cursor-pointer group">

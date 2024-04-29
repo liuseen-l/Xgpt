@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Skeleton } from 'antd'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import clsx from 'clsx'
@@ -7,6 +7,7 @@ import styles from './antd.module.scss'
 import ChatGptIcon from '~/asstes/icons/chatgpt'
 import type { ChatItemType } from '~/api/chat/types'
 import { useChatStore } from '~/stores/chat'
+import { ThemeInitContext } from '~/utils'
 
 const MIN_SIDEBAR_WIDTH = 280
 const MAX_SIDEBAR_WIDTH = 500
@@ -20,6 +21,7 @@ function SideBar() {
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH)
   const startDragWidth = useRef(DEFAULT_SIDEBAR_WIDTH)
 
+  const { isDark } = useContext(ThemeInitContext)
   const [search] = useSearchParams()
   const gptCode = search.get('gptCode')!
   const lastUpdateTime = useRef(Date.now())
@@ -134,8 +136,9 @@ function SideBar() {
                   shouldNarrow={shouldNarrow}
                   functionName={i.functionName}
                   style={{
-                    border: `2px solid ${i.chatCode === currentSession.chatCode ? '#1d93ab' : 'transparent'}`,
-                  }}
+                    '--card-border': `${isDark ? '#1d93ab' : '#0099ff'}`,
+                    'border': `2px solid ${i.chatCode === currentSession.chatCode ? 'var(--card-border)' : 'transparent'}`,
+                  } as React.CSSProperties}
                   onClick={() => { handleSelect(i) }}
                   key={idx}
                 >

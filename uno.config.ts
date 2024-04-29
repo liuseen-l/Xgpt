@@ -46,9 +46,9 @@ export default defineConfig({
       'card-text-base': 'text-#4b5b76 dark:text-neutral-300 switch-animation',
       // 对话重新发送
       'resend-text-base': 'text-blue-500 dark:text-[#1d93ab] switch-animation',
-      'btn-base': `border-none hover:filter-brightness-95 ${resolveBtnBase(['text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e] bg-[#fff] switch-animation`,
+      'btn-base': `border-none hover:filter-brightness-95 ${resolveBtnBase(['dark:text-[#1d93ab]', 'dark:bg-[#1e1e1e]'])} dark:bg-[#1e1e1e]  switch-animation`,
       // 发送按钮
-      'session-btn-base': `border-none ${resolveBtnBase(['text-white', 'dark:bg-[#1d93ab]', 'bg-[#1d93ab]'])} dark:bg-[#1d93ab] bg-[#1d93ab] switch-animation`,
+      'session-btn-base': `border-none ${resolveBtnBase(['dark:bg-[#1d93ab]', 'bg-[#1d93ab]'])} dark:bg-[#1d93ab] bg-[#1d93ab] switch-animation`,
       'pm-0': 'p-0 m-0',
     },
     [/^([tlrb])?border-base$/, ([, d]) => `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#ffffff31 switch-animation`],

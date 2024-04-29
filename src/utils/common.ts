@@ -22,3 +22,12 @@ export function getBase64(file: FileType): Promise<string> {
 export function getTimeUnixStr() {
   return `${Date.now()}`
 }
+
+/**
+ * 睡眠
+ * @param time
+ * @returns
+ */
+export function sleep(time: number) {
+  return new Promise(r => setTimeout(() => r(true), time))
+}

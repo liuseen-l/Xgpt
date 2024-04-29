@@ -116,7 +116,7 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
           style={{ minHeight: 150, maxHeight: 300 }}
         >
         </Input.TextArea>
-        <Button onClick={handleSend} className="bg-[#1d93ab] border-none text-white important:hover:bg-[#1d93ab] hover:filter-brightness-90 important:hover:text-white fs-12 absolute z-100 bottom-10px right-10px" loading={isSendLoading}>
+        <Button onClick={handleSend} type="primary" className="dark:bg-[#1d93ab] border-none important:dark:hover:bg-[#1d93ab] hover:filter-brightness-90 important:dark:hover:text-white fs-12 absolute z-100 bottom-10px right-10px" loading={isSendLoading}>
           发送
         </Button>
       </div>
