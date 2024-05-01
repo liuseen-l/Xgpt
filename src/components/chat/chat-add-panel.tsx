@@ -18,10 +18,6 @@ const ChatAddPanel: React.FC = () => {
     handleCheckSession: state.handleCheckSession,
   }))
 
-  // const { data, isLoading } = fetchGetFunction({
-  //   gptCode,
-  // })
-
   const { data, isLoading } = fetchPresetList({
     gptCode,
   })

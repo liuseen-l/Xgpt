@@ -30,12 +30,12 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <section className={clsx('w-100% max-w-100% sticky top-0 flex h-64px jc-b z-100 ai-c px-20px box-border', styles.wrapper)}>
+    <div className={clsx('w-100% sticky top-0 flex h-64px jc-b ai-c px-20px z-100 box-border', styles.wrapper)}>
       <div className="pl-100px flex flex-1 ai-c">
         <span className="fs-30 fw-700 mr-50px">Xgpt</span>
         <Menu onClick={onClick} className="w-200px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
-    </section>
+    </div>
   )
 }
 

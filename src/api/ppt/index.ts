@@ -1,9 +1,299 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestPPTOutline, ResponsePPTOutline } from './types'
+import type { RequestCreatePPT, RequestPPTCollect, RequestPPTList, RequestPPTOutline, ResponseCreatePPT, ResponsePPTClassify, ResponsePPTList, ResponsePPTOutline } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
   PPT_OUTLINE: '/ppt/outline/create',
+  PPT_CREATE: '/ppt/create/by/outline',
+  PPT_CLASSIFY: '/ppt/kind/list',
+  PPT_LIST: '/ppt/list/by/kind',
+  PPT_COLLECT: '/ppt/collect',
+}
+const obj = {
+  outline: {
+    subTitle: ' 如何有效提升公众演说力',
+    chapters: [
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763175,
+            chapterTitle: '主题背景阐述',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763176,
+            chapterTitle: '主题重要性分析',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763177,
+            chapterTitle: '主题相关数据展示',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763152,
+        chapterTitle: '演讲主题介绍',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763235,
+            chapterTitle: '个人背景概述',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763236,
+            chapterTitle: '职业经历亮点',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763237,
+            chapterTitle: '与主题的关联性',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763155,
+        chapterTitle: '演讲者自我介绍',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763209,
+            chapterTitle: '演讲主题核心',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763210,
+            chapterTitle: '关键信息提炼',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763211,
+            chapterTitle: '内容逻辑梳理',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763154,
+        chapterTitle: '演讲内容概览',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763178,
+            chapterTitle: '第一部分核心概念',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763179,
+            chapterTitle: '第一部分详细解析',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763180,
+            chapterTitle: '第一部分实际应用',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763156,
+        chapterTitle: '第一部分详解',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763212,
+            chapterTitle: '第二部分核心内容',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763213,
+            chapterTitle: '分点阐述关键信息',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763214,
+            chapterTitle: '实例解析加深理解',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763158,
+        chapterTitle: '第二部分详解',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763215,
+            chapterTitle: '第三部分核心概念',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763216,
+            chapterTitle: '关键内容深入剖析',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763217,
+            chapterTitle: '实例应用与效果展示',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763153,
+        chapterTitle: '第三部分详解',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763206,
+            chapterTitle: '问题一的深度解析',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763207,
+            chapterTitle: '解答关键问题二',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763208,
+            chapterTitle: '针对问题三的讨论',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763157,
+        chapterTitle: '关键问题解答',
+        fileType: 0,
+      },
+      {
+        chartFlag: false,
+        searchFlag: false,
+        chapterContents: [
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763218,
+            chapterTitle: '回顾演讲要点',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763219,
+            chapterTitle: '表达诚挚感谢',
+            fileType: 0,
+          },
+          {
+            chartFlag: 'false',
+            searchFlag: 'false',
+            fileUrl: '',
+            id: 64763220,
+            chapterTitle: '期待后续交流',
+            fileType: 0,
+          },
+        ],
+        fileUrl: '',
+        id: 64763159,
+        chapterTitle: '结束语及致谢',
+        fileType: 0,
+      },
+    ],
+    fileUrl: '',
+    end: '',
+    id: 64763109,
+    title: ' 演讲技巧与表达艺术',
+    fileType: 0,
+  },
+  sid: '2e2becd3740545e1aec01c2ac1247062',
+  content: '演讲模板PPT',
 }
 
 /**
@@ -12,60 +302,66 @@ const API_URL = {
  * @returns
  */
 export async function fetchPPTOutline(params: RequestPPTOutline) {
-  // const res = await request.post<ResponsePPTOutline>(API_URL.PPT_OUTLINE, params)
-  // return res.data?.data
-  const obj = {
-    outline: {
-      subTitle: ' 探索经典文学的人性与智慧',
-      chapters: [
-        {
-          chapterContents: [
-            {
-              chapterTitle: '《红楼梦》人物解析',
-            },
-            {
-              chapterTitle: '情感世界探究',
-            },
-            {
-              chapterTitle: '社会背景剖析',
-            },
-          ],
-          chapterTitle: '《红楼梦》阅读心得',
-        },
-        {
-          chapterContents: [
-            {
-              chapterTitle: '《西游记》主要情节',
-            },
-            {
-              chapterTitle: '人物性格分析',
-            },
-            {
-              chapterTitle: '主题思想解读',
-            },
-          ],
-          chapterTitle: '《西游记》故事解析',
-        },
-        {
-          chapterContents: [
-            {
-              chapterTitle: '宋江智谋与领导',
-            },
-            {
-              chapterTitle: '武松的侠义精神',
-            },
-            {
-              chapterTitle: '鲁智深的出世入世',
-            },
-          ],
-          chapterTitle: '《水浒传》人物评述',
-        },
-      ],
-      title: ' 四大名著的深度解读',
-    },
-    sid: '3536054b79b4481daac58625f9568fd5',
-    content: '四大名著读书报告',
-  }
+  const res = await request.post<ResponsePPTOutline>(API_URL.PPT_OUTLINE, params)
+  const data = res.data?.data
 
   return resolvePPTOutline(obj)
+}
+
+/**
+ * 生成ppt
+ * @param params
+ * @returns
+ */
+export async function fetchCreatePPT(params: RequestCreatePPT) {
+  const res = await request.post<ResponseCreatePPT>(API_URL.PPT_CREATE, params)
+  const r = {
+    code: 200,
+    data: {
+      userHeadshot: null,
+      userCode: '123',
+      username: null,
+      question: '授课模板PPT',
+      replication: 'https://bjcdn.openstorage.cn/xinghuo-privatedata/%2Ftmp/apiTempFilec7fac625ccd943d9899c4f177cd4aedd1668730078262484467/%E6%8E%88%E8%AF%BE%E6%A8%A1%E6%9D%BF%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9.pptx',
+      coverUrl: 'https://bjcdn.openstorage.cn/xinghuo-privatedata/2x8wv4xs.jpg',
+      createTime: '2024/04/30 15:42:33',
+      replyTime: '2024/04/30 15:42:33',
+    },
+    message: 'ok',
+  }
+  return r.data
+  // return res.data?.data
+}
+
+/**
+ * ppt分类
+ * @param params
+ * @returns
+ */
+export async function fetchPPTClassify() {
+  const res = await request.get<ResponsePPTClassify>(API_URL.PPT_CLASSIFY)
+  return res.data?.data
+}
+
+/**
+ * ppt列表
+ * @param params
+ * @returns
+ */
+export async function fetchPPTList(params: RequestPPTList) {
+  const res = await request.get<ResponsePPTList>(API_URL.PPT_LIST, {
+    params,
+  })
+  return res.data?.data
+}
+
+/**
+ * 收藏ppt
+ * @param params
+ * @returns
+ */
+export async function fetchPPTCollect(params: RequestPPTCollect) {
+  request.get(API_URL.PPT_COLLECT, {
+    params,
+  })
 }

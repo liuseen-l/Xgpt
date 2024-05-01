@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Button, ConfigProvider } from 'antd'
 import { TinyColor } from '@ctrl/tinycolor'
-import { CheckOutlined, RightCircleTwoTone } from '@ant-design/icons'
+import { RightCircleTwoTone } from '@ant-design/icons'
 import { useInViewport } from 'ahooks'
 import styles from './home-content.module.scss'
 import { fetchGetFunction, fetchPresetList } from '~/api'
@@ -109,7 +109,6 @@ function ContentUtils() {
   }
 
   const { data } = fetchGetFunction()
-  console.log(data)
 
   return (
     <Block title="集成工具" subTitle="集成多平台ChatGPT，智能交互无界，畅享高效沟通新体验">
@@ -183,18 +182,6 @@ const ContentPreset: React.FC = () => {
 }
 
 const Content: React.FC = () => {
-  // const handleMouseEnter = (e: MouseEvent<HTMLDivElement>) => {
-  //   const target = e.target as HTMLDivElement
-  //   target.classList.add(styles.active)
-  //   // e.target?.classList?.add(styles.active)
-  // }
-
-  // const handleMouseLeave = (e: MouseEvent<HTMLDivElement>) => {
-  //   const target = e.target as HTMLDivElement
-  //   target.classList.remove(styles.active)
-  //   // e.target?.classList?.add(styles.active)
-  // }
-
   return (
     <>
       <main className="w-100vw box-border mt-15">

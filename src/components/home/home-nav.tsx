@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './home-nav.module.scss'
+import { useGlobalStore } from '~/stores/global'
 
 const items: MenuProps['items'] = [
   {
@@ -24,6 +25,10 @@ const Nav: React.FC = () => {
   const navigate = useNavigate()
   const [current, setCurrent] = useState(items[0]!.key)
 
+  const { isLogin } = useGlobalStore(state => ({
+    isLogin: state.token,
+  }))
+
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key)
     if (e.key === 'chat')
@@ -39,10 +44,14 @@ const Nav: React.FC = () => {
         <span className="fs-30 fw-700 mr-50px">Xgpt</span>
         <Menu onClick={onClick} className="w-200px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
-      <div className="flex gap-5px ">
-        <Button onClick={() => navigate('/login')} className="bg-transparent important:hover:bg-[#f5f4f6] border-none important:hover:b-1-#c4c3c3 important:hover:text-black b-1-#c4c3c3">登录</Button>
-        <Button onClick={() => navigate('/register')} className="border-none important:hover:bg-white important:hover:text-black">注册</Button>
-      </div>
+      {
+        !isLogin?.length && (
+          <div className="flex gap-5px ">
+            <Button onClick={() => navigate('/login')} className="bg-transparent important:hover:bg-[#f5f4f6] border-none important:hover:b-1-#c4c3c3 important:hover:text-black b-1-#c4c3c3">登录</Button>
+            <Button onClick={() => navigate('/register')} className="border-none important:hover:bg-white important:hover:text-black">注册</Button>
+          </div>
+        )
+      }
     </section>
   )
 }

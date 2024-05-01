@@ -1,6 +1,5 @@
 import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 import ChatAddPanel from '~/components/chat/chat-add-panel'
-import IntroDuce from '~/components/chat/chat-introduce'
 import ChatRoom from '~/components/chat/chat-room'
 import PPTHome from '~/pages/ppt'
 import PPTChat from '~/components/ppt/ppt-chat'
@@ -10,6 +9,9 @@ import Login from '~/pages/login'
 import Register from '~/pages/register'
 import Community from '~/components/ppt/ppt-community'
 import Chat from '~/pages/chat'
+import ComCenter from '~/components/ppt/community-center'
+import ComLike from '~/components/ppt/community-like'
+import ComUpload from '~/components/ppt/community-upload'
 
 export const router = createHashRouter(
   [
@@ -24,10 +26,6 @@ export const router = createHashRouter(
         {
           path: 'addpanel',
           Component: ChatAddPanel,
-        },
-        {
-          path: 'introduce',
-          Component: IntroDuce,
         },
         {
           path: '/chat',
@@ -48,6 +46,27 @@ export const router = createHashRouter(
         {
           path: 'community',
           Component: Community,
+          children: [
+            {
+              path: 'center',
+              Component: ComCenter,
+            },
+            {
+              path: 'like',
+              Component: ComLike,
+            },
+            {
+              path: 'upload',
+              Component: ComUpload,
+            },
+            {
+              path: '/ppt/community',
+              element: (
+                <Navigate to="/ppt/community/center" />
+              ),
+            },
+          ],
+
         },
         {
           path: '/ppt',

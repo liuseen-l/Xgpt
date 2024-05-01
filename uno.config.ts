@@ -50,6 +50,7 @@ export default defineConfig({
       // 发送按钮
       'session-btn-base': `border-none ${resolveBtnBase(['dark:bg-[#1d93ab]', 'bg-[#1d93ab]'])} dark:bg-[#1d93ab] bg-[#1d93ab] switch-animation`,
       'pm-0': 'p-0 m-0',
+      'one-line': 'whitespace-nowrap of-hidden text-ellipsis break-all',
     },
     [/^([tlrb])?border-base$/, ([, d]) => `b${d || ''}-1-rgba(0,0,0,.1) dark:b${d || ''}-1-#ffffff31 switch-animation`],
   ],

@@ -1,11 +1,12 @@
-import { escape } from 'node:querystring'
 import clsx from 'clsx'
-import type { ChangeEvent, MouseEventHandler } from 'react'
-import React, { useState } from 'react'
+import type { ChangeEvent } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button, Input } from 'antd'
 import styles from './ppt-card.module.scss'
-import { getTimeUnixStr, sleep } from '~/utils/common'
-import { fetchPPTOutline } from '~/api/ppt'
+import { getTimeUnixStr } from '~/utils/common'
+import { fetchCreatePPT, fetchPPTOutline } from '~/api/ppt'
+import { recoverPPTOutline } from '~/api/ppt/helper'
+import { fetchStopSend } from '~/api'
 
 const RECOMMEND_CONFIG = [
   {
@@ -43,6 +44,7 @@ interface OutlineInfo {
   list: {
     isSub: boolean
     subTitle: string
+    id: number
   }[]
 }
 
@@ -54,10 +56,9 @@ interface OutlineProps {
 
 const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange }) => {
   const { list, title } = info
-  console.log(info)
 
   const renderInput = (item: OutlineInfo['list'][number], idx: number) => {
-    const { isSub, subTitle } = item
+    const { isSub, subTitle, id } = item
 
     return (
       <Input
@@ -69,6 +70,7 @@ const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange
           hanldeChange(idx, {
             subTitle: e.currentTarget.value,
             isSub,
+            id,
           })
         }}
         prefix={
@@ -90,6 +92,7 @@ const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange
                       hanldeChange(idx, {
                         subTitle,
                         isSub: false,
+                        id,
                       })
                     }}
                   >
@@ -102,6 +105,7 @@ const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange
                       hanldeChange(idx, {
                         subTitle,
                         isSub: true,
+                        id,
                       })
                     }}
                   >
@@ -117,36 +121,45 @@ const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange
 
   return (
     <>
-      <Input
-        value={title}
-        placeholder="请输入标题内容"
-        className="border-transparent h-36px fw-700"
-        maxLength={100}
-      >
-      </Input>
       {
-        list.map((i, idx) => {
-          return (
-            <div key={idx}>
-              {
-                renderInput(i, idx)
-              }
-            </div>
-          )
-        })
+        list && (
+          <>
+            <Input
+              value={title}
+              placeholder="请输入标题内容"
+              className="border-transparent h-36px fw-700"
+              maxLength={100}
+            >
+            </Input>
+            {
+              list.map((i, idx) => {
+                return (
+                  <div key={idx}>
+                    {
+                      renderInput(i, idx)
+                    }
+                  </div>
+                )
+              })
+            }
+          </>
+        )
       }
+
     </>
   )
 }
 
 const Content: React.FC = () => {
   const [showRec, setShowRec] = useState(true)
-
   const [search, setSearch] = useState('')
-
   const [isLoading, setLoading] = useState(false)
-
   const [hasSend, setHasSend] = useState(false)
+  const [isStop, setStop] = useState(false)
+  const [isGen, setGen] = useState(false)
+
+  const cid = useRef('')
+
   const hanldeSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value
     setShowRec(!value.length)
@@ -155,26 +168,26 @@ const Content: React.FC = () => {
 
   const [outline, setOutline] = useState({} as OutlineInfo)
 
-  const handleSend = async () => {
+  const handleSend = async (content?: string) => {
     if (isLoading)
       return
     setLoading(true)
     setHasSend(true)
+    cid.current = getTimeUnixStr()
     const data = await fetchPPTOutline({
-      content: search,
+      content: content || search,
       isRebuild: false,
-      cid: getTimeUnixStr(),
+      cid: cid.current,
     })
-    console.log(data)
-
-    setOutline(data)
-
+    if (data)
+      setOutline(data)
     setLoading(false)
+    setStop(false)
   }
 
   const handleClick = (content: string) => {
     setSearch(content)
-    handleSend()
+    handleSend(content)
   }
 
   const handleAddOrRemove = (idx: number, isSub?: boolean) => {
@@ -184,6 +197,7 @@ const Content: React.FC = () => {
       temp.splice(idx + 1, 0, {
         subTitle: '',
         isSub,
+        id: 123456, // id值不影响，但是必须传
       })
     }
     else {
@@ -198,10 +212,11 @@ const Content: React.FC = () => {
 
   const hanldeChange = (idx: number, info: OutlineInfo['list'][number]) => {
     const temp = [...outline.list]
-    const { subTitle, isSub } = info
+    const { subTitle, isSub, id } = info
     temp[idx] = {
       isSub,
       subTitle,
+      id,
     }
     setOutline({
       ...outline,
@@ -209,65 +224,106 @@ const Content: React.FC = () => {
     })
   }
 
+  const handleSubmit = async (e: React.MouseEvent<HTMLSpanElement>) => {
+    setGen(true)
+    const resolved = recoverPPTOutline(outline as any)
+    const data = await fetchCreatePPT({
+      ...resolved,
+      cid: getTimeUnixStr(),
+      isRebuild: false,
+    })
+    setGen(false)
+
+    requestAnimationFrame(() => {
+      const root = (e.target as HTMLSpanElement).parentNode!
+      const dom = document.createElement('iframe')
+      dom.setAttribute('src', `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(data.replication)}`)
+      dom.setAttribute('width', '720px')
+      dom.setAttribute('height', '600px')
+      dom.setAttribute('style', 'margin-top:10px')
+      root?.appendChild(dom)
+      // root?.removeChild(btn)
+    })
+  }
+
+  const handleCancel = async () => {
+    setStop(true)
+    await fetchStopSend({
+      cid: cid.current,
+    })
+  }
+
   return (
     <>
-      <CardItem>
-        <div className="flex ai-c gap-8px jc-c overflow-hidden">
-          <div className="i-streamline-emojis-robot-face-1 fs-16 "></div>
-          <div className="mt-3px">Hi👋我是你的百度 AI 小助手，今天你想创作什么主题的 PPT 呢？我都可以帮到你哦~</div>
-        </div>
-      </CardItem>
-      <CardItem isUser>
-        <Input
-          value={search}
-          placeholder="请输入你想创作的主题"
-          showCount
-          onChange={hanldeSearchChange}
-          maxLength={400}
-          suffix={(
-            <Button disabled={!search.length} type="link" onClick={handleSend} className="p-0">
-              <div className={`i-mingcute-send-plane-fill fs-20 ${search.length ? 'color-#468bd6' : 'color-#a7ccf3'}`}></div>
-            </Button>
-          )}
-        />
-        <div className="fs-12 text-#666 mt-12px lh-16px ">猜你想创作的PPT主题：</div>
+      <div className="of-x-hidden">
         {
-          showRec && (
-            <div className="flex flex-wrap w-100% gap-10px mt-10px">
-              {
-                RECOMMEND_CONFIG.map((i) => {
-                  return <Button key={i.text} onClick={() => handleClick(i.text)} className="bg-#2182ac1a important:hover:bg-#2182ac1a important:hover:text-black hover:b-1-#2174ac b-1-transparent focus:b-1-#2174ac important:focus:fw-700 important:focus:text-#2174ac ">{i.text}</Button>
-                })
-              }
-            </div>
+          isLoading && (
+            <Button onClick={handleCancel} type="primary" loading={isStop} className="absolute left-50% top-90%">
+              停止生成
+            </Button>
           )
         }
-      </CardItem>
-      {
-        hasSend && (
-          <>
-            <CardItem>
-              <div className="flex ai-c gap-8px jc-c overflow-hidden">
-                <div className="i-streamline-emojis-robot-face-1 fs-16"></div>
-                <div className="mt-3px">我会根据这个主题帮你生成一份大纲，大纲完成后可制作PPT，请稍等~</div>
+        <CardItem>
+          <div className="flex ai-c gap-8px jc-c overflow-hidden">
+            <div className="i-streamline-emojis-robot-face-1 fs-16 "></div>
+            <div className="mt-2px">Hi👋我是你的Xgpt AI 小助手，今天你想创作什么主题的 PPT 呢？我都可以帮到你哦~</div>
+          </div>
+        </CardItem>
+        <CardItem isUser>
+          <Input
+            value={search}
+            placeholder="请输入你想创作的主题"
+            showCount
+            onChange={hanldeSearchChange}
+            maxLength={400}
+            suffix={(
+              <Button disabled={!search.length} type="link" onClick={() => handleSend()} className="p-0">
+                <div className={`i-mingcute-send-plane-fill fs-20 ${search.length ? 'color-#468bd6' : 'color-#a7ccf3'}`}></div>
+              </Button>
+            )}
+          />
+          <div className="fs-12 text-#666 mt-12px lh-16px ">猜你想创作的PPT主题：</div>
+          {
+            showRec && (
+              <div className="flex flex-wrap w-100% gap-10px mt-10px">
+                {
+                  RECOMMEND_CONFIG.map((i) => {
+                    return <Button key={i.text} onClick={() => handleClick(i.text)} className="bg-#2182ac1a important:hover:bg-#2182ac1a important:hover:text-black hover:b-1-#2174ac b-1-transparent focus:b-1-#2174ac important:focus:fw-700 important:focus:text-#2174ac ">{i.text}</Button>
+                  })
+                }
               </div>
-            </CardItem>
-
-            <CardItem isUser className="rounded-bl-0">
+            )
+          }
+        </CardItem>
+        {
+          hasSend && (
+            <>
+              <CardItem>
+                <div className="flex ai-c gap-8px jc-c overflow-hidden">
+                  <div className="i-streamline-emojis-robot-face-1 fs-16"></div>
+                  <div className="mt-3px">我会根据这个主题帮你生成一份大纲，大纲完成后可制作PPT，请稍等~</div>
+                </div>
+              </CardItem>
               {
-                (isLoading && !outline.title)
-                  ? <div className="i-svg-spinners-3-dots-scale fs-22 color-#a7ccf3"></div>
-                  : (
-                    <div>
+                isLoading
+                  ? (
+                    <CardItem isUser className="rounded-bl-0">
+                      <div className="i-svg-spinners-3-dots-scale fs-22 color-#a7ccf3"></div>
+                    </CardItem>
+                    )
+                  : (outline?.list?.length
+                  && (
+                    <CardItem isUser className="rounded-bl-0">
                       <div className="text-#666 fs-14 mb-16px">您可以编辑此大纲，或按原样继续</div>
                       <Outline handleAddOrRemove={handleAddOrRemove} hanldeChange={hanldeChange} info={outline}></Outline>
-                    </div>
-                    )
+                      <Button loading={isGen} onClick={handleSubmit} className="w-100% mt-10px" type="primary">生成PPT</Button>
+                    </CardItem>
+                  ))
               }
-            </CardItem>
-          </>
-        )
-      }
+            </>
+          )
+        }
+      </div>
     </>
   )
 }
