@@ -46,10 +46,10 @@ const ChatAddPanel: React.FC = () => {
           {`${data?.data.length || 0} 个预设定义`}
         </span>
       </div>
-      <div className="flex-1 text-base p-20px  overflow-auto">
+      <div className="flex-1 text-base p-20px of-auto">
         {
 
-          isLoading ? <Skeleton paragraph={{ rows: 4 }}></Skeleton>
+          isLoading ? <Skeleton active paragraph={{ rows: 4 }}></Skeleton>
             : data?.data.map((i, idx) => {
               return (
                 <div key={idx} className="flex p-16px ai-c jc-b border-base">

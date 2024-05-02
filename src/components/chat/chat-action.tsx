@@ -29,7 +29,7 @@ const ChatAction: React.FC<Props> = ({ text, onClick: _onClick, icon }) => {
 
   return (
     <div
-      className="w-[var(--icon-width)] hover:w-[--full-width] border-base transition-width fs-12 flex py-4px px-10px ai-c overflow-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base group"
+      className="w-[var(--icon-width)] hover:w-[--full-width] border-base transition-width fs-12 flex py-4px px-10px ai-c of-hidden h-16px shadow-sm b-1-rgb(222,222,222) border-rounded-20px hover:cursor-pointer action-base group"
       onClick={() => {
         _onClick && _onClick()
       }}

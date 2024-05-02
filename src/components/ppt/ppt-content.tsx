@@ -224,7 +224,7 @@ const Content: React.FC = () => {
     })
   }
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLSpanElement>) => {
+  const handleSubmit = async () => {
     setGen(true)
     const resolved = recoverPPTOutline(outline as any)
     const data = await fetchCreatePPT({
@@ -235,14 +235,9 @@ const Content: React.FC = () => {
     setGen(false)
 
     requestAnimationFrame(() => {
-      const root = (e.target as HTMLSpanElement).parentNode!
-      const dom = document.createElement('iframe')
-      dom.setAttribute('src', `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(data.replication)}`)
-      dom.setAttribute('width', '720px')
-      dom.setAttribute('height', '600px')
-      dom.setAttribute('style', 'margin-top:10px')
-      root?.appendChild(dom)
-      // root?.removeChild(btn)
+      const dom = document.createElement('a')
+      dom.setAttribute('href', data.replication)
+      dom.click()
     })
   }
 

@@ -76,8 +76,8 @@ function ChatRoom() {
             isSessionLoading
               ? (
                 <>
-                  <Skeleton className="mb-30px" avatar paragraph={{ rows: 4 }} />
-                  <Skeleton avatar paragraph={{ rows: 4 }} />
+                  <Skeleton active className="mb-30px" avatar paragraph={{ rows: 4 }} />
+                  <Skeleton active avatar paragraph={{ rows: 4 }} />
                 </>
                 )
               : currentSession.list.map((i, idx) => <ChatCard supportResend={idx === currentSession.list.length - 1} key={idx} isDefault={i.isDefault} replyTime={i.replyTime} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)

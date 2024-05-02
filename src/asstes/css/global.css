@@ -21,16 +21,11 @@
 }
 
 
-.one-line {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  visibility:
-}
 
 
 .d {
- background: #468bd6;
+  background: #468bd6;
+  color: #e8e8ed4d
 }
 
 .da {

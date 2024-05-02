@@ -122,10 +122,10 @@ function SideBar() {
           </span>
         </div>
         {/* history */}
-        <div className="flex-1 w-100% overflow-y-auto overflow-x-hidden ">
+        <div className="flex-1 w-100% of-y-auto of-x-hidden ">
           {
             isLoading
-              ? <Skeleton paragraph={{ rows: 15 }} className={styles.skin} />
+              ? <Skeleton active paragraph={{ rows: 15 }} className={styles.skin} />
               : sideList.map((i, idx) => (
                 <SideItem
                 // 同步数据

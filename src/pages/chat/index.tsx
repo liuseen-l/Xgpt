@@ -8,7 +8,7 @@ function Chat() {
   const { isDark, handleToggle } = useTheme()
 
   return (
-    <div className={clsx('h-100vh w-100vw flex overflow-hidden bg-base relative', !isDark && styles.wrapper)}>
+    <div className={clsx('h-100vh w-100vw flex of-hidden bg-base relative', !isDark && styles.wrapper)}>
       <ThemeInitContext.Provider value={{
         handleToggle,
         isDark,

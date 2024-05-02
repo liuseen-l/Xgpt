@@ -58,6 +58,7 @@ export interface RequestPPTList {
   size: number
   firstKind: string
   secondKind: string
+  keyword?: string
 }
 
 export interface ResponsePPTList {
@@ -80,6 +81,65 @@ export interface ResponsePPTList {
   }
 }
 
+/**
+ * 收藏ppt
+ */
 export interface RequestPPTCollect {
   pptCode: string
+  folderCode: string
+}
+
+export interface ResponsePPTCollect {
+  data: string
+}
+
+/**
+ * 获取文件夹列表
+ */
+export interface RequestPPTFolders {
+  pptCode: string
+}
+
+export interface ResponsePPTFolders {
+  data: {
+    userCode: string
+    folderCode: string
+    folder: string
+    amount: string
+    isCollected: boolean
+    createTime: string
+    updateTime: string
+  }[]
+}
+
+/**
+ * 创建文件夹
+ */
+export interface RequestPPTCreateFolder {
+  folder: string
+}
+
+/**
+ * 获取某个文件夹下的ppt
+ */
+export interface RequestPPTCollectList {
+  page: number
+  size: number
+  folderCode: string
+}
+
+export type ResponsePPTCollectList = ResponsePPTList
+/**
+ * 创建文件夹
+ */
+export interface RequestFolderDelete {
+  folderCode: string
+}
+
+/**
+ * 重命名文件夹
+ */
+export interface RequestFolderRename {
+  folder: string
+  folderCode: string
 }

@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestCreatePPT, RequestPPTCollect, RequestPPTList, RequestPPTOutline, ResponseCreatePPT, ResponsePPTClassify, ResponsePPTList, ResponsePPTOutline } from './types'
+import type { RequestCreatePPT, RequestFolderDelete, RequestFolderRename, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, ResponseCreatePPT, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -8,6 +8,11 @@ const API_URL = {
   PPT_CLASSIFY: '/ppt/kind/list',
   PPT_LIST: '/ppt/list/by/kind',
   PPT_COLLECT: '/ppt/collect',
+  PPT_FOLDERS: '/ppt/collect/folder/list',
+  PPT_FOLDER_CREATE: '/ppt/folder/create',
+  PPT_COLLECT_LIST: '/ppt/collect/list',
+  PPT_FOLDER_DELETE: '/ppt/folder/delete',
+  PPT_FOLDER_RENAME: '/ppt/folder/update',
 }
 const obj = {
   outline: {
@@ -361,7 +366,60 @@ export async function fetchPPTList(params: RequestPPTList) {
  * @returns
  */
 export async function fetchPPTCollect(params: RequestPPTCollect) {
-  request.get(API_URL.PPT_COLLECT, {
+  const res = await request.get<ResponsePPTCollect>(API_URL.PPT_COLLECT, {
+    params,
+  })
+  return res.data?.data
+}
+
+/**
+ * 收藏时获取文件夹列表
+ * @param params
+ * @returns
+ */
+export async function fetchPPTFolders(params?: RequestPPTFolders) {
+  const res = await request.get<ResponsePPTFolders>(API_URL.PPT_FOLDERS, {
+    params,
+  })
+  return res.data?.data
+}
+
+/**
+ * 创建文件夹
+ * @param params
+ * @returns
+ */
+export async function fetchPPTCreateFolder(params: RequestPPTCreateFolder) {
+  return request.get(API_URL.PPT_FOLDER_CREATE, {
+    params,
+  })
+}
+
+/**
+ * 获取单个文件夹下的ppt
+ * @param params
+ * @returns
+ */
+export async function fetchPPTCollectList(params: RequestPPTCollectList) {
+  const res = await request.get<ResponsePPTCollectList>(API_URL.PPT_COLLECT_LIST, {
+    params,
+  })
+  return res.data?.data
+}
+
+/**
+ * 删除文件夹
+ * @param params
+ * @returns
+ */
+export async function fetchFolderDelete(params: RequestFolderDelete) {
+  return request.get(API_URL.PPT_FOLDER_DELETE, {
+    params,
+  })
+}
+
+export async function fetchFolderRename(params: RequestFolderRename) {
+  return request.get(API_URL.PPT_FOLDER_RENAME, {
     params,
   })
 }

@@ -1,9 +1,10 @@
-import type { MenuProps } from 'antd'
-import { Button, Col, DatePicker, Drawer, Form, Input, Menu, Row, Select, Space } from 'antd'
+import type { MenuProps, UploadProps } from 'antd'
+import { Button, Col, Drawer, Form, Input, Menu, Row, Select, Space, Upload } from 'antd'
 import type { SearchProps } from 'antd/es/input'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
+import { UploadOutlined } from '@ant-design/icons'
 import styles from './ppt-community.module.scss'
 
 const { Option } = Select
@@ -25,7 +26,6 @@ function getItem(
   } as MenuItem
 }
 
-const { Search } = Input
 const items: MenuProps['items'] = [
   getItem('首页推荐', 'center', <div className="i-solar-home-angle-2-bold-duotone"></div>),
 
@@ -34,11 +34,38 @@ const items: MenuProps['items'] = [
 ]
 const Community: React.FC = () => {
   const navigate = useNavigate()
+  const [form] = Form.useForm()
+  const ppt = useRef<any>()
+  const cover = useRef<any>()
 
   const onClick: MenuProps['onClick'] = (e) => {
     navigate(`${e.key}`)
   }
 
+  const props: UploadProps = {
+    name: 'file',
+    action: '',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading')
+        ppt.current = info.fileList
+      console.log(info.file, info.fileList)
+    },
+  }
+
+  const props2: UploadProps = {
+    name: 'file',
+    action: '',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading')
+        cover.current = info.fileList
+    },
+  }
   const [open, setOpen] = useState(false)
 
   const showDrawer = () => {
@@ -49,7 +76,9 @@ const Community: React.FC = () => {
     setOpen(false)
   }
 
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
+  const onFinish = async (info: any) => {
+    console.log(info)
+  }
 
   return (
     <div className={clsx('w-100% flex-1 flex', styles.wrapper)}>
@@ -67,19 +96,7 @@ const Community: React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex-1 h-[calc(100vh-64px)] flex flex-col">
-        <div className={clsx('h-56px box-border flex ai-c pl-20px', styles.search)}>
-          <Search
-            style={{
-              width: 600,
-            }}
-            placeholder="搜索文档"
-            size="large"
-            onSearch={onSearch}
-          />
-        </div>
-        <Outlet></Outlet>
-      </div>
+      <Outlet></Outlet>
       <Drawer
         title="PPT模板上传"
         width={720}
@@ -99,7 +116,12 @@ const Community: React.FC = () => {
           </Space>
         )}
       >
-        <Form layout="vertical" hideRequiredMark>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          hideRequiredMark
+        >
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -139,6 +161,40 @@ const Community: React.FC = () => {
                 ]}
               >
                 <Input.TextArea rows={4} placeholder="请描述一下ppt模板的内容..." />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="ppt"
+                label="上传文件"
+                rules={[
+                  {
+                    required: true,
+                    message: 'please enter url description',
+                  },
+                ]}
+              >
+                <Upload {...props}>
+                  <Button icon={<UploadOutlined />}>选择文件</Button>
+                </Upload>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="cover"
+                label="上传封面"
+                rules={[
+                  {
+                    required: true,
+                    message: 'please enter url description',
+                  },
+                ]}
+              >
+                <Upload {...props2}>
+                  <Button icon={<UploadOutlined />}>选择封面</Button>
+                </Upload>
               </Form.Item>
             </Col>
           </Row>
