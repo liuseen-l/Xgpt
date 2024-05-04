@@ -116,26 +116,24 @@ const Community: React.FC = () => {
   }
 
   const onFinish = async () => {
-    console.log(form.getFieldsValue())
-
-    form.validateFields(['firstKind', 'secondKind', 'pptFile', 'pptCoverFile', 'title']).then(async (r) => {
-      // const { title, firstKind, secondKind, pptCoverFile, pptFile } = form.getFieldsValue()
-      // const formData = new FormData()
-      // formData.append('title', title)
-      // formData.append('firstKind', firstKind)
-      // formData.append('secondKind', secondKind)
-      // formData.append('pptCoverFile', pptCoverFile.file.originFileObj as File)
-      // formData.append('pptFile', pptFile.file.originFileObj as File)
-      // try {
-      //   await fetchPPTUpload(formData)
-      // }
-      // catch (e) {
-      //   error('上传失败')
-      // }
-      // finally {
-      //   setOpen(false)
-      //   form.resetFields()
-      // }
+    form.validateFields(['firstKind', 'secondKind', 'pptFile', 'pptCoverFile', 'title']).then(async () => {
+      const { title, firstKind, secondKind, pptCoverFile, pptFile } = form.getFieldsValue()
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('firstKind', firstKind)
+      formData.append('secondKind', secondKind)
+      formData.append('pptCoverFile', pptCoverFile.file.originFileObj as File)
+      formData.append('pptFile', pptFile.file.originFileObj as File)
+      try {
+        await fetchPPTUpload(formData)
+      }
+      catch (e) {
+        error('上传失败')
+      }
+      finally {
+        setOpen(false)
+        form.resetFields()
+      }
     })
   }
 
