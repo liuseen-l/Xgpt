@@ -1,11 +1,15 @@
 import type { MenuProps, UploadProps } from 'antd'
 import { Button, Col, Drawer, Form, Input, Menu, Row, Select, Space, Upload } from 'antd'
-import type { SearchProps } from 'antd/es/input'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
 import { UploadOutlined } from '@ant-design/icons'
 import styles from './ppt-community.module.scss'
+import { fetchPPTClassify, fetchPPTUpload } from '~/api/ppt'
+import { resolvePPTKinds } from '~/api/ppt/helper'
+import { useMessage } from '~/utils'
+import { RequestPPTUpload } from '~/api/ppt/types'
+import { sleep } from '~/utils/common'
 
 const { Option } = Select
 type MenuItem = Required<MenuProps>['items'][number]
@@ -32,40 +36,74 @@ const items: MenuProps['items'] = [
   { type: 'divider' },
   getItem('我的资料库', 'sub2', <div className="i-solar-folder-with-files-bold-duotone"></div>, [getItem('我的收藏', 'like'), getItem('我的上传', 'upload')]),
 ]
+
+const { error } = useMessage()
 const Community: React.FC = () => {
   const navigate = useNavigate()
   const [form] = Form.useForm()
-  const ppt = useRef<any>()
-  const cover = useRef<any>()
+
+  const [classfiy, setClassify] = useState<Record<string, string[]>>({})
+  const [secondList, setSecondList] = useState<string[]>([])
+  const [firstList, setFirstList] = useState([])
+
+  const handleInit = async () => {
+    const data = await fetchPPTClassify()
+    if (!data)
+      return
+    const { firstKinds, secondKinds } = resolvePPTKinds(data)
+    setFirstList(firstKinds)
+    setClassify(secondKinds)
+  }
+
+  useEffect(() => {
+    handleInit()
+  }, [])
 
   const onClick: MenuProps['onClick'] = (e) => {
     navigate(`${e.key}`)
   }
 
-  const props: UploadProps = {
-    name: 'file',
-    action: '',
-    headers: {
-      authorization: 'authorization-text',
+  const pptFile: UploadProps = {
+    maxCount: 1,
+    beforeUpload: (file) => {
+      const isPPT = file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      if (!isPPT)
+        error(`请上传ppt文件`)
+      return isPPT || Upload.LIST_IGNORE
     },
-    onChange(info) {
-      if (info.file.status !== 'uploading')
-        ppt.current = info.fileList
-      console.log(info.file, info.fileList)
+    async customRequest(file: any) {
+      file.onProgress({
+        percent: 20,
+      })
+      await sleep(1000)
+      file.onProgress({
+        percent: 100,
+      })
+      await sleep(200)
+      file.onSuccess()
+    },
+  }
+  const pptCoverFile: UploadProps = {
+    maxCount: 1,
+    beforeUpload: (file) => {
+      const isPic = file.type === 'image/jpg' || file.type === 'image/png'
+      if (!isPic)
+        error(`请上传以png,jpg结尾的文件`)
+      return isPic || Upload.LIST_IGNORE
+    },
+    async customRequest(file: any) {
+      file.onProgress({
+        percent: 20,
+      })
+      await sleep(1000)
+      file.onProgress({
+        percent: 100,
+      })
+      await sleep(200)
+      file.onSuccess()
     },
   }
 
-  const props2: UploadProps = {
-    name: 'file',
-    action: '',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading')
-        cover.current = info.fileList
-    },
-  }
   const [open, setOpen] = useState(false)
 
   const showDrawer = () => {
@@ -73,11 +111,32 @@ const Community: React.FC = () => {
   }
 
   const onClose = () => {
+    form.resetFields()
     setOpen(false)
   }
 
-  const onFinish = async (info: any) => {
-    console.log(info)
+  const onFinish = async () => {
+    console.log(form.getFieldsValue())
+
+    form.validateFields(['firstKind', 'secondKind', 'pptFile', 'pptCoverFile', 'title']).then(async (r) => {
+      // const { title, firstKind, secondKind, pptCoverFile, pptFile } = form.getFieldsValue()
+      // const formData = new FormData()
+      // formData.append('title', title)
+      // formData.append('firstKind', firstKind)
+      // formData.append('secondKind', secondKind)
+      // formData.append('pptCoverFile', pptCoverFile.file.originFileObj as File)
+      // formData.append('pptFile', pptFile.file.originFileObj as File)
+      // try {
+      //   await fetchPPTUpload(formData)
+      // }
+      // catch (e) {
+      //   error('上传失败')
+      // }
+      // finally {
+      //   setOpen(false)
+      //   form.resetFields()
+      // }
+    })
   }
 
   return (
@@ -110,7 +169,7 @@ const Community: React.FC = () => {
         extra={(
           <Space>
             <Button onClick={onClose}>取消</Button>
-            <Button onClick={onClose} type="primary">
+            <Button onClick={onFinish} type="primary">
               完成
             </Button>
           </Space>
@@ -119,19 +178,36 @@ const Community: React.FC = () => {
         <Form
           form={form}
           layout="vertical"
-          onFinish={onFinish}
-          hideRequiredMark
         >
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="title"
+                label="名称"
+                rules={[{ required: true, message: '请输入ppt名称' }]}
+              >
+                <Input></Input>
+              </Form.Item>
+            </Col>
+          </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 name="firstKind"
                 label="一级类别"
-                rules={[{ required: true, message: 'Please select an owner' }]}
+                rules={[{ required: true, message: '请选择一级类目' }]}
               >
-                <Select placeholder="请选择">
-                  <Option value="xiao">Xiaoxiao Fu</Option>
-                  <Option value="mao">Maomao Zhou</Option>
+                <Select
+                  placeholder="请选择"
+                  onSelect={(i) => {
+                    setSecondList(classfiy[i])
+                  }}
+                >
+                  {
+                    firstList.map((i) => {
+                      return <Option value={i} key={i}>{i}</Option>
+                    })
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -139,60 +215,65 @@ const Community: React.FC = () => {
               <Form.Item
                 name="secondKind"
                 label="二级类别"
-                rules={[{ required: true, message: 'Please choose the type' }]}
+                rules={[{ required: true, message: '请选择二级类目' }]}
               >
                 <Select placeholder="请选择">
-                  <Option value="private">Private</Option>
-                  <Option value="public">Public</Option>
+                  {
+                    secondList.map((i) => {
+                      return <Option value={i} key={i}>{i}</Option>
+                    })
+                  }
                 </Select>
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
+          <Row gutter={20}>
             <Col span={24}>
               <Form.Item
                 name="description"
                 label="描述"
                 rules={[
                   {
-                    required: true,
-                    message: 'please enter url description',
+                    required: false,
                   },
                 ]}
               >
-                <Input.TextArea rows={4} placeholder="请描述一下ppt模板的内容..." />
+                <Input.TextArea rows={4} placeholder="请描述一下ppt模板的内容...(非必填)" />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="ppt"
+                name="pptFile"
                 label="上传文件"
                 rules={[
                   {
                     required: true,
-                    message: 'please enter url description',
+                    message: '请选择ppt文件',
                   },
                 ]}
               >
-                <Upload {...props}>
+                <Upload {...pptFile}>
                   <Button icon={<UploadOutlined />}>选择文件</Button>
                 </Upload>
               </Form.Item>
             </Col>
+
+          </Row>
+          <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="cover"
+                name="pptCoverFile"
                 label="上传封面"
                 rules={[
                   {
                     required: true,
-                    message: 'please enter url description',
+                    message: '请上传封面',
                   },
                 ]}
               >
-                <Upload {...props2}>
+                <Upload {...pptCoverFile}>
                   <Button icon={<UploadOutlined />}>选择封面</Button>
                 </Upload>
               </Form.Item>

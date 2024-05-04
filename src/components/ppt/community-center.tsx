@@ -185,9 +185,9 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
               <>
                 <div className="w-100% grid grid-cols-4 box-border p-20px gap-20px">
                   {
-                    list.map((i) => {
+                    list.map((i, idx) => {
                       return (
-                        <div key={i.coverUrl} className=" flex flex-col bg-#fff b-1-#f1f1f1 rounded-b-2 ">
+                        <div key={idx} className=" flex flex-col bg-#fff b-1-#f1f1f1 rounded-b-2 ">
                           <Image
                             width="100%"
                             height={250}

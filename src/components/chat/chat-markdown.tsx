@@ -100,8 +100,6 @@ function _MarkDownContent(props: { content: string }) {
           const isInternal = /^\/#/i.test(href)
           const target = isInternal ? '_self' : aProps.target ?? '_blank'
 
-          console.log(123, href)
-
           const pathname = parseUrl(href).pathname
           if (pathname.endsWith('jpg') || pathname.endsWith('png'))
             return <Image width={400} src={href} />

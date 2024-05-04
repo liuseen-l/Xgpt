@@ -143,3 +143,26 @@ export interface RequestFolderRename {
   folder: string
   folderCode: string
 }
+
+/**
+ * 我的上传
+ */
+export interface RequestMyUpload {
+  page: number
+  size: number
+}
+
+export type ResponseMyUpload = ResponsePPTList
+
+export interface RequestPPTUpload {
+  firstKind: string
+  secondKind: string
+  pptFile: File
+  pptCoverFile: File
+  title: string
+  describtion?: string
+}
+
+export interface ResponsePPTUpload {
+
+}

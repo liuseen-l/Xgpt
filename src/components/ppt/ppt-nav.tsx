@@ -11,18 +11,18 @@ const items: MenuProps['items'] = [
     key: 'center',
   },
   {
-    label: 'PPT',
-    key: 'ppt',
-  },
-  {
     label: '社区',
     key: 'ppt/community',
+  },
+  {
+    label: 'PPT',
+    key: 'ppt',
   },
 ]
 
 const Nav: React.FC = () => {
   const navigate = useNavigate()
-  const [current, setCurrent] = useState(items[1]!.key)
+  const [current, setCurrent] = useState(items[2]!.key)
 
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key)

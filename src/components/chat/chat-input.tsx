@@ -6,15 +6,17 @@ import styles from './antd.module.scss'
 import { ACTIONS_CONFIGS } from '~/consts/action-configs.tsx'
 import { useChatStore } from '~/stores/chat'
 import type { FileType } from '~/utils/common'
-import { getBase64 } from '~/utils/common'
+import { getBase64, sleep } from '~/utils/common'
 import { FunctionCodeType } from '~/api/chat/types'
 import { fetchStopSend } from '~/api'
+import { useMessage } from '~/utils'
 
 interface Props {
   scrollDomToBottom: () => void
   changeTheme: () => void
 }
 
+const { error } = useMessage()
 const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
   const [userInput, setUserInput] = useState('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
@@ -53,18 +55,40 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
 
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview)
-      file.preview = await getBase64(file.originFileObj as FileType)
+  const uploadProps: UploadProps = {
+    fileList,
+    maxCount: 1,
+    beforeUpload: (file) => {
+      console.log(file)
 
-    setPreviewImage(file.url || (file.preview as string))
-    setPreviewOpen(true)
+      const isPic = file.type === 'image/jpeg' || file.type === 'image/png'
+      if (!isPic)
+        error(`请上传以png,jpg结尾的文件`)
+      return isPic || Upload.LIST_IGNORE
+    },
+    onChange: ({ fileList: newFileList }) => {
+      setFileList(newFileList)
+    },
+    onPreview: async (file: UploadFile) => {
+      if (!file.url && !file.preview)
+        file.preview = await getBase64(file.originFileObj as FileType)
+
+      setPreviewImage(file.url || (file.preview as string))
+      setPreviewOpen(true)
+    },
+    listType: 'picture',
+    customRequest: async (file: any) => {
+      file.onProgress({
+        percent: 20,
+      })
+      await sleep(1000)
+      file.onProgress({
+        percent: 100,
+      })
+      await sleep(200)
+      file.onSuccess()
+    },
   }
-
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList)
-  }
-
   return (
     <div className="w-100% p-20px pt-10px tborder-base box-border relative">
       {
@@ -80,13 +104,8 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
             && (
               <>
                 <Upload
-                  action=""
-                  maxCount={1}
-                  listType="picture"
-                  onPreview={handlePreview}
-                  onChange={handleChange}
+                  {...uploadProps}
                   className={styles.upload}
-                  fileList={fileList}
                 >
                   <ChatAction text={ACTIONS_CONFIGS.picture.text} icon={ACTIONS_CONFIGS.picture.inco} />
                 </Upload>

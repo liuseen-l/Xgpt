@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestCreatePPT, RequestFolderDelete, RequestFolderRename, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, ResponseCreatePPT, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline } from './types'
+import type { RequestCreatePPT, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestPPTUpload, ResponseCreatePPT, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTUpload } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -13,6 +13,8 @@ const API_URL = {
   PPT_COLLECT_LIST: '/ppt/collect/list',
   PPT_FOLDER_DELETE: '/ppt/folder/delete',
   PPT_FOLDER_RENAME: '/ppt/folder/update',
+  PPT_MY_UPLOAD: '/ppt/me/list',
+  PPT_UPLOAD: '/ppt/upload',
 }
 const obj = {
   outline: {
@@ -418,8 +420,34 @@ export async function fetchFolderDelete(params: RequestFolderDelete) {
   })
 }
 
+/**
+ * 重命名文件夹
+ * @param params
+ * @returns
+ */
 export async function fetchFolderRename(params: RequestFolderRename) {
   return request.get(API_URL.PPT_FOLDER_RENAME, {
     params,
   })
+}
+
+/**
+ * 我的上传
+ * @param params
+ * @returns
+ */
+export async function fetchMyUpload(params: RequestMyUpload) {
+  const res = await request.get<ResponseMyUpload>(API_URL.PPT_MY_UPLOAD, {
+    params,
+  })
+  return res.data?.data
+}
+
+export async function fetchPPTUpload(params: FormData) {
+  const res = await request.post<ResponseMyUpload>(API_URL.PPT_UPLOAD, params, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  return res.data?.data
 }

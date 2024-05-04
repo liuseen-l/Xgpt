@@ -1,4 +1,4 @@
-import type { ResponsePPTOutline } from './types'
+import type { ResponsePPTClassify, ResponsePPTOutline } from './types'
 
 export function resolvePPTOutline(data: ResponsePPTOutline['data']) {
   if (!data)
@@ -80,4 +80,18 @@ export function recoverPPTOutline(data: RecoverPPTOutline) {
   origin.content = title
 
   return origin
+}
+
+export function resolvePPTKinds(list: ResponsePPTClassify['data']) {
+  const info: any = {
+    firstKinds: [],
+    secondKinds: {},
+  }
+
+  for (const item of list) {
+    info.firstKinds.push(item.firstKind)
+    info.secondKinds[item.firstKind] = item.secondKinds
+  }
+
+  return info
 }
