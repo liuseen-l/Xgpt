@@ -154,15 +154,19 @@ export interface RequestMyUpload {
 
 export type ResponseMyUpload = ResponsePPTList
 
-export interface RequestPPTUpload {
-  firstKind: string
-  secondKind: string
-  pptFile: File
-  pptCoverFile: File
-  title: string
-  describtion?: string
+// export interface RequestPPTUpload {
+//   firstKind: string
+//   secondKind: string
+//   pptFile: File
+//   pptCoverFile: File
+//   title: string
+//   describtion?: string
+// }
+
+export interface RequestDeleteUpload {
+  pptCode: string
 }
 
-export interface ResponsePPTUpload {
-
+export interface ResponseDeleteUpload {
+  data: string
 }

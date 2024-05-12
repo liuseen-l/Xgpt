@@ -1,6 +1,6 @@
 import type { MenuProps, UploadProps } from 'antd'
 import { Button, Col, Drawer, Form, Input, Menu, Row, Select, Space, Upload } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
 import { UploadOutlined } from '@ant-design/icons'
@@ -8,8 +8,8 @@ import styles from './ppt-community.module.scss'
 import { fetchPPTClassify, fetchPPTUpload } from '~/api/ppt'
 import { resolvePPTKinds } from '~/api/ppt/helper'
 import { useMessage } from '~/utils'
-import { RequestPPTUpload } from '~/api/ppt/types'
 import { sleep } from '~/utils/common'
+import { useGlobalStore } from '~/stores/global'
 
 const { Option } = Select
 type MenuItem = Required<MenuProps>['items'][number]
@@ -46,6 +46,10 @@ const Community: React.FC = () => {
   const [secondList, setSecondList] = useState<string[]>([])
   const [firstList, setFirstList] = useState([])
 
+  const { token } = useGlobalStore(state => ({
+    token: state.token,
+  }))
+
   const handleInit = async () => {
     const data = await fetchPPTClassify()
     if (!data)
@@ -60,6 +64,12 @@ const Community: React.FC = () => {
   }, [])
 
   const onClick: MenuProps['onClick'] = (e) => {
+    if (e.key === 'like' || e.key === 'upload') {
+      if (!token) {
+        navigate('/login')
+        return
+      }
+    }
     navigate(`${e.key}`)
   }
 
@@ -107,6 +117,10 @@ const Community: React.FC = () => {
   const [open, setOpen] = useState(false)
 
   const showDrawer = () => {
+    if (!token) {
+      navigate('/login')
+      return
+    }
     setOpen(true)
   }
 
@@ -181,7 +195,7 @@ const Community: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 name="title"
-                label="名称"
+                label="标题"
                 rules={[{ required: true, message: '请输入ppt名称' }]}
               >
                 <Input></Input>

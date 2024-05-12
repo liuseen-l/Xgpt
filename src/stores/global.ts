@@ -10,6 +10,7 @@ type GlobalStoreState = Partial<{
 
 interface GlobalStoreAction {
   handleSetUserInfo: (info: UserInfo) => void
+  handleUpdateUserInfo: (info: UserInfo) => void
   handleInit: () => void
 }
 
@@ -17,16 +18,27 @@ const initState = {
   token: '',
   emial: '',
   username: '',
+  headhost: '',
 }
 
 export const useGlobalStore = create<GlobalStoreState & GlobalStoreAction>()(devtools(persist((set, _get) => {
   return {
     ...initState,
     handleSetUserInfo(info) {
-      const { token, username, email } = info
+      const { token, headshot, username, email } = info
 
       set({
+        headshot,
         token,
+        username,
+        email,
+      })
+    },
+    handleUpdateUserInfo(info) {
+      const { headshot, username, email } = info
+
+      set({
+        headshot,
         username,
         email,
       })

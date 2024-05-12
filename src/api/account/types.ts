@@ -78,3 +78,33 @@ export interface RequestFindAccount {
   password: string
   againPassword: string
 }
+
+export interface ResponseFindAccount {
+  data: string
+}
+
+/**
+ * 修改密码
+ */
+export interface RequestPsRevise {
+  oldPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+
+export interface ResponsePsRevise {
+  data: string
+}
+
+/**
+ * 修改个人信息
+ */
+// export interface RequestUserRevise {
+//   email: string
+//   username: string
+//   headhost: string
+// }
+
+export interface ResponseUserRevise {
+  data: ResponseLogin['data']
+}

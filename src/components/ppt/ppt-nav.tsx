@@ -11,18 +11,18 @@ const items: MenuProps['items'] = [
     key: 'center',
   },
   {
-    label: '社区',
+    label: 'PPT社区',
     key: 'ppt/community',
   },
   {
-    label: 'PPT',
+    label: 'PPT创作',
     key: 'ppt',
   },
 ]
 
 const Nav: React.FC = () => {
   const navigate = useNavigate()
-  const [current, setCurrent] = useState(items[2]!.key)
+  const [current, setCurrent] = useState<string>(items[2]!.key as string)
 
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key)
@@ -33,7 +33,7 @@ const Nav: React.FC = () => {
     <div className={clsx('w-100% sticky top-0 flex h-64px jc-b ai-c px-20px z-100 box-border', styles.wrapper)}>
       <div className="pl-100px flex flex-1 ai-c">
         <span className="fs-30 fw-700 mr-50px">Xgpt</span>
-        <Menu onClick={onClick} className="w-200px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
+        <Menu onClick={onClick} className="w-250px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
     </div>
   )

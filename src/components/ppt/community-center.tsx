@@ -87,9 +87,11 @@ interface ContentProps {
   total: number
   isLoading: boolean
   size: number
+  handleDeleteUpload?: (c: string) => Promise<void>
 }
+const { confirm } = Modal
 
-export const Content: React.FC<ContentProps> = ({ handleChange, size, list, total, isLoading }) => {
+export const Content: React.FC<ContentProps> = ({ handleChange, size, list, total, isLoading, handleDeleteUpload }) => {
   const [folders, setFolders] = useState<ResponsePPTFolders['data']>([])
   const [item, setItem] = useState<ResponsePPTList['data']['list'][number]>({} as any)
   const [folderName, setFolderName] = useState('')
@@ -135,6 +137,18 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
     setFolders(res)
     setOpenCreate(false)
     setIsCreateLoading(false)
+  }
+
+  const showConfirm = (pptCode: string) => {
+    confirm({
+      title: '确认删除上传的文档？',
+      okText: '确定',
+      cancelText: '取消',
+      async onOk() {
+        handleDeleteUpload?.(pptCode)
+      },
+      onCancel() { },
+    })
   }
   return (
     <>
@@ -192,8 +206,10 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                             width="100%"
                             height={250}
                             src={i.coverUrl}
+                            className="rounded-2"
                           />
                           <div className="flex-1 flex flex-col box-border p-10px ">
+
                             <div className="fs-14 flex ai-c jc-b">
                               <span>{i.title}</span>
                               <div className="flex">
@@ -213,9 +229,25 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                                 前往查看
                               </Button>
                             </div>
-                            <div className="fs-14 flex jc-e ai-c fs-12 text-#999">
-                              <span className="fs-12 mr-5px">上传日期:</span>
-                              {i.createTime}
+                            <div className={clsx('fs-14 flex ai-c fs-12 text-#999', handleDeleteUpload ? 'jc-b' : 'jc-e')}>
+                              {
+                                handleDeleteUpload && (
+                                  <Button
+                                    type="link"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      showConfirm(i.pptCode)
+                                    }}
+                                  >
+                                    删除
+                                  </Button>
+                                )
+                              }
+                              <span className="fs-12 mr-5px">
+                                上传日期:
+                                {i.createTime}
+                              </span>
+
                             </div>
                           </div>
                         </div>

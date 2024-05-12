@@ -1,4 +1,4 @@
-import type { RequestFindAccount, RequestGetVerCode, RequestLoginByAccount, RequestLoginByEmail, RequestRegiste, ResponseGetVerInfo, ResponseLogin, ResponseRegiste } from './types'
+import type { RequestFindAccount, RequestGetVerCode, RequestLoginByAccount, RequestLoginByEmail, RequestPsRevise, RequestRegiste, ResponseFindAccount, ResponseGetVerInfo, ResponseLogin, ResponsePsRevise, ResponseRegiste, ResponseUserRevise } from './types'
 import request from '~/utils/request'
 
 export const ACCOUNT_API_URL = {
@@ -7,6 +7,8 @@ export const ACCOUNT_API_URL = {
   LOGIN_EMAIL: '/user/login/by/verifyCode', // 快捷登录
   LOGIN_ACCOUNT: '/user/login/by/password', // 账号密码登录
   FIND_ACCOUNT: '/user/password/forget', // 找回账号
+  REVISE_PASSWORD: '/user/password/update',
+  REVISE_USER: '/user/info/update',
 }
 
 /**
@@ -57,6 +59,30 @@ export async function fetchLoginByAccount(params: RequestLoginByAccount) {
  * @returns
  */
 export async function fetchFindAccount(params: RequestFindAccount) {
-  const res = await request.post<ResponseLogin>(ACCOUNT_API_URL.FIND_ACCOUNT, params)
+  const res = await request.post<ResponseFindAccount>(ACCOUNT_API_URL.FIND_ACCOUNT, params)
+  return res.data.data
+}
+
+/**
+ * 修改密码
+ * @param params
+ */
+export async function fetchPsRevise(params: RequestPsRevise) {
+  const res = await request.get<ResponsePsRevise>(ACCOUNT_API_URL.REVISE_PASSWORD, {
+    params,
+  })
+  return res.data.data
+}
+
+/**
+ * 修改个人资料
+ * @param params
+ */
+export async function fetchUserRevise(params: FormData) {
+  const res = await request.post<ResponseUserRevise>(ACCOUNT_API_URL.REVISE_USER, params, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
   return res.data.data
 }

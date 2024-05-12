@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestCreatePPT, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestPPTUpload, ResponseCreatePPT, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTUpload } from './types'
+import type { RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -15,6 +15,7 @@ const API_URL = {
   PPT_FOLDER_RENAME: '/ppt/folder/update',
   PPT_MY_UPLOAD: '/ppt/me/list',
   PPT_UPLOAD: '/ppt/upload',
+  PPT_UPLOAD_DELETE: '/ppt/delete',
 }
 const obj = {
   outline: {
@@ -311,6 +312,7 @@ const obj = {
 export async function fetchPPTOutline(params: RequestPPTOutline) {
   const res = await request.post<ResponsePPTOutline>(API_URL.PPT_OUTLINE, params)
   const data = res.data?.data
+  console.log(data)
 
   return resolvePPTOutline(obj)
 }
@@ -322,6 +324,8 @@ export async function fetchPPTOutline(params: RequestPPTOutline) {
  */
 export async function fetchCreatePPT(params: RequestCreatePPT) {
   const res = await request.post<ResponseCreatePPT>(API_URL.PPT_CREATE, params)
+  console.log(res)
+
   const r = {
     code: 200,
     data: {
@@ -443,11 +447,28 @@ export async function fetchMyUpload(params: RequestMyUpload) {
   return res.data?.data
 }
 
+/**
+ * 上传ppt
+ * @param params
+ * @returns
+ */
 export async function fetchPPTUpload(params: FormData) {
   const res = await request.post<ResponseMyUpload>(API_URL.PPT_UPLOAD, params, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  })
+  return res.data?.data
+}
+
+/**
+ * 删除上传的文件
+ * @param params
+ * @returns
+ */
+export async function fetchDeleteUpload(params: RequestDeleteUpload) {
+  const res = await request.get<ResponseDeleteUpload>(API_URL.PPT_UPLOAD_DELETE, {
+    params,
   })
   return res.data?.data
 }

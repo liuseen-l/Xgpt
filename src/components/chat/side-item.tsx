@@ -25,7 +25,7 @@ const SideItem: React.FC<Props> = ({ style, onClick: _onClick, lastChatTime, cha
 
   }))
 
-  const handleDelete = async (e) => {
+  const handleDelete = async (e: any) => {
     e.stopPropagation()
     await handleDeleteSession(chatCode)
     const data = await handleGetChatList()

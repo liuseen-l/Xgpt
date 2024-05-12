@@ -1,17 +1,19 @@
 import clsx from 'clsx'
 import { Button, Form, Input, Space } from 'antd'
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import styles from './index.module.scss'
 import { fetchFindAccount, fetchGetVerCode } from '~/api/account'
-import { useCount } from '~/utils'
+import { useCount, useMessage } from '~/utils'
 import type { ResponseGetVerInfo } from '~/api/account/types'
+import { sleep } from '~/utils/common'
 
+const { success } = useMessage()
 function Register() {
   const [form] = Form.useForm()
   const [verInfo, setVerInfo] = useState<ResponseGetVerInfo['data']>({} as any)
   const { play, btnCount, isPlaying } = useCount()
-
+  const navigate = useNavigate()
   const onFinish = async (info: any) => {
     const { email, vercode: userVerifyCode, password, password2: againPassword } = info
     const { preEmail, verifyCode } = verInfo
@@ -24,6 +26,10 @@ function Register() {
       password,
       againPassword,
     })
+
+    success('找回密码成功')
+    await sleep(1000)
+    navigate('/login')
   }
 
   const handleGetVerCode = () => {

@@ -1,8 +1,10 @@
 import clsx from 'clsx'
 import React from 'react'
+import { Avatar } from 'antd'
 import { Markdown } from './chat-markdown'
 import styles from './chat-room.module.scss'
 import { useChatStore } from '~/stores/chat'
+import { useGlobalStore } from '~/stores/global'
 
 interface ChatCardItemProps {
   content: string
@@ -17,15 +19,19 @@ const ChatCardItem: React.FC<ChatCardItemProps> = ({ content, time, isUser, isDe
   const { handleSendSeesion } = useChatStore(state => ({
     handleSendSeesion: state.handleSendSeesion,
   }))
-
+  const { headshot } = useGlobalStore(state => ({
+    headshot: state.headshot,
+  }))
   return (
     <div className={clsx('w-100% flex mb-25px card-text-base', isUser && 'jc-e', styles['chat-message'])}>
       <div className={clsx('max-w-80% flex flex-col gap-8px', isUser && 'ai-e')}>
         {/* header icon */}
-        <div className="h-30px w-30px flex ai-c jc-c border-base border-rounded-2">
+        <div className="h-30px w-30px flex ai-c jc-c">
           {
             isUser
-              ? <div className="i-emojione:blond-haired-person-medium-light-skin-tone fs-20" />
+              ? headshot?.length
+                ? <Avatar className="cursor-pointer" src={headshot} />
+                : <div className="i-emojione:blond-haired-person-medium-light-skin-tone fs-20" />
               : <div className="i-arcticons:openai-chatgpt fs-20" />
           }
         </div>

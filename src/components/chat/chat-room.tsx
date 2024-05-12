@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import ChatInput from './chat-input'
 import ChatCard from './chat-card'
 import styles from './chat-room.module.scss'
-import { ThemeInitContext, useScrollToBottom, useTheme } from '~/utils'
+import { ThemeInitContext, useScrollToBottom } from '~/utils'
 import { useChatStore } from '~/stores/chat'
 
 function ChatRoom() {
