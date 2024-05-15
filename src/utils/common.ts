@@ -31,3 +31,22 @@ export function getTimeUnixStr() {
 export function sleep(time: number) {
   return new Promise(r => setTimeout(() => r(true), time))
 }
+
+/**
+ * 收藏数展示
+ * @param c
+ */
+export function getAmountStr(c: number) {
+  if (c <= 10)
+    return c
+  if (c > 10 && c < 100)
+    return '10+'
+  if (c > 100 && c < 1000)
+    return '100+'
+
+  if (c > 1000 && c < 10000)
+    return '1k+'
+
+  if (c > 10000 && c < 100000)
+    return '1w+'
+}

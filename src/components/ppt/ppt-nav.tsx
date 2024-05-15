@@ -3,6 +3,7 @@ import { Menu } from 'antd'
 import clsx from 'clsx'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { UserInfo } from '../home/home-nav'
 import styles from './ppt-nav.module.scss'
 
 const items: MenuProps['items'] = [
@@ -35,6 +36,7 @@ const Nav: React.FC = () => {
         <span className="fs-30 fw-700 mr-50px">Xgpt</span>
         <Menu onClick={onClick} className="w-250px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
+      <UserInfo></UserInfo>
     </div>
   )
 }

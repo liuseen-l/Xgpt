@@ -74,8 +74,10 @@ export interface ResponsePPTList {
         content: null
         pptUrl: string
         coverUrl: string
+        score: number
         createTime: string
         updateTime: string
+        collectAmount: number
       },
     ]
   }

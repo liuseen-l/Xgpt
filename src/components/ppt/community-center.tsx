@@ -6,6 +6,7 @@ import styles from './ppt-community.module.scss'
 import { fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList } from '~/api/ppt'
 import type { ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList } from '~/api/ppt/types'
 import { useMessage } from '~/utils'
+import { getAmountStr } from '~/utils/common'
 
 interface ClassfiyProps {
   title: string
@@ -18,9 +19,20 @@ const { success } = useMessage()
 
 const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, active }) => {
   const [isfold, setIsfold] = useState(false)
+
+  const handleCheck = (str: string) => {
+    handleActive(active === str ? '-' : str)
+  }
+
   return (
     <div className="lh-10 w-100% flex ai-s min-h-35px  relative">
-      <h4 className="whitespace-nowrap text-#999  important:pm-0">
+      <h4
+        className={clsx('whitespace-nowrap text-#999  hover:text-blue  cursor-pointer  important:pm-0', active === `${title}-` && 'fw-700 text-blue')}
+        onClick={() => {
+          const str = `${title}-`
+          handleCheck(str)
+        }}
+      >
         {title}
         :
       </h4>
@@ -31,7 +43,8 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
               <li
                 key={j}
                 onClick={() => {
-                  handleActive(`${title}-${j}`)
+                  const str = `${title}-${j}`
+                  handleCheck(str)
                 }}
                 className={clsx(' list-none cursor-pointer px-16px box-border text-black hover:text-blue fs-14', active === `${title}-${j}` && 'fw-700 text-blue')}
               >
@@ -46,7 +59,8 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
               <li
                 key={j}
                 onClick={() => {
-                  handleActive(`${title}-${j}`)
+                  const str = `${title}-${j}`
+                  handleCheck(str)
                 }}
                 className={clsx(' list-none cursor-pointer px-16px box-border text-black hover:text-blue fs-14', active === `${title}-${j}` && 'fw-700 text-blue')}
               >
@@ -150,6 +164,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
       onCancel() { },
     })
   }
+
   return (
     <>
       <Modal
@@ -201,7 +216,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                   {
                     list.map((i, idx) => {
                       return (
-                        <div key={idx} className=" flex flex-col bg-#fff b-1-#f1f1f1 rounded-b-2 ">
+                        <div key={idx} className=" flex flex-col bg-#fff b-1-#f1f1f1 rounded-2 ">
                           <Image
                             width="100%"
                             height={250}
@@ -209,24 +224,24 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                             className="rounded-2"
                           />
                           <div className="flex-1 flex flex-col box-border p-10px ">
-
                             <div className="fs-14 flex ai-c jc-b">
                               <span>{i.title}</span>
-                              <div className="flex">
+                              <div className="flex gap-5px">
                                 {
                                   i.isCollected
                                     ? <div className="i-material-symbols-favorite cursor-pointer bg-yellow" onClick={() => handleOpen(i)}></div>
                                     : <div className="i-material-symbols-favorite-outline cursor-pointer bg-#999" onClick={() => handleOpen(i)}></div>
                                 }
+                                <span className="text-neutral-5">{getAmountStr(i.collectAmount)}</span>
                               </div>
                             </div>
                             <div className="flex ai-c jc-s gap-5px mt-10px">
                               <span className="fs-14">综合得分:</span>
-                              <Rate disabled defaultValue={1} />
+                              <Rate disabled defaultValue={i.score} />
                             </div>
                             <div className="mt-10px text-end">
                               <Button type="link" href={i.pptUrl} className="p-0">
-                                前往查看
+                                查看
                               </Button>
                             </div>
                             <div className={clsx('fs-14 flex ai-c fs-12 text-#999', handleDeleteUpload ? 'jc-b' : 'jc-e')}>
@@ -278,8 +293,20 @@ const ComCenter: React.FC = () => {
   const size = useRef(10)
 
   const handleInit = async () => {
-    const data = await fetchPPTClassify()
-    setClassify(data)
+    fetchPPTClassify().then((data) => {
+      setClassify(data)
+    })
+    setLoading(true)
+    const data = await fetchPPTList({
+      page: 1,
+      size: 10,
+      firstKind: '',
+      secondKind: '',
+      keyword: '',
+    })
+    setList(data.list)
+    setTotal(data.total)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -307,9 +334,10 @@ const ComCenter: React.FC = () => {
   }
 
   const handleActive = (kinds: string) => {
-    if (kinds === active)
-      return
+    console.log(kinds)
+
     setActive(kinds)
+
     handleChange(1, 10, { kinds })
   }
 

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite -c vite.config.ts -m web",
-    "dev:app": "vite h5 -c vite.config.ts -m app",
+    "dev:app": "vite app -c vite.config.ts -m app",
     "server": "nodemon ./server/index.cjs",
     "build": "tsc --noEmit --skipLibCheck && vite build -c vite.config.ts -m web",
     "build:app": "tsc --noEmit --skipLibCheck && vite build -c vite.config.ts -m app --watch",

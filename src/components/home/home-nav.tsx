@@ -28,9 +28,9 @@ const items: MenuProps['items'] = [
 ]
 
 const { success, error } = useMessage()
-const Nav: React.FC = () => {
+
+export const UserInfo: React.FC = () => {
   const navigate = useNavigate()
-  const [current, setCurrent] = useState<string>(items[0]!.key as string)
   const [psForm] = Form.useForm()
   const [userForm] = Form.useForm()
 
@@ -39,15 +39,6 @@ const Nav: React.FC = () => {
     handleInit: state.handleInit,
     headhot: state.headshot,
   }))
-
-  const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key)
-    if (e.key === 'chat')
-      navigate(`/${e.key}/session?gptCode=gpt_2`)
-
-    else
-      navigate(`/${e.key}`)
-  }
 
   const toLogin = () => {
     handleInit()
@@ -148,13 +139,9 @@ const Nav: React.FC = () => {
       file.onSuccess()
     },
   }
-
   return (
-    <section className={clsx('w-100% max-w-100% sticky top-0 flex h-64px jc-b z-100 ai-c px-20px box-border ', styles.wrapper)}>
-      <div className="pl-100px flex flex-1 ai-c">
-        <span className="fs-30 fw-700 mr-50px">Xgpt</span>
-        <Menu onClick={onClick} className="w-250px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
-      </div>
+    <>
+
       <Modal
         title="个人资料"
         open={userOpen}
@@ -331,6 +318,30 @@ const Nav: React.FC = () => {
             </Popover>
             )
       }
+
+    </>
+  )
+}
+const Nav: React.FC = () => {
+  const navigate = useNavigate()
+  const [current, setCurrent] = useState<string>(items[0]!.key as string)
+
+  const onClick: MenuProps['onClick'] = (e) => {
+    setCurrent(e.key)
+    if (e.key === 'chat')
+      navigate(`/${e.key}/session?gptCode=gpt_2`)
+
+    else
+      navigate(`/${e.key}`)
+  }
+
+  return (
+    <section className={clsx('w-100% max-w-100% sticky top-0 flex h-64px jc-b z-100 ai-c px-20px box-border ', styles.wrapper)}>
+      <div className="pl-100px flex flex-1 ai-c">
+        <span className="fs-30 fw-700 mr-50px">Xgpt</span>
+        <Menu onClick={onClick} className="w-250px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
+      </div>
+      <UserInfo></UserInfo>
     </section>
   )
 }

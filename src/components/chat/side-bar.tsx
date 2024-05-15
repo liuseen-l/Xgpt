@@ -112,7 +112,14 @@ function SideBar() {
           {
             !shouldNarrow && (
               <div className="flex flex-col">
-                <span className="fs-28 font-700 leading-14">Xgpt</span>
+                <span
+                  className="fs-28 font-700 leading-14 cursor-pointer"
+                  onClick={() => navigate('/center', {
+                    replace: true,
+                  })}
+                >
+                  Xgpt
+                </span>
                 <span className="fs-13">下一代 Chatgpt 集成平台</span>
               </div>
             )
