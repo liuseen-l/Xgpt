@@ -212,11 +212,11 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
           total
             ? (
               <>
-                <div className="w-100% grid grid-cols-4 box-border p-20px gap-20px">
+                <div className="w-100% flex flex-wrap box-border p-20px gap-20px ">
                   {
                     list.map((i, idx) => {
                       return (
-                        <div key={idx} className=" flex flex-col bg-#fff b-1-#f1f1f1 rounded-2 ">
+                        <div key={idx} className="w-260px flex flex-col bg-#fff b-1-#f1f1f1 rounded-2 ">
                           <Image
                             width="100%"
                             height={250}

@@ -172,3 +172,12 @@ export interface RequestDeleteUpload {
 export interface ResponseDeleteUpload {
   data: string
 }
+
+export interface ResponsePPTTheme {
+  data: {
+    id: number
+    colorKey: string
+    colorName: string
+    thumbnail: string
+  }[]
+}

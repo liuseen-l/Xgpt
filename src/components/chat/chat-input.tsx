@@ -129,8 +129,14 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
         <Input.TextArea
           value={userInput}
           disabled={isSendLoading}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              handleSend()
+            }
+          }}
           onInput={e => onInput(e.currentTarget.value)}
-          placeholder="请输入内容......"
+          placeholder="请输入内容......，可以通过shift+回车换行"
           className="input-bg-base hover:border-[#d9d9d9] dark:hover:border-[#ffffff31] dark:border-[#ffffff31] focus:border-[#1d93ab] dark:focus:border-[#1d93ab] dark:placeholder:text-neutral-600 text-base "
           style={{ minHeight: 150, maxHeight: 300 }}
         >

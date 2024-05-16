@@ -34,7 +34,9 @@
     "rehype-katex": "^7.0.0",
     "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.0",
-    "remark-math": "^6.0.0"
+    "remark-math": "^6.0.0",
+    "three": "^0.164.1",
+    "vanta": "^0.5.24"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.9.0",

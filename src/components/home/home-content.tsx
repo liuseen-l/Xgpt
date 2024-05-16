@@ -1,5 +1,5 @@
 // import type { MouseEvent } from 'react'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -7,6 +7,10 @@ import { Button, ConfigProvider } from 'antd'
 import { TinyColor } from '@ctrl/tinycolor'
 import { RightCircleTwoTone } from '@ant-design/icons'
 import { useInViewport } from 'ahooks'
+import GLOBNE from 'vanta/dist/vanta.globe.min'
+import BIRDS from 'vanta/dist/vanta.birds.min'
+import Net from 'vanta/dist/vanta.net.min'
+import * as THREE from 'three'
 import styles from './home-content.module.scss'
 import { fetchGetFunction, fetchPresetList } from '~/api'
 import { PPT_CONFIG, UTILS_CONFIG } from '~/consts/home-config'
@@ -156,45 +160,87 @@ const ContentPreset: React.FC = () => {
   const { data } = fetchPresetList({
     gptCode: 'gpt_2',
   })
-  return (
-    <Block title="预设市场" className="mt-20" subTitle="集成丰富预设，全场景覆盖，开箱即用大模型，轻松应对各类需求">
-      <div className="flex mt-10px gap-4 flex-wrap jc-a">
-        {
-          data?.data.map((i, idx) => {
-            const key = idx % 5
-            return (
-              <div
-                key={idx}
-                className={clsx('w-179px h-178px relative rounded-2 flex ai-c jc-c', styles[`preset${key}`])}
-              >
-                <span className="absolute left-0 top-0 h-25px lh-23px w-50px b-1-#f8faff fs-13 jc-c ai-c flex tracking-[2px] text-#fff ">{i.kind}</span>
-                {
-                  i.name
-                }
-              </div>
-            )
-          })
-        }
 
+  const [vantaEffect, setVantaEffect] = useState(null)
+  const myRef = useRef(null)
+
+  useEffect(() => {
+    if (!vantaEffect) {
+      setVantaEffect(BIRDS({
+        el: myRef.current,
+        color: '#9fc2d4',
+        backgroundColor: '#fff',
+      }))
+    }
+    return () => {
+      if (vantaEffect)
+        vantaEffect.destroy()
+    }
+  }, [vantaEffect])
+
+  return (
+    <Block title="预设市场" className="mt-20 important:px-0 " subTitle="集成丰富预设，全场景覆盖，开箱即用大模型，轻松应对各类需求">
+      <div ref={myRef} className="w-100% h-400px relative z-30 ">
+        <div className="flex mt-10px gap-4 flex-wrap jc-a mx-65 bg-white">
+          {
+            data?.data.map((i, idx) => {
+              const key = idx % 5
+              return (
+                <div
+                  key={idx}
+                  className={clsx('w-179px h-178px relative rounded-2 flex ai-c jc-c', styles[`preset${key}`])}
+                >
+                  <span className="absolute left-0 top-0 h-25px lh-23px w-50px b-1-#f8faff fs-13 jc-c ai-c flex tracking-[2px] text-#fff ">{i.kind}</span>
+                  {
+                    i.name
+                  }
+                </div>
+              )
+            })
+          }
+
+        </div>
       </div>
     </Block>
+
   )
 }
 
 const Content: React.FC = () => {
+  const [vantaEffect, setVantaEffect] = useState(null)
+  const myRef = useRef(null)
+
+  useEffect(() => {
+    if (!vantaEffect) {
+      setVantaEffect(GLOBNE({
+        el: myRef.current,
+        color: '#00f2ff',
+        backgroundColor: '#468bd6',
+        THREE,
+      }))
+    }
+    return () => {
+      if (vantaEffect)
+        vantaEffect.destroy()
+    }
+  }, [vantaEffect])
   return (
     <>
-      <main className="w-100vw box-border mt-15">
-        <div className={clsx(styles['slide-enter-content'], 'lh-10 px-90 ')}>
-          <div className="fs-30">欢迎来到我们的ChatGPT集成平台！</div>
-          <div className="fs-20">一站式体验多种GPT技术魅力。</div>
-          <div>高效对话，让交流更轻松自在。</div>
-          <div>智能创作，激发无限创意火花</div>
-          <div>安全稳定，保障您的数据安全。</div>
-          <div>专业团队，提供贴心技术支持。</div>
-          <div>精准推荐，个性化服务触手可及</div>
-          <div>实时互动，共享智慧生活新体验。</div>
-          <div>加入我们，一起探索AI的无限可能！</div>
+      <main className="w-100vw box-border">
+        <div className={clsx('lh-10 w-100%')}>
+          <div ref={myRef} className="w-100% h-600px relative z-20">
+            <div className={clsx(styles['slide-enter-content'], 'text-white pt-80px pl-200px')}>
+              <div className="fs-30">欢迎来到我们的ChatGPT集成平台！</div>
+              <div className="fs-20">一站式体验多种GPT技术魅力。</div>
+              <div>高效对话，让交流更轻松自在。</div>
+              <div>智能创作，激发无限创意火花</div>
+              <div>安全稳定，保障您的数据安全。</div>
+              <div>专业团队，提供贴心技术支持。</div>
+              <div>精准推荐，个性化服务触手可及</div>
+              <div>实时互动，共享智慧生活新体验。</div>
+              <div>加入我们，一起探索AI的无限可能！</div>
+            </div>
+          </div>
         </div>
         <ContentUtils></ContentUtils>
         <ContentPreset></ContentPreset>
