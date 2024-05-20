@@ -1,8 +1,17 @@
 .title {
   background: url('../../asstes/images/home/dotted-grid.4ea12a3695b55e3b5d4c.svg') no-repeat 50% / 202px 152px;
 }
+.utils {
+  background: url('../../asstes/images/home/cache5.png') no-repeat;
+  background-size: cover;
+}
 
-
+.preset {
+  // background: linear-gradient(180deg, #f5f4f6, #e6ebf7);
+  // background: linear-gradient(180deg, #f5f4f6, #d1d5de, #bec4cf, #b6bccd);
+  background: url('../../asstes/images/home/cache2.png') no-repeat;
+  background-size: cover;
+}
 @keyframes slide-enter {
   0% {
     transform: translateY(10px);

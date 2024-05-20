@@ -1,39 +1,39 @@
-@mixin home-card-appear {
+@mixin home-card-enter {
   opacity: 0;
   transform: translate3d(0, 100%, 0);
 }
 
-@mixin home-card1-appear-active {
+@mixin home-card1-enter-active {
   opacity: 1;
   transform: translateZ(0);
   transition: all ease 1s;
 }
 
 
-.home-card1-appear {
-  @include home-card-appear;
+.home-card1-enter {
+  @include home-card-enter;
 }
 
-.home-card1-appear-active {
-  @include home-card1-appear-active
+.home-card1-enter-active {
+  @include home-card1-enter-active
 }
 
-.home-card2-appear {
-  @include home-card-appear;
+.home-card2-enter {
+  @include home-card-enter;
 }
 
-.home-card2-appear-active {
-  @include home-card1-appear-active;
+.home-card2-enter-active {
+  @include home-card1-enter-active;
   transition-delay: 0.155s;
 }
 
 
-.home-card3-appear {
-  @include home-card-appear;
+.home-card3-enter {
+  @include home-card-enter;
 }
 
-.home-card3-appear-active {
-  @include home-card1-appear-active;
+.home-card3-enter-active {
+  @include home-card1-enter-active;
   transition-delay: 0.31s;
 }
 

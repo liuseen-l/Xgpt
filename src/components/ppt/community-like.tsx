@@ -3,6 +3,7 @@ import { Breadcrumb, Divider, Input, Modal, Popover, Spin } from 'antd'
 import clsx from 'clsx'
 import styles from './community-center.module.scss'
 import { Content } from './community-center'
+import LayOut from './content-layout'
 import type { ResponsePPTCollectList, ResponsePPTFolders } from '~/api/ppt/types'
 import { fetchFolderDelete, fetchFolderRename, fetchPPTCollectList, fetchPPTCreateFolder, fetchPPTFolders } from '~/api/ppt'
 
@@ -113,7 +114,8 @@ const ComLike: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 h-[calc(100vh-64px)] flex flex-col">
+
+    <LayOut>
       {/* todo */}
       <Modal title="创建文件夹" cancelText="取消" okText="确定" closable={false} open={open} onCancel={() => setOpen(false)} onOk={handleCreateFolder}>
         <Spin spinning={isCreateLoading}>
@@ -200,7 +202,7 @@ const ComLike: React.FC = () => {
             : <Content isLoading={isLoading} total={total} list={list} size={size.current} handleChange={handleChange}></Content>
         }
       </div>
-    </div>
+    </LayOut>
 
   )
 }

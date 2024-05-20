@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Content } from './community-center'
+import LayOut from './content-layout'
 import { fetchDeleteUpload, fetchMyUpload } from '~/api/ppt'
 
 const ComUpload: React.FC = () => {
@@ -31,11 +32,12 @@ const ComUpload: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 h-[calc(100vh-64px)] flex flex-col">
+    <LayOut>
       <div className="overflow-y-auto pb-10px">
         <Content isLoading={isLoading} total={total} list={list} size={size.current} handleDeleteUpload={handleDeleteUpload} handleChange={handleChange}></Content>
       </div>
-    </div>
+    </LayOut>
+
   )
 }
 

@@ -274,7 +274,6 @@ const Content: React.FC = () => {
     <>
       <div className="of-x-hidden">
         <Modal title="选择PPT主题" width={600} open={isModalOpen} centered onOk={handleOk} okText="生成ppt" cancelText="取消" onCancel={() => setIsModalOpen(false)}>
-
           {
             isThemeLoading
               ? <Skeleton />
@@ -320,9 +319,7 @@ const Content: React.FC = () => {
                       }
                     </div>
                   </div>
-
                 </>
-
                 )
           }
 

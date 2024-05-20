@@ -336,10 +336,10 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <section className={clsx('w-100% max-w-100% sticky top-0 flex h-64px jc-b z-100 ai-c px-20px box-border ', styles.wrapper)}>
+    <section className={clsx('w-100% max-w-100% sticky top-0 flex h-64px jc-b z-100 ai-c px-20px box-border', styles.wrapper)}>
       <div className="pl-100px flex flex-1 ai-c">
         <span className="fs-30 fw-700 mr-50px">Xgpt</span>
-        <Menu onClick={onClick} className="w-250px border-b-none fs-16" selectedKeys={[current]} mode="horizontal" items={items} />
+        <Menu onClick={onClick} className="w-250px border-b-none fs-16 bg-#e5f1ff" selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
       <UserInfo></UserInfo>
     </section>

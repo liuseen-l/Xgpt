@@ -152,147 +152,149 @@ const Community: React.FC = () => {
   }
 
   return (
-    <div className={clsx('w-100% flex-1 flex', styles.wrapper)}>
-      {/* side-bar */}
-
-      <div className="w-230px bg-#f5f5f5 flex flex-col ai-c">
-        <Button onClick={showDrawer} className="w-205px h-40px fw-700 mt-20px">上传文档</Button>
-        <div className="w-100% px-10px flex jc-c mt-20px box-border ">
-          <Menu
-            onClick={onClick}
-            defaultSelectedKeys={['center']}
-            defaultOpenKeys={['sub1', 'sub2']}
-            mode="inline"
-            items={items}
-          />
+    <div className={clsx('w-100% h-[calc(100vh-64px)] flex of-hidden box-border')}>
+      <div className={clsx('w-100% flex-1 flex bg-#FBFCFD rounded-24px m-16px')}>
+        {/* side-bar */}
+        <div className="w-230px mr-16px bg-#FBFCFD  rounded-l-24px flex flex-col ai-c">
+          <Button onClick={showDrawer} className="w-205px h-40px fw-700 mt-20px">上传文档</Button>
+          <div className="w-100% px-10px flex jc-c mt-20px box-border">
+            <Menu
+              onClick={onClick}
+              defaultSelectedKeys={['center']}
+              defaultOpenKeys={['sub1', 'sub2']}
+              mode="inline"
+              items={items}
+            />
+          </div>
         </div>
-      </div>
-      <Outlet></Outlet>
-      <Drawer
-        title="PPT模板上传"
-        width={720}
-        onClose={onClose}
-        open={open}
-        styles={{
-          body: {
-            paddingBottom: 80,
-          },
-        }}
-        extra={(
-          <Space>
-            <Button onClick={onClose}>取消</Button>
-            <Button onClick={onFinish} type="primary">
-              完成
-            </Button>
-          </Space>
-        )}
-      >
-        <Form
-          form={form}
-          layout="vertical"
+        <Outlet></Outlet>
+        <Drawer
+          title="PPT模板上传"
+          width={720}
+          onClose={onClose}
+          open={open}
+          styles={{
+            body: {
+              paddingBottom: 80,
+            },
+          }}
+          extra={(
+            <Space>
+              <Button onClick={onClose}>取消</Button>
+              <Button onClick={onFinish} type="primary">
+                完成
+              </Button>
+            </Space>
+          )}
         >
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="title"
-                label="标题"
-                rules={[{ required: true, message: '请输入ppt名称' }]}
-              >
-                <Input></Input>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="firstKind"
-                label="一级类别"
-                rules={[{ required: true, message: '请选择一级类目' }]}
-              >
-                <Select
-                  placeholder="请选择"
-                  onSelect={(i) => {
-                    setSecondList(classfiy[i])
-                  }}
+          <Form
+            form={form}
+            layout="vertical"
+          >
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="title"
+                  label="标题"
+                  rules={[{ required: true, message: '请输入ppt名称' }]}
                 >
-                  {
-                    firstList.map((i) => {
-                      return <Option value={i} key={i}>{i}</Option>
-                    })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="secondKind"
-                label="二级类别"
-                rules={[{ required: true, message: '请选择二级类目' }]}
-              >
-                <Select placeholder="请选择">
-                  {
-                    secondList.map((i) => {
-                      return <Option value={i} key={i}>{i}</Option>
-                    })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={20}>
-            <Col span={24}>
-              <Form.Item
-                name="description"
-                label="描述"
-                rules={[
-                  {
-                    required: false,
-                  },
-                ]}
-              >
-                <Input.TextArea rows={4} placeholder="请描述一下ppt模板的内容...(非必填)" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="pptFile"
-                label="上传文件"
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择ppt文件',
-                  },
-                ]}
-              >
-                <Upload {...pptFile}>
-                  <Button icon={<UploadOutlined />}>选择文件</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
+                  <Input></Input>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="firstKind"
+                  label="一级类别"
+                  rules={[{ required: true, message: '请选择一级类目' }]}
+                >
+                  <Select
+                    placeholder="请选择"
+                    onSelect={(i) => {
+                      setSecondList(classfiy[i])
+                    }}
+                  >
+                    {
+                      firstList.map((i) => {
+                        return <Option value={i} key={i}>{i}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="secondKind"
+                  label="二级类别"
+                  rules={[{ required: true, message: '请选择二级类目' }]}
+                >
+                  <Select placeholder="请选择">
+                    {
+                      secondList.map((i) => {
+                        return <Option value={i} key={i}>{i}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={20}>
+              <Col span={24}>
+                <Form.Item
+                  name="description"
+                  label="描述"
+                  rules={[
+                    {
+                      required: false,
+                    },
+                  ]}
+                >
+                  <Input.TextArea rows={4} placeholder="请描述一下ppt模板的内容...(非必填)" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="pptFile"
+                  label="上传文件"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择ppt文件',
+                    },
+                  ]}
+                >
+                  <Upload {...pptFile}>
+                    <Button icon={<UploadOutlined />}>选择文件</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
 
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="pptCoverFile"
-                label="上传封面"
-                rules={[
-                  {
-                    required: true,
-                    message: '请上传封面',
-                  },
-                ]}
-              >
-                <Upload {...pptCoverFile}>
-                  <Button icon={<UploadOutlined />}>选择封面</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Drawer>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="pptCoverFile"
+                  label="上传封面"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请上传封面',
+                    },
+                  ]}
+                >
+                  <Upload {...pptCoverFile}>
+                    <Button icon={<UploadOutlined />}>选择封面</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Drawer>
+      </div>
+
     </div>
   )
 }

@@ -7,9 +7,7 @@ import { Button, ConfigProvider } from 'antd'
 import { TinyColor } from '@ctrl/tinycolor'
 import { RightCircleTwoTone } from '@ant-design/icons'
 import { useInViewport } from 'ahooks'
-import GLOBNE from 'vanta/dist/vanta.globe.min'
-import BIRDS from 'vanta/dist/vanta.birds.min'
-import Net from 'vanta/dist/vanta.net.min'
+import RINGS from 'vanta/dist/vanta.rings.min'
 import * as THREE from 'three'
 import styles from './home-content.module.scss'
 import { fetchGetFunction, fetchPresetList } from '~/api'
@@ -21,6 +19,7 @@ interface BlockProps {
   subTitle: string
   children?: React.ReactNode
   className?: string
+  titleClass?: string
 }
 
 const colors1 = ['#6253E1', '#04BEFE']
@@ -32,11 +31,10 @@ function getActiveColors(colors: string[]) {
   return colors.map(color => new TinyColor(color).darken(5).toString())
 }
 
-const Block: React.FC<BlockProps> = ({ title, subTitle, children, className }) => {
+const Block: React.FC<BlockProps> = ({ title, subTitle, children, className, titleClass }) => {
   return (
-    <div className={clsx('w-100% flex flex-col px-65 mt-10 box-border', className)}>
-      <div className={clsx('text-center fs-30 mb-40px fw-700')}>
-
+    <div className={clsx('w-100% flex flex-col px-65 box-border of-hidden', className)}>
+      <div className={clsx('text-center fs-30 mt-20px mb-40px fw-700', titleClass)}>
         <div className={clsx(styles.title, 'flex text-#252525 tracking-[2.33px] flex pt-30px pb-60px ai-c jc-c lh-42px')}>
           <div className="i-teenyicons:left-outline fw-700 fs-20 mr-12 text-blue-6"></div>
           <span>{title}</span>
@@ -62,7 +60,7 @@ const ContentPPT: React.FC = () => {
   const navigate = useNavigate()
 
   return (
-    <Block title="PPT应用" className={clsx('mt-20 important:px-0 pt-10 h-650px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
+    <Block title="PPT应用" className={clsx('important:px-0 pt-10 h-650px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
       <CSSTransition
         in={hasShow.current}
         timeout={1000}
@@ -113,22 +111,26 @@ function ContentUtils() {
   }
 
   const { data } = fetchGetFunction()
+  const viewRef = useRef(null)
+  const [inViewport] = useInViewport(viewRef)
+  const hasShow = useRef(false)
 
+  if (inViewport)
+    hasShow.current = true
   return (
-    <Block title="集成工具" subTitle="集成多平台ChatGPT，智能交互无界，畅享高效沟通新体验">
-      <div className="flex w-100% jc-b box-border">
+    <Block title="集成工具" className={clsx(styles.utils, 'important:mt-0')} titleClass="mt-60px" subTitle="集成多平台ChatGPT，智能交互无界，畅享高效沟通新体验">
+      <div className="flex w-100% pb-80px jc-b">
         {
           UTILS_CONFIG.map((i, idx) => {
             return (
               <CSSTransition
                 key={idx}
-                in={true}
+                in={hasShow.current}
                 timeout={1000}
-                appear={true}
                 classNames={`home-card${idx + 1}`}
               >
-                <div>
-                  <div className={clsx('h-346px w-358px rounded-5  hover:scale-105 transition-all relative cursor-pointer', styles[`card${idx + 1}`])} onClick={() => handleJump(i.url)}>
+                <div ref={viewRef}>
+                  <div className={clsx('h-346px w-358px rounded-5 hover:scale-105 transition-all relative cursor-pointer', styles[`card${idx + 1}`])} onClick={() => handleJump(i.url)}>
                     <span className="fs-20 fw-600">{i.title}</span>
                     <p className="text-#4b5b76 lh-7">{i.intro}</p>
                     <div className="absolute gap-col-8 gap-row-3 grid mt-10px grid-cols-2 grid-rows-2">
@@ -161,45 +163,26 @@ const ContentPreset: React.FC = () => {
     gptCode: 'gpt_2',
   })
 
-  const [vantaEffect, setVantaEffect] = useState(null)
-  const myRef = useRef(null)
-
-  useEffect(() => {
-    if (!vantaEffect) {
-      setVantaEffect(BIRDS({
-        el: myRef.current,
-        color: '#9fc2d4',
-        backgroundColor: '#fff',
-      }))
-    }
-    return () => {
-      if (vantaEffect)
-        vantaEffect.destroy()
-    }
-  }, [vantaEffect])
-
   return (
-    <Block title="预设市场" className="mt-20 important:px-0 " subTitle="集成丰富预设，全场景覆盖，开箱即用大模型，轻松应对各类需求">
-      <div ref={myRef} className="w-100% h-400px relative z-30 ">
-        <div className="flex mt-10px gap-4 flex-wrap jc-a mx-65 bg-white">
-          {
-            data?.data.map((i, idx) => {
-              const key = idx % 5
-              return (
-                <div
-                  key={idx}
-                  className={clsx('w-179px h-178px relative rounded-2 flex ai-c jc-c', styles[`preset${key}`])}
-                >
-                  <span className="absolute left-0 top-0 h-25px lh-23px w-50px b-1-#f8faff fs-13 jc-c ai-c flex tracking-[2px] text-#fff ">{i.kind}</span>
-                  {
-                    i.name
-                  }
-                </div>
-              )
-            })
-          }
+    <Block title="预设市场" className={clsx('important:px-0', styles.preset)} subTitle="集成丰富预设，全场景覆盖，开箱即用大模型，轻松应对各类需求">
+      <div className="flex mt-10px gap-4 flex-wrap pb-100px jc-a mx-65 relative z-20">
+        {
+          data?.data.map((i, idx) => {
+            const key = idx % 5
+            return (
+              <div
+                key={idx}
+                className={clsx('w-179px h-178px relative rounded-2 flex ai-c jc-c', styles[`preset${key}`])}
+              >
+                <span className="absolute left-0 top-0 h-25px lh-23px w-50px b-1-#f8faff fs-13 jc-c ai-c flex tracking-[2px] text-#fff ">{i.kind}</span>
+                {
+                  i.name
+                }
+              </div>
+            )
+          })
+        }
 
-        </div>
       </div>
     </Block>
 
@@ -212,24 +195,24 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     if (!vantaEffect) {
-      setVantaEffect(GLOBNE({
+      setVantaEffect(RINGS({
         el: myRef.current,
-        color: '#00f2ff',
-        backgroundColor: '#468bd6',
-        THREE,
+        // color: '#00f2ff',
+        backgroundColor: '#e5f1ff',
+        // THREE,
       }))
     }
     return () => {
       if (vantaEffect)
-        vantaEffect.destroy()
+        (vantaEffect as any).destroy()
     }
   }, [vantaEffect])
   return (
     <>
       <main className="w-100vw box-border">
         <div className={clsx('lh-10 w-100%')}>
-          <div ref={myRef} className="w-100% h-600px relative z-20">
-            <div className={clsx(styles['slide-enter-content'], 'text-white pt-80px pl-200px')}>
+          <div ref={myRef} className="w-100% h-100vh relative z-20">
+            <div className={clsx(styles['slide-enter-content'], 'text-black pt-80px pl-200px')}>
               <div className="fs-30">欢迎来到我们的ChatGPT集成平台！</div>
               <div className="fs-20">一站式体验多种GPT技术魅力。</div>
               <div>高效对话，让交流更轻松自在。</div>

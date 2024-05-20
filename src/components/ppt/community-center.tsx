@@ -3,6 +3,7 @@ import type { SearchProps } from 'antd/es/input'
 import clsx from 'clsx'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './ppt-community.module.scss'
+import LayOut from './content-layout'
 import { fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList } from '~/api/ppt'
 import type { ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList } from '~/api/ppt/types'
 import { useMessage } from '~/utils'
@@ -25,7 +26,7 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
   }
 
   return (
-    <div className="lh-10 w-100% flex ai-s min-h-35px  relative">
+    <div className="lh-10 w-100% flex ai-s min-h-35px relative">
       <h4
         className={clsx('whitespace-nowrap text-#999  hover:text-blue  cursor-pointer  important:pm-0', active === `${title}-` && 'fw-700 text-blue')}
         onClick={() => {
@@ -212,11 +213,11 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
           total
             ? (
               <>
-                <div className="w-100% flex flex-wrap box-border p-20px gap-20px ">
+                <div className="w-100% flex flex-wrap box-border p-20px gap-20px">
                   {
                     list.map((i, idx) => {
                       return (
-                        <div key={idx} className="w-260px flex flex-col bg-#fff b-1-#f1f1f1 rounded-2 ">
+                        <div key={idx} className="w-250px flex flex-col b-1-#f1f1f1 rounded-2 ">
                           <Image
                             width="100%"
                             height={250}
@@ -334,8 +335,6 @@ const ComCenter: React.FC = () => {
   }
 
   const handleActive = (kinds: string) => {
-    console.log(kinds)
-
     setActive(kinds)
 
     handleChange(1, 10, { kinds })
@@ -349,9 +348,8 @@ const ComCenter: React.FC = () => {
   }
 
   return (
-
-    <div className="flex-1 h-[calc(100vh-64px)] flex flex-col">
-      <div className={clsx('h-56px box-border flex ai-c pl-20px', styles.search)}>
+    <LayOut>
+      <div className={clsx('h-56px box-border flex ai-c pl-20px mt-10px', styles.search)}>
         <Search
           style={{
             width: 600,
@@ -376,8 +374,7 @@ const ComCenter: React.FC = () => {
         <Divider dashed />
         <Content handleChange={handleChange} total={total} size={size.current} isLoading={isLoading} list={list}></Content>
       </div>
-    </div>
-
+    </LayOut>
   )
 }
 
