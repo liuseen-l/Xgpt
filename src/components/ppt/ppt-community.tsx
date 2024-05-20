@@ -155,16 +155,22 @@ const Community: React.FC = () => {
     <div className={clsx('w-100% h-[calc(100vh-64px)] flex of-hidden box-border')}>
       <div className={clsx('w-100% flex-1 flex bg-#FBFCFD rounded-24px m-16px')}>
         {/* side-bar */}
-        <div className="w-230px mr-16px bg-#FBFCFD  rounded-l-24px flex flex-col ai-c">
-          <Button onClick={showDrawer} className="w-205px h-40px fw-700 mt-20px">上传文档</Button>
-          <div className="w-100% px-10px flex jc-c mt-20px box-border">
-            <Menu
-              onClick={onClick}
-              defaultSelectedKeys={['center']}
-              defaultOpenKeys={['sub1', 'sub2']}
-              mode="inline"
-              items={items}
-            />
+        <div className="w-230px mr-10px bg-#FBFCFD rounded-l-24px flex flex-col ai-c jc-b">
+          <div className="flex flex-col mt-20px ai-c">
+            <Button onClick={showDrawer} className="w-205px h-40px fw-700">上传文档</Button>
+            <div className="w-100% flex jc-c mt-20px box-border">
+              <Menu
+                onClick={onClick}
+                defaultSelectedKeys={['center']}
+                defaultOpenKeys={['sub1', 'sub2']}
+                mode="inline"
+                items={items}
+              />
+            </div>
+          </div>
+          <div className="w-100% relative pr-80px rotate-y-180 mb-20px">
+            <div className={clsx('flex jc-c ai-c', styles.talk)}><span className="rotate-y-180">试试和我聊天吧</span></div>
+            <div className={clsx('float-right', styles.gif)}></div>
           </div>
         </div>
         <Outlet></Outlet>

@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme } from './types'
+import type { RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestViewPPT, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -17,6 +17,7 @@ const API_URL = {
   PPT_UPLOAD: '/ppt/upload',
   PPT_UPLOAD_DELETE: '/ppt/delete',
   PPT_THEME: '/ppt/color/list',
+  PPT_VIEW: '/ppt/see',
 }
 const obj = {
   outline: {
@@ -481,4 +482,10 @@ export async function fetchDeleteUpload(params: RequestDeleteUpload) {
 export async function fetchPPTTheme() {
   const res = await request.get<ResponsePPTTheme>(API_URL.PPT_THEME)
   return res.data?.data
+}
+
+export async function fetchViewPPT(params: RequestViewPPT) {
+  request.get(API_URL.PPT_VIEW, {
+    params,
+  })
 }

@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import styles from './index.module.scss'
 import Nav from '~/components/home/home-nav'
 import Content from '~/components/home/home-content'
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Breadcrumb, Divider, Input, Modal, Popover, Spin } from 'antd'
-import clsx from 'clsx'
-import styles from './community-center.module.scss'
+import styles from './ppt-community.module.scss'
 import { Content } from './community-center'
 import LayOut from './content-layout'
 import type { ResponsePPTCollectList, ResponsePPTFolders } from '~/api/ppt/types'
@@ -138,9 +137,12 @@ const ComLike: React.FC = () => {
       </Modal>
       <div className="flex-1 of-y-auto p-20px box-border">
         <div className="flex">
-          <div className="flex h-60px w-240px jc-b ai-c px-20px box-border bg-#f7f7f7 rounded-6px cursor-pointer " onClick={() => setOpen(true)}>
-            <span className="text-#333 fs-15">新建文件夹</span>
-            <div className={clsx(styles.folder, 'w-45px h-45px ml-10px')}></div>
+          <div className="flex h-98px w-248px jc-c gap-5px ai-c box-border bg-[rgba(100,210,255,.15)] rounded-24px cursor-pointer" onClick={() => setOpen(true)}>
+            <div className={styles.folder}></div>
+            <div className="flex flex-col">
+              <span className="fs-16 fw-600 text-#333 mb-5px">新建文件夹</span>
+              <span className="text-#333333b3 fs-12">创建文件夹，收藏中意模板</span>
+            </div>
           </div>
         </div>
         <Divider dashed />

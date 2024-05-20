@@ -9,5 +9,32 @@
 
 
 .layout {
-  box-shadow: -12px 0 16px #aba9ff1a;
+  box-shadow: -6px 0 16px #aba9ff1a;
+}
+
+.gif {
+  width: 75px;
+  height: 72px;
+  display: inline-block;
+  background: url('https://huixie.iflyrec.com/assets/deepingAI-creation.da5671e0.gif') no-repeat center / contain;
+}
+
+.talk {
+  width: 115px;
+  height: 30px;
+  background-image: url('../../asstes/images/ppt/talk.png');
+  cursor: pointer;
+  background-size: 100% 100%;
+  position: absolute;
+  right: 140px;
+  top: -35px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+
+.folder {
+  width: 53px;
+  height: 53px;
+  background: url('../../asstes/images/ppt/folder.png') no-repeat center / cover;
 }

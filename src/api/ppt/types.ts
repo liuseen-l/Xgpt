@@ -78,6 +78,7 @@ export interface ResponsePPTList {
         createTime: string
         updateTime: string
         collectAmount: number
+        seeAmount: number
       },
     ]
   }
@@ -180,4 +181,8 @@ export interface ResponsePPTTheme {
     colorName: string
     thumbnail: string
   }[]
+}
+
+export interface RequestViewPPT {
+  pptCode: string
 }

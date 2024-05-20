@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './ppt-community.module.scss'
 import LayOut from './content-layout'
-import { fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList } from '~/api/ppt'
+import { fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchViewPPT } from '~/api/ppt'
 import type { ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList } from '~/api/ppt/types'
 import { useMessage } from '~/utils'
 import { getAmountStr } from '~/utils/common'
@@ -224,31 +224,32 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                             src={i.coverUrl}
                             className="rounded-2"
                           />
-                          <div className="flex-1 flex flex-col box-border p-10px ">
+                          <div className="flex-1 flex flex-col box-border p-15px ">
                             <div className="fs-14 flex ai-c jc-b">
                               <span>{i.title}</span>
-                              <div className="flex gap-5px">
-                                {
-                                  i.isCollected
-                                    ? <div className="i-material-symbols-favorite cursor-pointer bg-yellow" onClick={() => handleOpen(i)}></div>
-                                    : <div className="i-material-symbols-favorite-outline cursor-pointer bg-#999" onClick={() => handleOpen(i)}></div>
-                                }
-                                <span className="text-neutral-5">{getAmountStr(i.collectAmount)}</span>
-                              </div>
-                            </div>
-                            <div className="flex ai-c jc-s gap-5px mt-10px">
-                              <span className="fs-14">综合得分:</span>
-                              <Rate disabled defaultValue={i.score} />
-                            </div>
-                            <div className="mt-10px text-end">
-                              <Button type="link" href={i.pptUrl} className="p-0">
+                              <a
+                                target="_blank"
+                                href={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(i.pptUrl)}`}
+                                className="p-0 flex ai-c jc-c"
+                                onClick={() => {
+                                  fetchViewPPT({
+                                    pptCode: i.pptCode,
+                                  })
+                                }}
+                                rel="noreferrer"
+                              >
                                 查看
-                              </Button>
+                              </a>
                             </div>
-                            <div className={clsx('fs-14 flex ai-c fs-12 text-#999', handleDeleteUpload ? 'jc-b' : 'jc-e')}>
+                            <div className="flex ai-c jc-s gap-5px mt-15px">
+                              <span className="fs-14">综合得分:</span>
+                              <Rate disabled defaultValue={i.score} className="fs-14" />
+                            </div>
+                            <div className={clsx('fs-14 flex ai-c fs-12 text-#999 mt-15px', handleDeleteUpload ? 'jc-b' : 'jc-e')}>
                               {
                                 handleDeleteUpload && (
-                                  <Button
+                                  <a
+                                    className="m-0"
                                     type="link"
                                     onClick={(e) => {
                                       e.stopPropagation()
@@ -256,14 +257,27 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                                     }}
                                   >
                                     删除
-                                  </Button>
+                                  </a>
                                 )
                               }
-                              <span className="fs-12 mr-5px">
+                              {/* <span className="fs-12 mr-5px">
                                 上传日期:
                                 {i.createTime}
-                              </span>
-
+                              </span> */}
+                              <div className="flex gap-10px">
+                                <div className="flex gap-5px">
+                                  <div className="i-ph-eye bg-#999"></div>
+                                  <span className="text-neutral-5">{getAmountStr(i.seeAmount)}</span>
+                                </div>
+                                <div className="flex gap-5px">
+                                  {
+                                    i.isCollected
+                                      ? <div className="i-material-symbols-favorite cursor-pointer bg-yellow" onClick={() => handleOpen(i)}></div>
+                                      : <div className="i-material-symbols-favorite-outline cursor-pointer bg-#999" onClick={() => handleOpen(i)}></div>
+                                  }
+                                  <span className="text-neutral-5">{getAmountStr(i.collectAmount)}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
