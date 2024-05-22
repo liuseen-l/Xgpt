@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestViewPPT, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme } from './types'
+import type { RequestCommentList, RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestReplyList, RequestViewPPT, ResponseCommentList, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme, ResponseReplyList } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -18,6 +18,8 @@ const API_URL = {
   PPT_UPLOAD_DELETE: '/ppt/delete',
   PPT_THEME: '/ppt/color/list',
   PPT_VIEW: '/ppt/see',
+  PPT_COMMENT_LIST: '/ppt/comment/list',
+  PPT_REPLY_LIST: '/ppt/reply/list',
 }
 const obj = {
   outline: {
@@ -484,8 +486,36 @@ export async function fetchPPTTheme() {
   return res.data?.data
 }
 
+/**
+ * 记录浏览次数
+ * @param params
+ */
 export async function fetchViewPPT(params: RequestViewPPT) {
   request.get(API_URL.PPT_VIEW, {
     params,
   })
+}
+
+/**
+ * 获取一级评论数量
+ * @param params
+ * @returns
+ */
+export async function fetchCommentList(params: RequestCommentList) {
+  const res = await request.get<ResponseCommentList>(API_URL.PPT_COMMENT_LIST, {
+    params,
+  })
+  return res.data?.data
+}
+
+/**
+ * 获取二级评论数量
+ * @param params
+ * @returns
+ */
+export async function fetchReplyList(params: RequestReplyList) {
+  const res = await request.get<ResponseReplyList>(API_URL.PPT_REPLY_LIST, {
+    params,
+  })
+  return res.data?.data
 }

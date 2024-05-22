@@ -1,12 +1,12 @@
-import { Button, Divider, Empty, Image, Input, Modal, Pagination, Rate, Skeleton, Spin } from 'antd'
+import { Avatar, Divider, Empty, Image, Input, Modal, Pagination, Rate, Skeleton, Spin } from 'antd'
 import type { SearchProps } from 'antd/es/input'
 import clsx from 'clsx'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './ppt-community.module.scss'
 import LayOut from './content-layout'
-import { fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchViewPPT } from '~/api/ppt'
-import type { ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList } from '~/api/ppt/types'
-import { useMessage } from '~/utils'
+import { fetchCommentList, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchReplyList, fetchViewPPT } from '~/api/ppt'
+import type { ResponseCommentList, ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList, ResponseReplyList } from '~/api/ppt/types'
+import { useCommentList, useMessage, useScrollBottom } from '~/utils'
 import { getAmountStr } from '~/utils/common'
 
 interface ClassfiyProps {
@@ -47,7 +47,7 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
                   const str = `${title}-${j}`
                   handleCheck(str)
                 }}
-                className={clsx(' list-none cursor-pointer px-16px box-border text-black hover:text-blue fs-14', active === `${title}-${j}` && 'fw-700 text-blue')}
+                className={clsx(' list-none cursor-pointer mx-16px box-border text-black hover:text-blue fs-14', active === `${title}-${j}` && 'fw-700 text-blue')}
               >
                 {j}
               </li>
@@ -63,7 +63,7 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
                   const str = `${title}-${j}`
                   handleCheck(str)
                 }}
-                className={clsx(' list-none cursor-pointer px-16px box-border text-black hover:text-blue fs-14', active === `${title}-${j}` && 'fw-700 text-blue')}
+                className={clsx('list-none cursor-pointer mx-16px box-border text-black hover:text-blue fs-14', active === `${title}-${j}` && 'fw-700 text-blue')}
               >
                 {j}
               </li>
@@ -92,6 +92,222 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
         }
       </ul>
     </div>
+  )
+}
+
+interface CommentItemProps {
+  info: ResponseCommentList['data']['list'][number]
+  size?: number
+  className?: string
+}
+const CommentItem: React.FC<CommentItemProps> = ({ info, size = 50, className }) => {
+  return (
+    <div className={clsx('flex my-15px', className)}>
+      <Avatar className="mr-10px" size={size} src={info.headshot} />
+      <div className="flex flex-1 flex-col">
+        <div className="text-neutral-5">{info.username}</div>
+        <div className="text-#0a0a0a">
+          {info.content}
+          12312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都1
+        </div>
+        <div className="text-neutral-5">{info.createTime}</div>
+        {
+          info.replyAmount !== undefined
+          && (
+            <div className="flex gap-10px ai-c">
+              <div className="flex gap-3px jc-c ai-c text-neutral-6 cursor-pointer">
+                <div className="i-iconamoon-comment-light"></div>
+                <div>{info.replyAmount}</div>
+              </div>
+              <span className="fs-12 text-blue-4 cursor-pointer">回复</span>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  )
+}
+
+interface ReplyProps {
+  commentCode: string
+}
+const Reply: React.FC<ReplyProps> = ({ commentCode }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1)
+  const [data, setData] = useState<ResponseReplyList['data']>({ list: [], hasMore: true } as any)
+  const handleLoad = async (page: number, size: number, load?: boolean) => {
+    setIsLoading(true)
+    const res = await fetchReplyList({
+      page,
+      size,
+      commentCode,
+    })
+    setData({
+      ...res,
+      list: load ? [...res.list] : [...data.list, ...res.list],
+    })
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    handleLoad(1, 1)
+  }, [])
+
+  const handleLoadMore = () => {
+    handleLoad(page, 5, page === 1)
+    setPage(page + 1)
+  }
+
+  if (!data.list?.length)
+    return
+
+  return (
+    <div className="ml-50px">
+      {
+        data.list?.map((i, idx) => {
+          return (
+            <div key={idx}>
+              <CommentItem className="important:my-5px" size={35} info={i}></CommentItem>
+            </div>
+          )
+        })
+      }
+      {
+        data.hasMore
+        && (isLoading
+          ? <div className="flex jc-c"><Spin></Spin></div>
+          : (
+            <div className="lh-32px text-blue-4 fs-14 cursor-pointer" onClick={handleLoadMore}>
+              {
+                page === 1
+                  ? `展开 ${data.total - 1} 回复`
+                  : '展开更多回复'
+              }
+            </div>
+            ))
+      }
+    </div>
+  )
+}
+
+interface CommentProps {
+  currentPPT: ResponsePPTList['data']['list'][number]
+  setOpenComment: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+// 评论组件
+const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
+  const comRef = useRef(null)
+  const { useFn, data, isLoading, isInit } = useCommentList(currentPPT.pptCode)
+
+  useEffect(() => {
+    (comRef.current as any).addEventListener('scroll', useFn)
+    // handleFetch()
+    return () => {
+      window.removeEventListener('scroll', useFn)
+    }
+  }, [])
+
+  return (
+    <>
+      <div
+        onClick={() => {
+          setOpenComment(false)
+        }}
+        className="absolute z-300 left-[-80px] top-[0px] bg-[rgba(64,64,64,0.25)] w-40px h-40px rounded-50% flex jc-c ai-c cursor-pointer"
+      >
+        <div className="i-ic-outline-close text-#fff fs-20"></div>
+      </div>
+      <div className="relative h-[calc(100vh-140px)] flex flex-col">
+        <div ref={comRef} className="flex-1 w-100% of-auto">
+          {/* header */}
+          <div className="w-100% flex flex-col">
+            <div className="flex">
+              <Avatar className="cursor-pointer mr-20px" size={50} src={currentPPT.headhost} />
+              <div className="flex flex-col fs-18">
+                <span className="fw-700">{currentPPT.username}</span>
+                <span></span>
+              </div>
+            </div>
+            <div className="flex gap-10px fs-14 text-neutral-5 lh-8">
+              <span>
+                {currentPPT.seeAmount}
+                人浏览过此模板
+              </span>
+              <span>
+                {currentPPT.collectAmount}
+                人收藏过此模板
+              </span>
+            </div>
+            {/* descri */}
+            <div>
+              <div className="lh-6">这是一个很好看的模板</div>
+              <div className="lh-8 flex gap-10px">
+                {
+                  [currentPPT.firstKind, currentPPT.secondKind].map((i, idx) => {
+                    return (
+                      <a className="text-#4a8fde" key={idx}>
+                        #
+                        {i}
+                      </a>
+                    )
+                  })
+                }
+              </div>
+            </div>
+            <Image
+              className="rounded-8px"
+              width={480}
+              src={currentPPT.coverUrl}
+            >
+            </Image>
+            <div className="text-neutral-5 lh-8">
+              发布于
+              {currentPPT.createTime}
+            </div>
+          </div>
+          {/* footer */}
+          <Divider className="my-10px"></Divider>
+          <div className="fs-14 text-neutral-5">{`共 ${currentPPT.commentAmount} 条评论`}</div>
+          <div>
+            {
+              data.list.length === 0 && !data.hasMore
+              && (
+                <div>
+                  <Empty description="暂无评论，快来评论吧" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                </div>
+              )
+
+            }
+            {data.list?.map((i, idx) => {
+              return (
+                <div key={idx}>
+                  <CommentItem info={i}></CommentItem>
+                  <Reply commentCode={i.commentCode}></Reply>
+                </div>
+              )
+            })}
+            {
+              isInit && <Skeleton className="mt-50px" avatar paragraph={{ rows: 4 }} />
+            }
+            {
+              isLoading && <div className="flex jc-c"><Spin /></div>
+            }
+            {
+              !!data.list.length && !data.hasMore && (
+                <div>
+                  <Empty description="暂无更多消息~" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                </div>
+              )
+            }
+          </div>
+        </div>
+        <div className="w-100% h-50px box-border">
+          <p contentEditable={true} className={styles['comment-input']}></p>
+        </div>
+      </div>
+    </>
+
   )
 }
 
@@ -166,8 +382,15 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
     })
   }
 
+  const [openComment, setOpenComment] = useState(false)
+
+  const [currentPPT, setCurrentPPT] = useState<ResponsePPTList['data']['list'][number]>({} as any)
+
   return (
     <>
+      <Modal destroyOnClose title={currentPPT.title} footer={null} className={styles.comment} closable={false} centered open={openComment} width={1100} onOk={() => setOpenComment(false)} onCancel={() => setOpenComment(false)}>
+        <Comment currentPPT={currentPPT} setOpenComment={setOpenComment}></Comment>
+      </Modal>
       <Modal
         title="添加收藏夹"
         open={open}
@@ -220,26 +443,27 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                         <div key={idx} className="w-250px flex flex-col b-1-#f1f1f1 rounded-2 ">
                           <Image
                             width="100%"
-                            height={250}
+                            height={200}
                             src={i.coverUrl}
                             className="rounded-2"
                           />
                           <div className="flex-1 flex flex-col box-border p-15px ">
                             <div className="fs-14 flex ai-c jc-b">
                               <span>{i.title}</span>
-                              <a
-                                target="_blank"
-                                href={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(i.pptUrl)}`}
-                                className="p-0 flex ai-c jc-c"
+                              <span
+                                // href={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(i.pptUrl)}`}
+                                className="p-0 flex ai-c jc-c cursor-pointer text-blue-4"
                                 onClick={() => {
-                                  fetchViewPPT({
-                                    pptCode: i.pptCode,
-                                  })
+                                  setOpenComment(true)
+                                  setCurrentPPT(i)
+                                  // fetchViewPPT({
+                                  //   pptCode: i.pptCode,
+                                  // })
                                 }}
                                 rel="noreferrer"
                               >
                                 查看
-                              </a>
+                              </span>
                             </div>
                             <div className="flex ai-c jc-s gap-5px mt-15px">
                               <span className="fs-14">综合得分:</span>

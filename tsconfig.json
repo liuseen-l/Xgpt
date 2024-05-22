@@ -36,6 +36,6 @@
   "include": [
     "src",
     "app",
-    "src/vite-env.d.ts"
   ],
+  
 }

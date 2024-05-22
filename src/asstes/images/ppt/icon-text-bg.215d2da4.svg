@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="25px" viewBox="0 0 34 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#A1B8F4" offset="0%"></stop>
+            <stop stop-color="#F7AFB8" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="「视觉」文生图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="结果大窗" transform="translate(-834, -170)">
+            <g id="转写结果" transform="translate(761, 0)">
+                <g id="编组-10" transform="translate(72.5, 170)">
+                    <g id="标题后面的字" transform="translate(0.5, 0)">
+                        <rect id="矩形" fill-opacity="0" fill="#D8D8D8" x="0" y="0" width="34" height="25"></rect>
+                        <path d="M4.47721985,21.727359 C4.47721985,21.727359 16.9637337,13 31.5,13" id="路径-9" stroke="url(#linearGradient-1)" stroke-width="4" opacity="0.800000012" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

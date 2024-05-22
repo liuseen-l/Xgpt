@@ -2,7 +2,7 @@ import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import clsx from 'clsx'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { UserInfo } from '../home/home-nav'
 import styles from './ppt-nav.module.scss'
 
@@ -34,11 +34,22 @@ const Nav: React.FC<NavProps> = ({ className }) => {
     navigate(`/${e.key}`)
   }
 
+  const location = useLocation()
+
+  const isCommunity = () => {
+    return !location.pathname.indexOf('/ppt/community')
+  }
+
   return (
-    <div className={clsx('w-100% sticky top-0 flex h-64px jc-b ai-c px-20px z-100 box-border', styles.wrapper, className)}>
+    <div
+      style={{
+        background: isCommunity() ? 'transparent' : 'white',
+      }}
+      className={clsx('w-100% sticky top-0 flex h-64px jc-b ai-c px-20px z-100 box-border', styles.wrapper, className)}
+    >
       <div className="pl-100px flex flex-1 ai-c">
         <span className="fs-30 fw-700 mr-50px">Xgpt</span>
-        <Menu onClick={onClick} className="w-250px border-b-none fs-16 bg-#e6f7ff" selectedKeys={[current]} mode="horizontal" items={items} />
+        <Menu onClick={onClick} className="w-250px border-b-none fs-16 bg-transparent" selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
       <UserInfo></UserInfo>
     </div>

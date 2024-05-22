@@ -79,6 +79,9 @@ export interface ResponsePPTList {
         updateTime: string
         collectAmount: number
         seeAmount: number
+        username: string
+        headhost: string
+        commentAmount: number
       },
     ]
   }
@@ -185,4 +188,50 @@ export interface ResponsePPTTheme {
 
 export interface RequestViewPPT {
   pptCode: string
+}
+
+export interface RequestCommentList {
+  pptCode: string
+  page: number
+  size: number
+}
+
+export interface ResponseCommentList {
+  data: {
+    total: number
+    hasMore: boolean
+    list: {
+      commentCode: string
+      pptCode: string
+      userCode: string
+      username: string
+      headshot: string
+      content: string
+      replyAmount: number
+      createTime: string
+    }[]
+  }
+}
+
+export interface RequestReplyList {
+  commentCode: string
+  page: number
+  size: number
+}
+
+export interface ResponseReplyList {
+  data: {
+    total: number
+    hasMore: boolean
+    list: {
+      commentCode: string
+      pptCode: string
+      userCode: string
+      username: string
+      headshot: string
+      content: string
+      replyAmount: number
+      createTime: string
+    }[]
+  }
 }

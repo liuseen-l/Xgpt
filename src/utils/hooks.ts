@@ -3,6 +3,9 @@ import type { RefObject } from 'react'
 import { createContext, useEffect, useRef, useState } from 'react'
 import { message } from 'antd'
 import request from './request'
+import { sleep } from './common'
+import { fetchCommentList } from '~/api/ppt'
+import type { ResponseCommentList } from '~/api/ppt/types'
 /**
  * 控制主题
  */
@@ -39,7 +42,7 @@ export function useTheme() {
  * @param detach
  * @returns
  */
-export function useScrollToBottom(
+export function useScroll(
   scrollRef: RefObject<HTMLDivElement>,
 ) {
   function scrollDomToBottom() {
@@ -168,7 +171,6 @@ export function useCount() {
 /**
  * message提示
  */
-
 export function useMessage() {
   const success = (content?: string) => {
     message?.open({
@@ -187,5 +189,56 @@ export function useMessage() {
   return {
     success,
     error,
+  }
+}
+
+export function useCommentList(pptCode: string) {
+  const [isLoading, setIsloading] = useState(false)
+  const [isInit, setIsInit] = useState(false)
+  const data = useRef<ResponseCommentList['data']>({ list: [], hasMore: true } as any)
+  const page = useRef(1)
+
+  const handleFetch = async () => {
+    const res = await fetchCommentList({
+      page: page.current,
+      size: 10,
+      pptCode,
+    })
+    await sleep(1000)
+    data.current = {
+      ...res,
+      list: [...data.current.list, ...res.list],
+    }
+    page.current = (page.current + 1)
+  }
+
+  const useFn = async (e: any) => {
+    if (!data.current.hasMore)
+      return
+    const { target } = e
+    const showHeight = target.offsetHeight
+    const scrollTop = target.scrollTop
+    const allHeight = target.scrollHeight
+
+    if (allHeight <= showHeight + scrollTop) {
+      setIsloading(true)
+      handleFetch().then(() => {
+        setIsloading(false)
+      })
+    }
+  }
+
+  useEffect(() => {
+    setIsInit(true)
+    handleFetch().then(() => {
+      setIsInit(false)
+    })
+  }, [])
+
+  return {
+    isLoading,
+    useFn,
+    data: data.current,
+    isInit,
   }
 }

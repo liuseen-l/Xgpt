@@ -8,7 +8,6 @@ import { TinyColor } from '@ctrl/tinycolor'
 import { RightCircleTwoTone } from '@ant-design/icons'
 import { useInViewport } from 'ahooks'
 import RINGS from 'vanta/dist/vanta.rings.min'
-import * as THREE from 'three'
 import styles from './home-content.module.scss'
 import { fetchGetFunction, fetchPresetList } from '~/api'
 import { PPT_CONFIG, UTILS_CONFIG } from '~/consts/home-config'
@@ -197,9 +196,7 @@ const Content: React.FC = () => {
     if (!vantaEffect) {
       setVantaEffect(RINGS({
         el: myRef.current,
-        // color: '#00f2ff',
         backgroundColor: '#e5f1ff',
-        // THREE,
       }))
     }
     return () => {

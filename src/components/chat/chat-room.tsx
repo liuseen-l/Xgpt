@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import ChatInput from './chat-input'
 import ChatCard from './chat-card'
 import styles from './chat-room.module.scss'
-import { ThemeInitContext, useScrollToBottom } from '~/utils'
+import { ThemeInitContext, useScroll } from '~/utils'
 import { useChatStore } from '~/stores/chat'
 
 function ChatRoom() {
@@ -23,7 +23,7 @@ function ChatRoom() {
   // if (scrollRef.current)
   //   console.log('ref', scrollRef.current.scrollHeight, scrollRef.current.scrollTop, scrollRef.current.clientHeight)
 
-  const { scrollDomToBottom } = useScrollToBottom(
+  const { scrollDomToBottom } = useScroll(
     scrollRef,
     // isScrolledToBottom,
   )
