@@ -7,7 +7,7 @@ interface LayOutProps {
 }
 const LayOut: React.FC<LayOutProps> = ({ children }) => {
   return (
-    <div className={clsx('flex-1 flex ')}>
+    <div className={clsx('flex-1 flex')}>
       <div className={clsx('h-100% flex-1 flex flex-col rounded-24px ', styles.layout)}>
         {children}
       </div>

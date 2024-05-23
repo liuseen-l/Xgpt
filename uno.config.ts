@@ -71,6 +71,11 @@ export default defineConfig({
       const key = `border${directionMap[d] ? `-${directionMap[d]}` : ''}`
       return ({ [key]: `${s}px solid ${c}` })
     }],
+    [/^scroll-bar-none$/, () => {
+      return ({
+        'scrollbar-width': 'none',
+      })
+    }],
   ],
   presets: [
     presetUno(),

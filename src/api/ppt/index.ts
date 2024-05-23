@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestCommentList, RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestReplyList, RequestViewPPT, ResponseCommentList, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme, ResponseReplyList } from './types'
+import type { RequestComment, RequestCommentList, RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestReplyList, RequestViewPPT, ResponseComment, ResponseCommentList, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme, ResponseReplyList } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -20,6 +20,7 @@ const API_URL = {
   PPT_VIEW: '/ppt/see',
   PPT_COMMENT_LIST: '/ppt/comment/list',
   PPT_REPLY_LIST: '/ppt/reply/list',
+  PPT_COMMENT: '/ppt/comment',
 }
 const obj = {
   outline: {
@@ -316,9 +317,7 @@ const obj = {
 export async function fetchPPTOutline(params: RequestPPTOutline) {
   const res = await request.post<ResponsePPTOutline>(API_URL.PPT_OUTLINE, params)
   const data = res.data?.data
-  console.log(data)
-
-  return resolvePPTOutline(obj)
+  return resolvePPTOutline(data)
 }
 
 /**
@@ -517,5 +516,15 @@ export async function fetchReplyList(params: RequestReplyList) {
   const res = await request.get<ResponseReplyList>(API_URL.PPT_REPLY_LIST, {
     params,
   })
+  return res.data?.data
+}
+
+/**
+ * 评论
+ * @param params
+ * @returns
+ */
+export async function fetchComment(params: RequestComment) {
+  const res = await request.post<ResponseComment>(API_URL.PPT_COMMENT, params)
   return res.data?.data
 }

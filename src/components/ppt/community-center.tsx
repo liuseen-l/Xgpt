@@ -1,12 +1,12 @@
-import { Avatar, Divider, Empty, Image, Input, Modal, Pagination, Rate, Skeleton, Spin } from 'antd'
+import { Avatar, Button, Divider, Empty, Image, Input, Modal, Pagination, Rate, Skeleton, Spin } from 'antd'
 import type { SearchProps } from 'antd/es/input'
 import clsx from 'clsx'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './ppt-community.module.scss'
 import LayOut from './content-layout'
-import { fetchCommentList, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchReplyList, fetchViewPPT } from '~/api/ppt'
+import { fetchComment, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchReplyList, fetchViewPPT } from '~/api/ppt'
 import type { ResponseCommentList, ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList, ResponseReplyList } from '~/api/ppt/types'
-import { useCommentList, useMessage, useScrollBottom } from '~/utils'
+import { useCommentList, useMessage } from '~/utils'
 import { getAmountStr } from '~/utils/common'
 
 interface ClassfiyProps {
@@ -108,7 +108,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ info, size = 50, className })
         <div className="text-neutral-5">{info.username}</div>
         <div className="text-#0a0a0a">
           {info.content}
-          12312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都112312321312312dawd撒大大231212都1
         </div>
         <div className="text-neutral-5">{info.createTime}</div>
         {
@@ -208,6 +207,21 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
     }
   }, [])
 
+  const inputRef = useRef(null)
+
+  const [isComment, setIsComment] = useState(false)
+  const handleComment = async () => {
+    const content = (inputRef.current as any).textContent
+    setIsComment(true)
+    const res = await fetchComment({
+      pptCode: currentPPT.pptCode,
+      content,
+    })
+    data.current.list?.unshift(res)
+    setIsComment(false);
+    (inputRef.current as any).textContent = ''
+  }
+
   return (
     <>
       <div
@@ -219,11 +233,14 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
         <div className="i-ic-outline-close text-#fff fs-20"></div>
       </div>
       <div className="relative h-[calc(100vh-140px)] flex flex-col">
-        <div ref={comRef} className="flex-1 w-100% of-auto">
+        <div
+          ref={comRef}
+          className="flex-1 w-100% of-auto scroll-bar-none"
+        >
           {/* header */}
           <div className="w-100% flex flex-col">
             <div className="flex">
-              <Avatar className="cursor-pointer mr-20px" size={50} src={currentPPT.headhost} />
+              <Avatar className="cursor-pointer mr-20px" size={50} src={currentPPT.headshot} />
               <div className="flex flex-col fs-18">
                 <span className="fw-700">{currentPPT.username}</span>
                 <span></span>
@@ -255,12 +272,14 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
                 }
               </div>
             </div>
-            <Image
-              className="rounded-8px"
-              width={480}
-              src={currentPPT.coverUrl}
-            >
-            </Image>
+            <div className="flex jc-b">
+              <Image
+                className="rounded-8px"
+                width={480}
+                src={currentPPT.coverUrl}
+              >
+              </Image>
+            </div>
             <div className="text-neutral-5 lh-8">
               发布于
               {currentPPT.createTime}
@@ -271,7 +290,7 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
           <div className="fs-14 text-neutral-5">{`共 ${currentPPT.commentAmount} 条评论`}</div>
           <div>
             {
-              data.list.length === 0 && !data.hasMore
+              data.current.list.length === 0 && !data.current.hasMore
               && (
                 <div>
                   <Empty description="暂无评论，快来评论吧" image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -279,11 +298,11 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
               )
 
             }
-            {data.list?.map((i, idx) => {
+            {data.current.list?.map((i, idx) => {
               return (
                 <div key={idx}>
                   <CommentItem info={i}></CommentItem>
-                  <Reply commentCode={i.commentCode}></Reply>
+                  <Reply commentCode={i?.commentCode}></Reply>
                 </div>
               )
             })}
@@ -294,7 +313,7 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
               isLoading && <div className="flex jc-c"><Spin /></div>
             }
             {
-              !!data.list.length && !data.hasMore && (
+              !!data.current.list.length && !data.current.hasMore && (
                 <div>
                   <Empty description="暂无更多消息~" image={Empty.PRESENTED_IMAGE_SIMPLE} />
                 </div>
@@ -302,8 +321,12 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
             }
           </div>
         </div>
-        <div className="w-100% h-50px box-border">
-          <p contentEditable={true} className={styles['comment-input']}></p>
+        <div className="w-100% box-border bt-1-#ccc flex flex-col jc-a p-16px pb-0 gap-10px box-border">
+          <p ref={inputRef} contentEditable={true} className={clsx(styles['comment-input'], 'scroll-bar-none')}></p>
+          <div className="flex jc-e ai-c ">
+            <Button loading={isComment} type="primary" className="mr-10px w-80px h-40px rounded-44px" onClick={handleComment}>发送</Button>
+            <Button className="mr-10px w-80px h-40px rounded-44px">取消</Button>
+          </div>
         </div>
       </div>
     </>
@@ -484,10 +507,6 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                                   </a>
                                 )
                               }
-                              {/* <span className="fs-12 mr-5px">
-                                上传日期:
-                                {i.createTime}
-                              </span> */}
                               <div className="flex gap-10px">
                                 <div className="flex gap-5px">
                                   <div className="i-ph-eye bg-#999"></div>
@@ -597,7 +616,7 @@ const ComCenter: React.FC = () => {
           onSearch={handleSearch}
         />
       </div>
-      <div className="flex-1 of-y-auto">
+      <div className="flex-1 of-y-auto scroll-bar-none">
         <div className="w-100% pt-10px px-40px box-border">
           {
             !classfiy.length
@@ -609,7 +628,7 @@ const ComCenter: React.FC = () => {
               })
           }
         </div>
-        <Divider dashed />
+        <Divider className="my-10px" dashed />
         <Content handleChange={handleChange} total={total} size={size.current} isLoading={isLoading} list={list}></Content>
       </div>
     </LayOut>

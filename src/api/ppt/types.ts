@@ -80,8 +80,10 @@ export interface ResponsePPTList {
         collectAmount: number
         seeAmount: number
         username: string
-        headhost: string
+        headshot: string
         commentAmount: number
+        enableScore: boolean
+        haveScored: boolean
       },
     ]
   }
@@ -233,5 +235,23 @@ export interface ResponseReplyList {
       replyAmount: number
       createTime: string
     }[]
+  }
+}
+
+export interface RequestComment {
+  pptCode: string
+  content: string
+}
+
+export interface ResponseComment {
+  data: {
+    commentCode: string
+    pptCode: string
+    userCode: string
+    username: string
+    headshot: string
+    content: string
+    replyAmount: number
+    createTime: string
   }
 }

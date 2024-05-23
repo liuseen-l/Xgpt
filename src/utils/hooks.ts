@@ -204,7 +204,6 @@ export function useCommentList(pptCode: string) {
       size: 10,
       pptCode,
     })
-    await sleep(1000)
     data.current = {
       ...res,
       list: [...data.current.list, ...res.list],
@@ -213,7 +212,7 @@ export function useCommentList(pptCode: string) {
   }
 
   const useFn = async (e: any) => {
-    if (!data.current.hasMore)
+    if (!data.current.hasMore || isLoading)
       return
     const { target } = e
     const showHeight = target.offsetHeight
@@ -238,7 +237,7 @@ export function useCommentList(pptCode: string) {
   return {
     isLoading,
     useFn,
-    data: data.current,
+    data,
     isInit,
   }
 }
