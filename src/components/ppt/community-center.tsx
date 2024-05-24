@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './ppt-community.module.scss'
 import LayOut from './content-layout'
-import { fetchComment, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchReplyList, fetchViewPPT } from '~/api/ppt'
+import { fetchComment, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchReply, fetchReplyList, fetchViewPPT } from '~/api/ppt'
 import type { ResponseCommentList, ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList, ResponseReplyList } from '~/api/ppt/types'
 import { useCommentList, useMessage } from '~/utils'
 import { getAmountStr } from '~/utils/common'
@@ -95,12 +95,14 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
   )
 }
 
+type MakePropertyOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 interface CommentItemProps {
-  info: ResponseCommentList['data']['list'][number]
+  info: MakePropertyOptional<ResponseCommentList['data']['list'][number], 'replyAmount'>
   size?: number
+  handleReply?: (p: Record<string, string>) => void
   className?: string
 }
-const CommentItem: React.FC<CommentItemProps> = ({ info, size = 50, className }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ info, size = 50, className, handleReply }) => {
   return (
     <div className={clsx('flex my-15px', className)}>
       <Avatar className="mr-10px" size={size} src={info.headshot} />
@@ -111,14 +113,26 @@ const CommentItem: React.FC<CommentItemProps> = ({ info, size = 50, className })
         </div>
         <div className="text-neutral-5">{info.createTime}</div>
         {
-          info.replyAmount !== undefined
+          handleReply
           && (
             <div className="flex gap-10px ai-c">
               <div className="flex gap-3px jc-c ai-c text-neutral-6 cursor-pointer">
                 <div className="i-iconamoon-comment-light"></div>
                 <div>{info.replyAmount}</div>
               </div>
-              <span className="fs-12 text-blue-4 cursor-pointer">回复</span>
+              <span
+                className="fs-12 text-blue-4 cursor-pointer"
+                onClick={() => {
+                  handleReply && handleReply({
+                    commentCode: info.commentCode,
+                    pptCode: info.pptCode,
+                    userName: info.username,
+                    commentContent: info.content,
+                  })
+                }}
+              >
+                回复
+              </span>
             </div>
           )
         }
@@ -129,11 +143,20 @@ const CommentItem: React.FC<CommentItemProps> = ({ info, size = 50, className })
 
 interface ReplyProps {
   commentCode: string
+  replyInfo: Record<string, any>
 }
-const Reply: React.FC<ReplyProps> = ({ commentCode }) => {
+const Reply: React.FC<ReplyProps> = ({ commentCode, replyInfo }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [data, setData] = useState<ResponseReplyList['data']>({ list: [], hasMore: true } as any)
+
+  if (replyInfo.commentCode === commentCode && replyInfo.replyRes?.replyCode && !data.list?.find(i => i.replyCode === replyInfo.replyRes.replyCode)) {
+    setData({
+      ...data,
+      list: [replyInfo.replyRes, ...data.list],
+    })
+  }
+
   const handleLoad = async (page: number, size: number, load?: boolean) => {
     setIsLoading(true)
     const res = await fetchReplyList({
@@ -201,7 +224,6 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
 
   useEffect(() => {
     (comRef.current as any).addEventListener('scroll', useFn)
-    // handleFetch()
     return () => {
       window.removeEventListener('scroll', useFn)
     }
@@ -210,16 +232,40 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
   const inputRef = useRef(null)
 
   const [isComment, setIsComment] = useState(false)
+  const [replyInfo, setReplyInfo] = useState<Record<string, any>>({ replyUserName: '', content: '', isReply: false, commentCode: '', replyRes: {} })
   const handleComment = async () => {
     const content = (inputRef.current as any).textContent
     setIsComment(true)
-    const res = await fetchComment({
-      pptCode: currentPPT.pptCode,
-      content,
-    })
-    data.current.list?.unshift(res)
+    if (!replyInfo.isReply) {
+      const res = await fetchComment({
+        pptCode: currentPPT.pptCode,
+        content,
+      })
+      data.current.list?.unshift(res)
+    }
+    else {
+      const res = await fetchReply({
+        pptCode: currentPPT.pptCode,
+        content,
+        commentCode: replyInfo.commentCode,
+      })
+      setReplyInfo({
+        ...replyInfo,
+        isReply: false,
+        replyRes: res,
+      })
+    }
     setIsComment(false);
     (inputRef.current as any).textContent = ''
+  }
+
+  const handleReply = (p: Record<string, string>) => {
+    setReplyInfo({
+      content: p.commentContent,
+      replyUserName: p.userName,
+      commentCode: p.commentCode,
+      isReply: true,
+    })
   }
 
   return (
@@ -287,42 +333,58 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
           </div>
           {/* footer */}
           <Divider className="my-10px"></Divider>
-          <div className="fs-14 text-neutral-5">{`共 ${currentPPT.commentAmount} 条评论`}</div>
-          <div>
-            {
-              data.current.list.length === 0 && !data.current.hasMore
-              && (
-                <div>
-                  <Empty description="暂无评论，快来评论吧" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                </div>
-              )
+          <div className="bg-#fff box-border p-20px rounded-20px">
+            <div className="fs-14 text-neutral-5">{`共 ${currentPPT.commentAmount} 条评论`}</div>
+            <div>
+              {
+                data.current.list.length === 0 && !data.current.hasMore
+                && (
+                  <div>
+                    <Empty description="暂无评论，快来评论吧" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  </div>
+                )
 
-            }
-            {data.current.list?.map((i, idx) => {
-              return (
-                <div key={idx}>
-                  <CommentItem info={i}></CommentItem>
-                  <Reply commentCode={i?.commentCode}></Reply>
-                </div>
-              )
-            })}
-            {
-              isInit && <Skeleton className="mt-50px" avatar paragraph={{ rows: 4 }} />
-            }
-            {
-              isLoading && <div className="flex jc-c"><Spin /></div>
-            }
-            {
-              !!data.current.list.length && !data.current.hasMore && (
-                <div>
-                  <Empty description="暂无更多消息~" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                </div>
-              )
-            }
+              }
+              {data.current.list?.map((i) => {
+                return (
+                  <div key={i.commentCode}>
+                    <CommentItem info={i} handleReply={handleReply}></CommentItem>
+                    <Reply replyInfo={replyInfo} commentCode={i?.commentCode}></Reply>
+                  </div>
+                )
+              })}
+              {
+                isInit && <Skeleton className="mt-50px" avatar paragraph={{ rows: 4 }} />
+              }
+              {
+                isLoading && <div className="flex jc-c"><Spin /></div>
+              }
+              {
+                !!data.current.list.length && !data.current.hasMore && (
+                  <div>
+                    <Empty description="暂无更多消息~" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  </div>
+                )
+              }
+            </div>
           </div>
         </div>
-        <div className="w-100% box-border bt-1-#ccc flex flex-col jc-a p-16px pb-0 gap-10px box-border">
-          <p ref={inputRef} contentEditable={true} className={clsx(styles['comment-input'], 'scroll-bar-none')}></p>
+        <div className="w-100% mt-15px box-border bt-1-#ccc flex flex-col jc-a p-16px pb-0 gap-10px box-border">
+          {
+            replyInfo.isReply && (
+              <div className="flex flex-col fs-14 w-100%">
+                <span className=" text-neutral-5">
+                  {`回复 ${replyInfo.replyUserName}`}
+                </span>
+                <span className="mt-5px text-hidden">
+                  {replyInfo.content}
+                </span>
+              </div>
+            )
+          }
+          <div className={styles['input-bg']}>
+            <p ref={inputRef} contentEditable={true} className={clsx(styles['comment-input'], 'scroll-bar-none')}></p>
+          </div>
           <div className="flex jc-e ai-c ">
             <Button loading={isComment} type="primary" className="mr-10px w-80px h-40px rounded-44px" onClick={handleComment}>发送</Button>
             <Button className="mr-10px w-80px h-40px rounded-44px">取消</Button>

@@ -226,13 +226,13 @@ export interface ResponseReplyList {
     total: number
     hasMore: boolean
     list: {
+      replyCode: string
       commentCode: string
       pptCode: string
       userCode: string
       username: string
       headshot: string
       content: string
-      replyAmount: number
       createTime: string
     }[]
   }
@@ -252,6 +252,25 @@ export interface ResponseComment {
     headshot: string
     content: string
     replyAmount: number
+    createTime: string
+  }
+}
+
+export interface RequestReply {
+  commentCode: string
+  pptCode: string
+  content: string
+}
+
+export interface ResponseReply {
+  data: {
+    replyCode: string
+    commentCode: string
+    pptCode: string
+    userCode: string
+    username: string
+    headshot: string
+    content: string
     createTime: string
   }
 }

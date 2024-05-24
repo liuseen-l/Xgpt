@@ -1,5 +1,5 @@
 import { resolvePPTOutline } from './helper'
-import type { RequestComment, RequestCommentList, RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestReplyList, RequestViewPPT, ResponseComment, ResponseCommentList, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme, ResponseReplyList } from './types'
+import type { RequestComment, RequestCommentList, RequestCreatePPT, RequestDeleteUpload, RequestFolderDelete, RequestFolderRename, RequestMyUpload, RequestPPTCollect, RequestPPTCollectList, RequestPPTCreateFolder, RequestPPTFolders, RequestPPTList, RequestPPTOutline, RequestReply, RequestReplyList, RequestViewPPT, ResponseComment, ResponseCommentList, ResponseCreatePPT, ResponseDeleteUpload, ResponseMyUpload, ResponsePPTClassify, ResponsePPTCollect, ResponsePPTCollectList, ResponsePPTFolders, ResponsePPTList, ResponsePPTOutline, ResponsePPTTheme, ResponseReply, ResponseReplyList } from './types'
 import request from '~/utils/request'
 
 const API_URL = {
@@ -21,6 +21,7 @@ const API_URL = {
   PPT_COMMENT_LIST: '/ppt/comment/list',
   PPT_REPLY_LIST: '/ppt/reply/list',
   PPT_COMMENT: '/ppt/comment',
+  PPT_REPLY: '/ppt/reply',
 }
 const obj = {
   outline: {
@@ -526,5 +527,14 @@ export async function fetchReplyList(params: RequestReplyList) {
  */
 export async function fetchComment(params: RequestComment) {
   const res = await request.post<ResponseComment>(API_URL.PPT_COMMENT, params)
+  return res.data?.data
+}
+/**
+ * h回复
+ * @param params
+ * @returns
+ */
+export async function fetchReply(params: RequestReply) {
+  const res = await request.post<ResponseReply>(API_URL.PPT_REPLY, params)
   return res.data?.data
 }
