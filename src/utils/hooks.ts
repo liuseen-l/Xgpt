@@ -3,7 +3,6 @@ import type { RefObject } from 'react'
 import { createContext, useEffect, useRef, useState } from 'react'
 import { message } from 'antd'
 import request from './request'
-import { sleep } from './common'
 import { fetchCommentList } from '~/api/ppt'
 import type { ResponseCommentList } from '~/api/ppt/types'
 /**

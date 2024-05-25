@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './ppt-community.module.scss'
 import LayOut from './content-layout'
-import { fetchComment, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTFolders, fetchPPTList, fetchReply, fetchReplyList, fetchViewPPT } from '~/api/ppt'
+import { fetchComment, fetchPPTClassify, fetchPPTCollect, fetchPPTCreateFolder, fetchPPTDetail, fetchPPTFolders, fetchPPTList, fetchReply, fetchReplyList, fetchScors, fetchViewPPT } from '~/api/ppt'
 import type { ResponseCommentList, ResponsePPTClassify, ResponsePPTFolders, ResponsePPTList, ResponseReplyList } from '~/api/ppt/types'
 import { useCommentList, useMessage } from '~/utils'
 import { getAmountStr } from '~/utils/common'
@@ -72,7 +72,7 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
         }
         {
           subTitle.length > 13 && (
-            <div className="fs-14 absolute right-10px cursor-pointer flex ai-c jc-c" onClick={() => setIsfold(!isfold)}>
+            <div className="fs-14 absolute right-10px cursor-pointer flex ai-c jc-c text-blue-4" onClick={() => setIsfold(!isfold)}>
               {isfold
                 ? (
                   <>
@@ -214,11 +214,12 @@ const Reply: React.FC<ReplyProps> = ({ commentCode, replyInfo }) => {
 
 interface CommentProps {
   currentPPT: ResponsePPTList['data']['list'][number]
+  handleUpdatePPTDetail: (pptCode: string) => Promise<void>
   setOpenComment: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 // 评论组件
-const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
+const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment, handleUpdatePPTDetail }) => {
   const comRef = useRef(null)
   const { useFn, data, isLoading, isInit } = useCommentList(currentPPT.pptCode)
 
@@ -241,7 +242,8 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
         pptCode: currentPPT.pptCode,
         content,
       })
-      data.current.list?.unshift(res)
+      if (res)
+        data.current.list?.unshift(res)
     }
     else {
       const res = await fetchReply({
@@ -249,11 +251,13 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
         content,
         commentCode: replyInfo.commentCode,
       })
-      setReplyInfo({
-        ...replyInfo,
-        isReply: false,
-        replyRes: res,
-      })
+      if (res) {
+        setReplyInfo({
+          ...replyInfo,
+          isReply: false,
+          replyRes: res,
+        })
+      }
     }
     setIsComment(false);
     (inputRef.current as any).textContent = ''
@@ -268,8 +272,66 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
     })
   }
 
+  const [isScoreOpen, setIsScoreOpen] = useState(false)
+  const scores = useRef([0, 0, 0])
+  const handlePushStars = async () => {
+    const [score1, score2, score3] = scores.current
+    await fetchScors({
+      score1,
+      score2,
+      score3,
+      pptCode: currentPPT.pptCode,
+    })
+    await handleUpdatePPTDetail(currentPPT.pptCode)
+    setIsScoreOpen(false)
+    scores.current = [0, 0, 0]
+  }
+
   return (
     <>
+      <Modal
+        title="您对PPT满意吗？"
+        open={isScoreOpen}
+        onOk={() => {
+          handlePushStars()
+        }}
+        okText="确定"
+        cancelText="取消"
+        onCancel={() => setIsScoreOpen(false)}
+      >
+        <div className="flex flex-col gap-5px">
+          <div>
+            <span>内容质量：</span>
+            <Rate
+              allowHalf
+              defaultValue={0}
+              onChange={(e) => {
+                scores.current[0] = e
+              }}
+            />
+          </div>
+          <div>
+            <span>主题风格：</span>
+            <Rate
+              allowHalf
+              defaultValue={0}
+              onChange={(e) => {
+                scores.current[1] = e
+              }}
+            />
+          </div>
+          <div>
+            <span>视觉效果：</span>
+            <Rate
+              allowHalf
+              defaultValue={0}
+              onChange={(e) => {
+                scores.current[2] = e
+              }}
+            />
+          </div>
+        </div>
+      </Modal>
       <div
         onClick={() => {
           setOpenComment(false)
@@ -286,21 +348,32 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
           {/* header */}
           <div className="w-100% flex flex-col">
             <div className="flex">
-              <Avatar className="cursor-pointer mr-20px" size={50} src={currentPPT.headshot} />
-              <div className="flex flex-col fs-18">
+              <Avatar className="cursor-pointer mr-15px" size={50} src={currentPPT.headshot} />
+              <div className="flex flex-1 jc-b ai-c fs-18">
                 <span className="fw-700">{currentPPT.username}</span>
-                <span></span>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    requestAnimationFrame(() => {
+                      const dom = document.createElement('a')
+                      dom.setAttribute('href', currentPPT.pptUrl)
+                      dom.click()
+                    })
+                  }}
+                >
+                  下载PPT
+                </Button>
               </div>
             </div>
-            <div className="flex gap-10px fs-14 text-neutral-5 lh-8">
-              <span>
-                {currentPPT.seeAmount}
-                人浏览过此模板
-              </span>
-              <span>
-                {currentPPT.collectAmount}
-                人收藏过此模板
-              </span>
+            <div className="flex gap-10px fs-14 text-neutral-5 h-35px ai-c ">
+              <div className="flex jc-c ai-c gap-5px">
+                <div className="i-line-md-watch"></div>
+                <span>{`阅读量 ${currentPPT.seeAmount}`}</span>
+              </div>
+              <div className="flex jc-c ai-c gap-5px">
+                <div className="i-fluent-star-checkmark-24-regular"></div>
+                <span>{`被${currentPPT.collectAmount}个专栏收藏`}</span>
+              </div>
             </div>
             {/* descri */}
             <div>
@@ -325,10 +398,21 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
                 src={currentPPT.coverUrl}
               >
               </Image>
+              <div className="mr-20px">
+                <span className="mr-10px">综合得分</span>
+                <Rate disabled value={currentPPT.score} className="fs-14" />
+                {
+                  !currentPPT.haveScored && (
+                    <div className="flex ai-c mt-20px jc-e gap-5px">
+                      <div className="i-material-symbols-family-star-outline-sharp text-yellow-3"></div>
+                      <span className="fs-14 text-blue-4 cursor-pointer" onClick={() => setIsScoreOpen(true)}>快来评价吧</span>
+                    </div>
+                  )
+                }
+              </div>
             </div>
             <div className="text-neutral-5 lh-8">
-              发布于
-              {currentPPT.createTime}
+              {`发布于 ${currentPPT.createTime}`}
             </div>
           </div>
           {/* footer */}
@@ -387,7 +471,7 @@ const Comment: React.FC<CommentProps> = ({ currentPPT, setOpenComment }) => {
           </div>
           <div className="flex jc-e ai-c ">
             <Button loading={isComment} type="primary" className="mr-10px w-80px h-40px rounded-44px" onClick={handleComment}>发送</Button>
-            <Button className="mr-10px w-80px h-40px rounded-44px">取消</Button>
+            <Button className="mr-10px w-80px h-40px rounded-44px" onClick={() => setOpenComment(false)}>取消</Button>
           </div>
         </div>
       </div>
@@ -402,17 +486,19 @@ interface ContentProps {
   list: ResponsePPTList['data']['list']
   total: number
   isLoading: boolean
-  size: number
+  currentPageSize: number
+  currentPage: number
   handleDeleteUpload?: (c: string) => Promise<void>
 }
 const { confirm } = Modal
 
-export const Content: React.FC<ContentProps> = ({ handleChange, size, list, total, isLoading, handleDeleteUpload }) => {
+export const Content: React.FC<ContentProps> = ({ handleChange, currentPageSize, currentPage, list, total, isLoading, handleDeleteUpload }) => {
   const [folders, setFolders] = useState<ResponsePPTFolders['data']>([])
   const [item, setItem] = useState<ResponsePPTList['data']['list'][number]>({} as any)
   const [folderName, setFolderName] = useState('')
 
   const [open, setOpen] = useState(false)
+  // 收藏ppt
   const handleCollect = async (folderCode: string) => {
     const data = await fetchPPTCollect({
       pptCode: item.pptCode,
@@ -420,7 +506,8 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
     })
     success(data)
     setOpen(false)
-    handleChange(1, size)
+    // 重新拉数据
+    handleChange(currentPage, currentPageSize)
   }
 
   const [isFolderLoading, setIsFolderLoding] = useState(false)
@@ -437,6 +524,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
 
   const [openCreate, setOpenCreate] = useState(false)
   const [isCreateLoading, setIsCreateLoading] = useState(false)
+  // 新建文件夹
   const handleCreateFolder = async () => {
     // 创建
     setIsCreateLoading(true)
@@ -444,7 +532,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
       folder: folderName,
     })
 
-    // 创建完重新拉数据
+    // 创建完重新拉收藏夹数据
     const res = await fetchPPTFolders({
       pptCode: item.pptCode,
     })
@@ -471,10 +559,18 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
 
   const [currentPPT, setCurrentPPT] = useState<ResponsePPTList['data']['list'][number]>({} as any)
 
+  const handleUpdatePPTDetail = async (pptCode: string) => {
+    const res = await fetchPPTDetail({
+      pptCode,
+    })
+    setCurrentPPT(res)
+    handleChange(currentPage, currentPageSize)
+  }
+
   return (
     <>
       <Modal destroyOnClose title={currentPPT.title} footer={null} className={styles.comment} closable={false} centered open={openComment} width={1100} onOk={() => setOpenComment(false)} onCancel={() => setOpenComment(false)}>
-        <Comment currentPPT={currentPPT} setOpenComment={setOpenComment}></Comment>
+        <Comment handleUpdatePPTDetail={handleUpdatePPTDetail} currentPPT={currentPPT} setOpenComment={setOpenComment}></Comment>
       </Modal>
       <Modal
         title="添加收藏夹"
@@ -523,9 +619,9 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
               <>
                 <div className="w-100% flex flex-wrap box-border p-20px gap-20px">
                   {
-                    list.map((i, idx) => {
+                    list.map((i) => {
                       return (
-                        <div key={idx} className="w-250px flex flex-col b-1-#f1f1f1 rounded-2 ">
+                        <div key={i.pptCode} className="w-250px flex flex-col b-1-#f1f1f1 rounded-2 ">
                           <Image
                             width="100%"
                             height={200}
@@ -533,17 +629,17 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                             className="rounded-2"
                           />
                           <div className="flex-1 flex flex-col box-border p-15px ">
-                            <div className="fs-14 flex ai-c jc-b">
-                              <span>{i.title}</span>
+                            <div className="fs-14 flex ai-c gap-10px jc-b">
+                              <span className="flex-1 text-hidden">{i.title}</span>
                               <span
                                 // href={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(i.pptUrl)}`}
                                 className="p-0 flex ai-c jc-c cursor-pointer text-blue-4"
                                 onClick={() => {
                                   setOpenComment(true)
                                   setCurrentPPT(i)
-                                  // fetchViewPPT({
-                                  //   pptCode: i.pptCode,
-                                  // })
+                                  fetchViewPPT({
+                                    pptCode: i.pptCode,
+                                  })
                                 }}
                                 rel="noreferrer"
                               >
@@ -552,7 +648,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                             </div>
                             <div className="flex ai-c jc-s gap-5px mt-15px">
                               <span className="fs-14">综合得分:</span>
-                              <Rate disabled defaultValue={i.score} className="fs-14" />
+                              <Rate disabled value={i.score} className="fs-14" />
                             </div>
                             <div className={clsx('fs-14 flex ai-c fs-12 text-#999 mt-15px', handleDeleteUpload ? 'jc-b' : 'jc-e')}>
                               {
@@ -574,6 +670,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                                   <div className="i-ph-eye bg-#999"></div>
                                   <span className="text-neutral-5">{getAmountStr(i.seeAmount)}</span>
                                 </div>
+                                {/* 收藏 */}
                                 <div className="flex gap-5px">
                                   {
                                     i.isCollected
@@ -591,7 +688,7 @@ export const Content: React.FC<ContentProps> = ({ handleChange, size, list, tota
                   }
                 </div>
                 <div className="w-100% text-center mb-20px">
-                  <Pagination onChange={handleChange} showSizeChanger={true} defaultPageSize={10} defaultCurrent={1} total={total} />
+                  <Pagination current={currentPage} pageSize={currentPageSize} onChange={handleChange} showSizeChanger={true} defaultPageSize={10} defaultCurrent={1} total={total} />
                 </div>
               </>
               )
@@ -610,7 +707,8 @@ const ComCenter: React.FC = () => {
   const [total, setTotal] = useState(0)
   const [isLoading, setLoading] = useState(false)
   const keword = useRef('')
-  const size = useRef(10)
+  const [currentPageSize, setCurrentSize] = useState(10)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const handleInit = async () => {
     fetchPPTClassify().then((data) => {
@@ -633,6 +731,7 @@ const ComCenter: React.FC = () => {
     handleInit()
   }, [])
 
+  // 分页查询，分类查询，搜索查询都会触发
   const handleChange = async (page: number, pageSize: number, config = {}) => {
     const { keyword, kinds } = config as any
 
@@ -646,19 +745,20 @@ const ComCenter: React.FC = () => {
       keyword: keword.current,
     }
     keyword && (params.keyword = keyword)
+    setCurrentPage(page)
+    setCurrentSize(pageSize)
     const data = await fetchPPTList(params)
-    size.current = pageSize
     setList(data.list)
     setTotal(data.total)
     setLoading(false)
   }
-
+  // 分类触发
   const handleActive = (kinds: string) => {
     setActive(kinds)
-
     handleChange(1, 10, { kinds })
   }
 
+  // 搜索触发
   const handleSearch: SearchProps['onSearch'] = (value) => {
     keword.current = value
     handleChange(1, 10, {
@@ -691,7 +791,7 @@ const ComCenter: React.FC = () => {
           }
         </div>
         <Divider className="my-10px" dashed />
-        <Content handleChange={handleChange} total={total} size={size.current} isLoading={isLoading} list={list}></Content>
+        <Content handleChange={handleChange} total={total} currentPage={currentPage} currentPageSize={currentPageSize} isLoading={isLoading} list={list}></Content>
       </div>
     </LayOut>
   )

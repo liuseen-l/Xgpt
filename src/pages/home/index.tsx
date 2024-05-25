@@ -4,7 +4,7 @@ import Content from '~/components/home/home-content'
 
 function Home() {
   return (
-    <div className={clsx('w-100% of-x-hidden h-100vh relative')}>
+    <div className={clsx('w-100% of-x-hidden h-100vh relative ')}>
       <div className={clsx('w-100% h-100vh absolute left-0 top-0 z-[-1]')}></div>
       <Nav></Nav>
       <Content></Content>

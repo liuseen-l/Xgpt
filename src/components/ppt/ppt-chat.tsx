@@ -187,6 +187,8 @@ const Content: React.FC = () => {
   }
 
   const handleClick = (content: string) => {
+    if (isLoading)
+      return
     setSearch(content)
     handleSend(content)
   }
@@ -244,9 +246,11 @@ const Content: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTheme, setActiveTheme] = useState('')
+  // 生成ppt
   const handleOk = async () => {
     setGen(true)
     const resolved = recoverPPTOutline(outline as any)
+    setIsModalOpen(false)
     const data = await fetchCreatePPT({
       ...resolved,
       cid: getTimeUnixStr(),
@@ -260,7 +264,6 @@ const Content: React.FC = () => {
       dom.setAttribute('href', data.replication)
       dom.click()
     })
-    setIsModalOpen(false)
   }
 
   const handleSubmit = async () => {
@@ -342,6 +345,7 @@ const Content: React.FC = () => {
             value={search}
             placeholder="请输入你想创作的主题"
             showCount
+            disabled={isLoading}
             onChange={hanldeSearchChange}
             maxLength={400}
             suffix={(

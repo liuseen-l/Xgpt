@@ -274,3 +274,37 @@ export interface ResponseReply {
     createTime: string
   }
 }
+
+export interface RequestScore {
+  pptCode: string
+  score1: number
+  score2: number
+  score3: number
+}
+
+export interface RequestPPTDetail {
+  pptCode: string
+}
+
+export interface ResponsePPTDetail {
+  data: {
+    isCollected: boolean
+    pptCode: string
+    firstKind: string
+    secondKind: string
+    title: string
+    content: null
+    pptUrl: string
+    coverUrl: string
+    score: number
+    createTime: string
+    updateTime: string
+    collectAmount: number
+    seeAmount: number
+    username: string
+    headshot: string
+    commentAmount: number
+    enableScore: boolean
+    haveScored: boolean
+  }
+}

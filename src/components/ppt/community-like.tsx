@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Divider, Input, Modal, Popover, Spin } from 'antd'
 import styles from './ppt-community.module.scss'
 import { Content } from './community-center'
@@ -13,7 +13,10 @@ const ComLike: React.FC = () => {
   const [showFolder, setShowFolder] = useState(true)
   const [list, setList] = useState<ResponsePPTCollectList['data']['list']>([] as any)
   const [total, setTotal] = useState(0)
-  const size = useRef(10)
+
+  const [currentPageSize, setCurrentSize] = useState(10)
+  const [currentPage, setCurrentPage] = useState(1)
+
   const [bread, setBread] = useState([
     {
       title: '我的资料库',
@@ -33,24 +36,25 @@ const ComLike: React.FC = () => {
   const [isLoading, setLoading] = useState(false)
   const handleChange = async (page: number, pageSize: number, fc?: string) => {
     setLoading(true)
-
+    setCurrentPage(page)
+    setCurrentSize(pageSize)
     const data = await fetchPPTCollectList({
       page,
       size: pageSize,
       folderCode: fc || folderCode,
     })
-    size.current = pageSize
     setList(data.list)
     setTotal(data.total)
     setLoading(false)
   }
 
+  // 查询某个文件当中的ppt列表
   const handleCheckFolder = (folderName: string, folderCode: string) => {
     bread[2] = { title: `${folderName}` }
     setBread([...bread])
     setShowFolder(false)
     setFolderCode(folderCode)
-    handleChange(1, size.current, folderCode)
+    handleChange(1, currentPageSize, folderCode)
   }
 
   const [folders, setFolders] = useState<ResponsePPTFolders['data']>([])
@@ -201,7 +205,7 @@ const ComLike: React.FC = () => {
                 </div>
               </Spin>
               )
-            : <Content isLoading={isLoading} total={total} list={list} size={size.current} handleChange={handleChange}></Content>
+            : <Content isLoading={isLoading} total={total} list={list} currentPageSize={currentPageSize} currentPage={currentPage} handleChange={handleChange}></Content>
         }
       </div>
     </LayOut>

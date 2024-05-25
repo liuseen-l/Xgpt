@@ -47,6 +47,7 @@ const ChatInput: React.FC<Props> = ({ scrollDomToBottom, changeTheme }) => {
     await fetchStopSend({
       cid,
     })
+    setStopLoading(false)
   }
 
   const onInput = (text: string) => {

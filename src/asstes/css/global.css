@@ -21,7 +21,9 @@
 }
 
 
-
+body {
+  min-width: 1024px;
+}
 
 .d {
   background: #9fc2d4;
