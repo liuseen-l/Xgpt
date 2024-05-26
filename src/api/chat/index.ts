@@ -1,4 +1,4 @@
-import type { RequestAddChat, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPresetList, RequestPushSession, RequestStopSend, ResponseAddChat, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePresetList, ResponsePushSession } from './types'
+import type { RequestAddChat, RequestChangeChatName, RequestChatSession, RequestDeleteSession, RequestGetChatList, RequestGptFunction, RequestImageGen, RequestImageUnd, RequestPPTGen, RequestPresetList, RequestPushSession, RequestStopSend, ResponseAddChat, ResponseGetChatList, ResponseGetChatSession, ResponseGptFunction, ResponseImageGen, ResponseImageUnd, ResponsePPTGen, ResponsePresetList, ResponsePushSession } from './types'
 import { useGetFecth } from '~/utils'
 import request from '~/utils/request'
 
@@ -10,6 +10,7 @@ const API_URL = {
   CHAT_DELETE: '/chat/delete',
   CHAT_PRESET: '/chat/default/list',
   CHAT_STOP: '/chat/request/stop',
+  CHAT_CHANGE_NAME: '/chat/name/change',
 }
 
 /**
@@ -123,6 +124,12 @@ export function fetchPresetList(params: RequestPresetList) {
  */
 export async function fetchStopSend(params: RequestStopSend) {
   return request.get(API_URL.CHAT_STOP, {
+    params,
+  })
+}
+
+export async function fetchChangeChatName(params: RequestChangeChatName) {
+  return request.get(API_URL.CHAT_CHANGE_NAME, {
     params,
   })
 }

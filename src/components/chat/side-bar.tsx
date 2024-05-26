@@ -133,10 +133,10 @@ function SideBar() {
           {
             isLoading
               ? <Skeleton active paragraph={{ rows: 15 }} className={styles.skin} />
-              : sideList.map((i, idx) => (
+              : sideList.map(i => (
                 <SideItem
-                // 同步数据
-                  chatAmount={currentSession.chatCode === i.chatCode ? currentSession.list.length : i.chatAmount}
+                  // 同步数据
+                  chatAmount={currentSession.chatCode === i.chatCode ? currentSession.total : i.chatAmount}
                   chatName={i.chatName}
                   lastChatTime={i.createTime}
                   chatCode={i.chatCode}
@@ -147,7 +147,7 @@ function SideBar() {
                     'border': `2px solid ${i.chatCode === currentSession.chatCode ? 'var(--card-border)' : 'transparent'}`,
                   } as React.CSSProperties}
                   onClick={() => { handleSelect(i) }}
-                  key={idx}
+                  key={i.chatCode}
                 >
                 </SideItem>
               ))

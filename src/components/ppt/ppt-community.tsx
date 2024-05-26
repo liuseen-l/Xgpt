@@ -1,15 +1,15 @@
+import { UploadOutlined } from '@ant-design/icons'
 import type { MenuProps, UploadProps } from 'antd'
 import { Button, Col, Drawer, Form, Input, Menu, Row, Select, Space, Spin, Upload } from 'antd'
+import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import clsx from 'clsx'
-import { UploadOutlined } from '@ant-design/icons'
 import styles from './ppt-community.module.scss'
 import { fetchPPTClassify, fetchPPTUpload } from '~/api/ppt'
 import { resolvePPTKinds } from '~/api/ppt/helper'
+import { useGlobalStore } from '~/stores/global'
 import { useMessage } from '~/utils'
 import { sleep } from '~/utils/common'
-import { useGlobalStore } from '~/stores/global'
 
 const { Option } = Select
 type MenuItem = Required<MenuProps>['items'][number]

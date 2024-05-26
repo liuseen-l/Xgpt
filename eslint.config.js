@@ -1,8 +1,8 @@
 import antfu from '@antfu/eslint-config'
+import tsParser from '@typescript-eslint/parser'
 import pluginReact from 'eslint-plugin-react'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
 import pluginReactRefresh from 'eslint-plugin-react-refresh'
-import tsParser from '@typescript-eslint/parser'
 import { isPackageExists } from 'local-pkg'
 
 const ReactRefreshAllowConstantExportPackages = [
@@ -93,5 +93,6 @@ export default antfu({
     'react-hooks/rules-of-hooks': 'off',
     'no-console': 'off',
     'unicorn/prefer-dom-node-text-content': 'off',
+
   },
 })

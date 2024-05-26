@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Divider, Input, Modal, Popover, Spin } from 'antd'
-import styles from './ppt-community.module.scss'
-import { Content } from './community-center'
+import React, { useEffect, useState } from 'react'
+import Content from './community-content'
 import LayOut from './content-layout'
+import styles from './ppt-community.module.scss'
 import type { ResponsePPTCollectList, ResponsePPTFolders } from '~/api/ppt/types'
 import { fetchFolderDelete, fetchFolderRename, fetchPPTCollectList, fetchPPTCreateFolder, fetchPPTFolders } from '~/api/ppt'
 
@@ -204,7 +204,7 @@ const ComLike: React.FC = () => {
                   }
                 </div>
               </Spin>
-              )
+            )
             : <Content isLoading={isLoading} total={total} list={list} currentPageSize={currentPageSize} currentPage={currentPage} handleChange={handleChange}></Content>
         }
       </div>

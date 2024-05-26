@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Content } from './community-center'
+import Content from './community-content'
 import LayOut from './content-layout'
 import { fetchDeleteUpload, fetchMyUpload } from '~/api/ppt'
 

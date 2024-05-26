@@ -192,3 +192,8 @@ export interface ResponsePresetList {
 export interface RequestStopSend {
   cid: string
 }
+
+export interface RequestChangeChatName {
+  chatCode: string
+  name: string
+}

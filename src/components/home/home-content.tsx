@@ -1,4 +1,3 @@
-// import type { MouseEvent } from 'react'
 import React, { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
@@ -59,7 +58,7 @@ const ContentPPT: React.FC = () => {
   const navigate = useNavigate()
 
   return (
-    <Block title="PPT应用" className={clsx('important:px-0 pt-10 h-650px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
+    <Block title="PPT应用" className={clsx('important:px-0 pt-10px h-700px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
       <CSSTransition
         in={hasShow.current}
         timeout={1000}
@@ -210,7 +209,7 @@ const Content: React.FC = () => {
         <div className={clsx('lh-10 w-100%')}>
           <div ref={myRef} className="w-100% h-100vh relative z-20">
             <div className={clsx(styles['slide-enter-content'], 'text-black pt-80px pl-200px')}>
-              <div className="fs-30">欢迎来到我们的ChatGPT集成平台！</div>
+              <div className="fs-30">欢迎来到我们的大模型融合平台与PPT智能创意社区！</div>
               <div className="fs-20">一站式体验多种GPT技术魅力。</div>
               <div>高效对话，让交流更轻松自在。</div>
               <div>智能创作，激发无限创意火花</div>
@@ -225,6 +224,10 @@ const Content: React.FC = () => {
         <ContentUtils></ContentUtils>
         <ContentPreset></ContentPreset>
         <ContentPPT></ContentPPT>
+        <section className="h-100px flex flex-col ai-c jc-c bg-#1a1a1a gap-10px text-neutral-2">
+          <span className="fs-14">版权所有 @liujiahao @chenzhenyu</span>
+          <span className="fs-14">反馈邮箱 773890440@qq.com 947219346@qq.com</span>
+        </section>
       </main>
     </>
 

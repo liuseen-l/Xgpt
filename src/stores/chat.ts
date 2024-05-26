@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
 import type { UploadFile } from 'antd'
-import { fetchChatList, fetchChatSession, fetchDeleteSession } from '~/api'
+import { fetchChangeChatName, fetchChatList, fetchChatSession, fetchDeleteSession } from '~/api'
 import { FunctionCodeType } from '~/api/chat/types'
 import type { ChatItemType, ChatSessionItem } from '~/api/chat/types'
 
@@ -43,6 +43,7 @@ interface ChatStoreActions {
   handleGetChatList: () => Promise<ChatItemType[]>
   handleDeleteSession: (c: string) => void
   handleInit: (config?: Partial<ChatStoreState>) => void
+  handleUpdateChatName: (name: string) => void
 }
 
 const initState = {
@@ -68,7 +69,19 @@ const initState = {
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(devtools((set, get) => ({
   ...initState,
+  handleUpdateChatName(name) {
+    const { currentSession } = get()
+    set((state) => {
+      state.currentSession.chatName = name
+      const idx = state.sideList.findIndex(i => i.chatCode === currentSession.chatCode)
+      state.sideList[idx].chatName = name
+    })
 
+    fetchChangeChatName({
+      chatCode: currentSession.chatCode,
+      name,
+    })
+  },
   // 切换聊天
   async handleCheckSession(i) {
     const { chatCode } = i
@@ -170,7 +183,12 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>()(immer(de
         if (isRebuild)
           state.currentSession.list.pop()
 
+        // 更新当前对话的total值
         state.currentSession.list.push(res)
+        state.currentSession.total += 1
+        // 发送消息更新列表的total值
+        const idx = state.sideList.findIndex(i => i.chatCode === get().currentSession.chatCode)
+        state.sideList[idx].chatAmount += 1
       })
     }
     set({
