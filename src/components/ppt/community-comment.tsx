@@ -117,7 +117,7 @@ const Reply: React.FC<ReplyProps> = ({ commentCode, replyInfo }) => {
                   : '展开更多回复'
               }
             </div>
-          ))
+            ))
       }
     </div>
   )

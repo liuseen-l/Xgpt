@@ -76,13 +76,13 @@ const Classfiy: React.FC<ClassfiyProps> = ({ title, subTitle, handleActive, acti
                     <span>收起</span>
                     <div className="i-material-symbols-light-keyboard-arrow-up fs-12"></div>
                   </>
-                )
+                  )
                 : (
                   <>
                     <span>展开</span>
                     <div className="i-material-symbols-light-keyboard-arrow-down fs-12"></div>
                   </>
-                )}
+                  )}
 
             </div>
           )

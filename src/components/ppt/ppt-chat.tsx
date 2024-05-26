@@ -98,7 +98,7 @@ const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange
                     }}
                   >
                   </div>
-                )
+                  )
                 : (
                   <div
                     className="i-bi-text-indent-right cursor-pointer"
@@ -111,7 +111,7 @@ const Outline: React.FC<OutlineProps> = ({ info, handleAddOrRemove, hanldeChange
                     }}
                   >
                   </div>
-                )
+                  )
             }
           </div>
         )}
@@ -323,7 +323,7 @@ const Content: React.FC = () => {
                     </div>
                   </div>
                 </>
-              )
+                )
           }
 
         </Modal>
@@ -382,15 +382,15 @@ const Content: React.FC = () => {
                     <CardItem isUser className="rounded-bl-0">
                       <div className="i-svg-spinners-3-dots-scale fs-22 color-#a7ccf3"></div>
                     </CardItem>
-                  )
+                    )
                   : (outline?.list?.length
-                    && (
-                      <CardItem isUser className="rounded-bl-0">
-                        <div className="text-#666 fs-14 mb-16px">您可以编辑此大纲，或按原样继续</div>
-                        <Outline handleAddOrRemove={handleAddOrRemove} hanldeChange={hanldeChange} info={outline}></Outline>
-                        <Button loading={isGen} onClick={handleSubmit} className="w-100% mt-10px" type="primary">生成PPT</Button>
-                      </CardItem>
-                    ))
+                  && (
+                    <CardItem isUser className="rounded-bl-0">
+                      <div className="text-#666 fs-14 mb-16px">您可以编辑此大纲，或按原样继续</div>
+                      <Outline handleAddOrRemove={handleAddOrRemove} hanldeChange={hanldeChange} info={outline}></Outline>
+                      <Button loading={isGen} onClick={handleSubmit} className="w-100% mt-10px" type="primary">生成PPT</Button>
+                    </CardItem>
+                  ))
               }
             </>
           )

@@ -221,7 +221,7 @@ const Content: React.FC<ContentProps> = ({ handleChange, currentPageSize, curren
                   <Pagination current={currentPage} pageSize={currentPageSize} onChange={handleChange} showSizeChanger={true} defaultPageSize={10} defaultCurrent={1} total={total} />
                 </div>
               </>
-            )
+              )
             : <Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
         }
       </Spin>

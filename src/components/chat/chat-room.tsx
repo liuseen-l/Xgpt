@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from 'react'
-import { Input, Modal, Skeleton, Spin } from 'antd'
+import { Input, Skeleton, Spin } from 'antd'
 import clsx from 'clsx'
 import ChatInput from './chat-input'
 import ChatCard from './chat-card'
@@ -74,7 +74,7 @@ function ChatRoom() {
                       }}
                     >
                     </Input>
-                  )
+                    )
                   : <span className="fs-20 font-700 h-40px flex ai-c">{currentSession.chatName}</span>
 
               }
@@ -95,7 +95,7 @@ function ChatRoom() {
                   <div className="flex ai-c jc-c">
                     <Spin tip="Loading" size="small"></Spin>
                   </div>
-                )
+                  )
                 : currentSession.hasMore && (
                   <div
                     className="flex ai-c jc-c text-base fs-12 cursor-pointer"
@@ -113,7 +113,7 @@ function ChatRoom() {
                   <Skeleton active className="mb-30px" avatar paragraph={{ rows: 4 }} />
                   <Skeleton active avatar paragraph={{ rows: 4 }} />
                 </>
-              )
+                )
               : currentSession.list.map((i, idx) => <ChatCard supportResend={idx === currentSession.list.length - 1} key={idx} isDefault={i.isDefault} replyTime={i.replyTime} question={i?.question} createTime={i?.createTime} replication={i?.replication}></ChatCard>)
           }
         </div>

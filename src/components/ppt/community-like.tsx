@@ -204,7 +204,7 @@ const ComLike: React.FC = () => {
                   }
                 </div>
               </Spin>
-            )
+              )
             : <Content isLoading={isLoading} total={total} list={list} currentPageSize={currentPageSize} currentPage={currentPage} handleChange={handleChange}></Content>
         }
       </div>
