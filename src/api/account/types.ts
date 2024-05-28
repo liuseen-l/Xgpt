@@ -87,7 +87,7 @@ export interface ResponseFindAccount {
  * 修改密码
  */
 export interface RequestPsRevise {
-  oldPassword: string
+  oldPassword?: string
   newPassword: string
   confirmPassword: string
 }
@@ -107,4 +107,19 @@ export interface ResponsePsRevise {
 
 export interface ResponseUserRevise {
   data: ResponseLogin['data']
+}
+
+export interface ResponseUserInfo {
+  data: {
+    createTime: string
+    email: string
+    headshot: string
+    id: number
+    isDeleted: number
+    password: string
+    phone: string
+    updateTime: string
+    userCode: string
+    username: string
+  }
 }

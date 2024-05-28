@@ -1,4 +1,4 @@
-import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import ChatAddPanel from '~/components/chat/chat-add-panel'
 import ChatRoom from '~/components/chat/chat-room'
 import PPTHome from '~/pages/ppt'
@@ -13,7 +13,7 @@ import ComCenter from '~/components/ppt/community-center'
 import ComLike from '~/components/ppt/community-like'
 import ComUpload from '~/components/ppt/community-upload'
 
-export const router = createHashRouter(
+export const router = createBrowserRouter(
   [
     {
       path: '/chat',

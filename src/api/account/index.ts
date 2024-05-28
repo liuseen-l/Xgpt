@@ -1,4 +1,4 @@
-import type { RequestFindAccount, RequestGetVerCode, RequestLoginByAccount, RequestLoginByEmail, RequestPsRevise, RequestRegiste, ResponseFindAccount, ResponseGetVerInfo, ResponseLogin, ResponsePsRevise, ResponseRegiste, ResponseUserRevise } from './types'
+import type { RequestFindAccount, RequestGetVerCode, RequestLoginByAccount, RequestLoginByEmail, RequestPsRevise, RequestRegiste, ResponseFindAccount, ResponseGetVerInfo, ResponseLogin, ResponsePsRevise, ResponseRegiste, ResponseUserInfo, ResponseUserRevise } from './types'
 import request from '~/utils/request'
 
 export const ACCOUNT_API_URL = {
@@ -9,6 +9,7 @@ export const ACCOUNT_API_URL = {
   FIND_ACCOUNT: '/user/password/forget', // 找回账号
   REVISE_PASSWORD: '/user/password/update',
   REVISE_USER: '/user/info/update',
+  USER_INFO: 'user/info',
 }
 
 /**
@@ -84,5 +85,14 @@ export async function fetchUserRevise(params: FormData) {
       'Content-Type': 'multipart/form-data',
     },
   })
+  return res.data.data
+}
+
+/**
+ * 获取用户信息
+ * @returns
+ */
+export async function fetchGetUserInfo() {
+  const res = await request.get<ResponseUserInfo>(ACCOUNT_API_URL.USER_INFO)
   return res.data.data
 }

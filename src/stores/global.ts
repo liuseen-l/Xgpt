@@ -10,7 +10,7 @@ type GlobalStoreState = Partial<{
 
 interface GlobalStoreAction {
   handleSetUserInfo: (info: UserInfo) => void
-  handleUpdateUserInfo: (info: UserInfo) => void
+  handleUpdateUserInfo: (info: Omit<UserInfo, 'isLoginByAccount'>) => void
   handleInit: () => void
 }
 
@@ -26,7 +26,6 @@ export const useGlobalStore = create<GlobalStoreState & GlobalStoreAction>()(dev
     ...initState,
     handleSetUserInfo(info) {
       const { token, headshot, username, email } = info
-
       set({
         headshot,
         token,
@@ -36,7 +35,6 @@ export const useGlobalStore = create<GlobalStoreState & GlobalStoreAction>()(dev
     },
     handleUpdateUserInfo(info) {
       const { headshot, username, email } = info
-
       set({
         headshot,
         username,

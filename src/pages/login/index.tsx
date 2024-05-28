@@ -32,6 +32,7 @@ function Login() {
     const { email, vercode: userVerifyCode, password } = info
     const { preEmail, verifyCode } = verInfo
     if (loginType === LoginType.email) {
+      // 验证码登录
       const res = await fetchLoginByEmail({
         email,
         userVerifyCode,
@@ -44,6 +45,7 @@ function Login() {
       }
     }
     else {
+      // 账号密码登录
       const res = await fetchLoginByAccount({
         email,
         password,
@@ -98,6 +100,7 @@ function Login() {
           token,
           email,
           username,
+          isLoginByAccount: false,
         } as any)
         navigate('/center')
       }
@@ -119,7 +122,6 @@ function Login() {
           <div className="i-mingcute:wechat-line text-green"></div>
           <div className="i-ant-design:alipay-circle-outlined text-#2e58ff"></div>
           <div className="i-logos:tiktok-icon"></div>
-
         </div>
         <div></div>
       </Modal>
@@ -213,7 +215,7 @@ function Login() {
                     </Button>
                   </Form.Item>
                 </Form>
-                )
+              )
               : (
                 <>
                   <Form
@@ -271,7 +273,7 @@ function Login() {
                     <NavLink className="text-#566dff mt-[-10px] cursor-pointer flex jc-c fs-14 decoration-none" to="/register" replace>注册账号</NavLink>
                   </Form>
                 </>
-                )
+              )
           }
         </div>
         <div onClick={showModal} className={clsx('w-44px h-44px absolute bottom-0 right-0 cursor-pointer', styles.scan)}></div>

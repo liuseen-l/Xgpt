@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import ImgCrop from 'antd-img-crop'
 import styles from './home-nav.module.scss'
 import { useGlobalStore } from '~/stores/global'
-import { fetchPsRevise, fetchUserRevise } from '~/api/account'
+import { fetchGetUserInfo, fetchPsRevise, fetchUserRevise } from '~/api/account'
 import { useMessage } from '~/utils'
 import type { FileType } from '~/utils/common'
 import { getBase64, sleep } from '~/utils/common'
@@ -46,8 +46,13 @@ export const UserInfo: React.FC = () => {
   }
   const [psOpen, setIsPspen] = useState(false)
 
+  const [hasPassword, setHasPassword] = useState(true)
+
   const handlePsRevise = () => {
-    psForm.validateFields(['oldPassword', 'newPassword', 'confirmPassword']).then(async () => {
+    const validateFieldsLists = ['newPassword', 'confirmPassword']
+    if (hasPassword)
+      validateFieldsLists.push('oldPassword')
+    psForm.validateFields(validateFieldsLists).then(async () => {
       const { oldPassword, newPassword, confirmPassword } = psForm.getFieldsValue()
       const data = await fetchPsRevise({
         oldPassword,
@@ -89,7 +94,7 @@ export const UserInfo: React.FC = () => {
       const formData = new FormData()
       formData.append('username', username)
       formData.append('email', email)
-      !fileList[0].url && formData.append('headhost', fileList[0].originFileObj as File)
+      !fileList[0].url && formData.append('headShot', fileList[0].originFileObj as File)
       const data = await fetchUserRevise(formData)
       if (data) {
         success('信息修改成功')
@@ -139,9 +144,9 @@ export const UserInfo: React.FC = () => {
       file.onSuccess()
     },
   }
+
   return (
     <>
-
       <Modal
         title="个人资料"
         open={userOpen}
@@ -205,7 +210,6 @@ export const UserInfo: React.FC = () => {
               >
                 + 上传头像
               </Upload>
-
             </ImgCrop>
             {previewImage && (
               <Image
@@ -241,21 +245,25 @@ export const UserInfo: React.FC = () => {
           initialValues={{ remember: true }}
           autoComplete="off"
         >
-          <Form.Item
-            label="输入旧密码"
-            name="oldPassword"
-            rules={[
-              () => ({
-                validator(_, value) {
-                  if (!value)
-                    return Promise.reject(new Error('请输入旧密码'))
-                  return Promise.resolve()
-                },
-              }),
-            ]}
-          >
-            <Input.Password placeholder="请输入旧密码" />
-          </Form.Item>
+          {
+            hasPassword && (
+              <Form.Item
+                label="输入旧密码"
+                name="oldPassword"
+                rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (!value)
+                        return Promise.reject(new Error('请输入旧密码'))
+                      return Promise.resolve()
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="请输入旧密码" />
+              </Form.Item>
+            )
+          }
           <Form.Item
             label="输入新密码"
             name="newPassword"
@@ -302,21 +310,30 @@ export const UserInfo: React.FC = () => {
               <Button onClick={() => navigate('/login')} className="bg-transparent important:hover:bg-[#f5f4f6] border-none important:hover:b-1-#c4c3c3 important:hover:text-black b-1-#c4c3c3">登录</Button>
               <Button onClick={() => navigate('/register')} className="border-none important:hover:bg-white important:hover:text-black">注册</Button>
             </div>
-            )
+          )
           : (
             <Popover
               placement="bottom"
               content={(
                 <>
                   <div className="px-10px cursor-pointer hover:text-blue mb-5px" onClick={() => setUserOpen(true)}>个人资料</div>
-                  <div className="px-10px cursor-pointer hover:text-blue mb-5px" onClick={() => setIsPspen(true)}>修改密码</div>
+                  <div
+                    className="px-10px cursor-pointer hover:text-blue mb-5px"
+                    onClick={async () => {
+                      const info = await fetchGetUserInfo()
+                      setHasPassword(!!info.password.length)
+                      setIsPspen(true)
+                    }}
+                  >
+                    修改密码
+                  </div>
                   <div className="px-10px cursor-pointer hover:text-blue mb-5px" onClick={toLogin}>退出登录</div>
                 </>
               )}
             >
               <Avatar className="cursor-pointer mr-20px" src={headhot} />
             </Popover>
-            )
+          )
       }
 
     </>
@@ -330,7 +347,6 @@ const Nav: React.FC = () => {
     setCurrent(e.key)
     if (e.key === 'chat')
       navigate(`/${e.key}/session?gptCode=gpt_2`)
-
     else
       navigate(`/${e.key}`)
   }
