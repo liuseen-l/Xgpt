@@ -31,7 +31,7 @@ function getActiveColors(colors: string[]) {
 
 const Block: React.FC<BlockProps> = ({ title, subTitle, children, className, titleClass }) => {
   return (
-    <div className={clsx('w-100% flex flex-col px-65 box-border of-hidden', className)}>
+    <div className={clsx('min-w-1300px w-100% flex flex-col box-border of-hidden', className)}>
       <div className={clsx('text-center fs-30 mt-20px mb-40px fw-700', titleClass)}>
         <div className={clsx(styles.title, 'flex text-#252525 tracking-[2.33px] flex pt-30px pb-60px ai-c jc-c lh-42px')}>
           <div className="i-teenyicons:left-outline fw-700 fs-20 mr-12 text-blue-6"></div>
@@ -58,7 +58,7 @@ const ContentPPT: React.FC = () => {
   const navigate = useNavigate()
 
   return (
-    <Block title="PPT应用" className={clsx('important:px-0 pt-10px h-700px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
+    <Block title="PPT应用" className={clsx('important:px-0 pt-10px', styles.ppt)} subTitle="PPT生成主题板块，多样模板，轻松发布，助力高效演示与分享">
       <CSSTransition
         in={hasShow.current}
         timeout={1000}
@@ -117,7 +117,7 @@ function ContentUtils() {
     hasShow.current = true
   return (
     <Block title="集成工具" className={clsx(styles.utils, 'important:mt-0')} titleClass="mt-60px" subTitle="集成多平台ChatGPT，智能交互无界，畅享高效沟通新体验">
-      <div className="flex w-100% pb-80px jc-b">
+      <div className="flex w-1200px m-auto pb-80px jc-b">
         {
           UTILS_CONFIG.map((i, idx) => {
             return (
