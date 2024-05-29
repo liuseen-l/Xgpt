@@ -161,10 +161,10 @@ const ComLike: React.FC = () => {
               <Spin spinning={isFolderLoading}>
                 <div className="w-100% flex box-border flex-wrap gap-10px p-20px">
                   {
-                    folders.map((i, idx) => {
+                    folders.map((i) => {
                       return (
                         <>
-                          <div key={idx} className="flex relative flex-col ai-c jc-c cursor-pointer group hover:bg-#f7f7f7 py-30px px-35px  rounded-5" onClick={() => { handleCheckFolder(i.folder, i.folderCode) }}>
+                          <div key={i.folderCode} className="flex relative flex-col ai-c jc-c cursor-pointer group hover:bg-#f7f7f7 py-30px px-35px  rounded-5" onClick={() => { handleCheckFolder(i.folder, i.folderCode) }}>
                             <div className="i-material-symbols-folder bg-#a8daff fs-58"></div>
                             <span className="fs-13">{i.folder}</span>
                             <Popover
@@ -204,7 +204,7 @@ const ComLike: React.FC = () => {
                   }
                 </div>
               </Spin>
-              )
+            )
             : <Content isLoading={isLoading} total={total} list={list} currentPageSize={currentPageSize} currentPage={currentPage} handleChange={handleChange}></Content>
         }
       </div>

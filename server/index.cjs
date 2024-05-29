@@ -9,11 +9,11 @@ app.all('*', (req, res, next) => {
 })
 
 app.use(express.json())
-app.use('/static', express.static('./server/public/app'))
-app.use('/assets', express.static('./server/public/assets'))
+app.use('/static', express.static('public/app'))
+app.use('/assets', express.static('public/assets'))
 app.get('/qrcode', async (req, res) => {
   const createTime = req.query.createTime
-  const code = await qrcode.toDataURL(`http://192.168.1.112:3000/static/index.html?createTime=${createTime}`)
+  const code = await qrcode.toDataURL(`http://124.71.110.30:3000/static/index.html?createTime=${createTime}`)
   res.json({
     code,
   })

@@ -86,7 +86,7 @@ function Login() {
 
   const showModal = () => {
     const createTime = Date.now()
-    fetch(`http://localhost:3000/qrcode?createTime=${createTime}`).then(res => res.json()).then((res) => {
+    fetch(`http://124.71.110.30:3000/qrcode?createTime=${createTime}`).then(res => res.json()).then((res) => {
       qrRef.current!.src = res.code
     })
     const sse = new EventSource(`http://124.71.110.30:8080/user/login/by/scan/listen?&createTime=${createTime}`)

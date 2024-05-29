@@ -321,7 +321,7 @@ export const UserInfo: React.FC = () => {
                     className="px-10px cursor-pointer hover:text-blue mb-5px"
                     onClick={async () => {
                       const info = await fetchGetUserInfo()
-                      setHasPassword(!!info.password.length)
+                      setHasPassword(!!info.password?.length)
                       setIsPspen(true)
                     }}
                   >
